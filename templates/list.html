@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>AskMate</title>
+    </head>
+    <body>
+        <h1>Questions</h1>
+        <a href="/question">Add new question</a>
+        <table>
+            <thead>
+                <tr>
+                    {% for header_item in header %}
+                        <th>{{header_item}}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    {% for question_item in question_dictionary_list %}
+                        {% for header_item in header %}
+                            <td>{{question_item[header_item]}}</td>
+                        {% endfor %}
+                </tr>
+                    {% endfor %}
+
+            </tbody>
+        </table>
+    </body>
+</html>

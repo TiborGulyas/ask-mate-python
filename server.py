@@ -16,6 +16,27 @@ def question_list():
         return render_template('list.html', question_dictionary_list=sorted_question_dictionary_list, header=DATA_HEADER_question)
 
 
+@app.route('/question', methods=['GET', 'POST'])
+def add_question():
+    if request.method == 'GET':
+        return render_template('add_new_question.html')
+    elif request.method == "POST":
+        new_question = {
+            'title': request.form.get('title'),
+            'message': request.form.get('message'),
+        }
+        new_question['id'] = data_manager.generate_id('question')
+        new_question['submission_time'] = data_manager.generate_time()
+        new_question['view_number'] = '0'
+        new_question['vote_number'] = '0'
+        new_question['image'] = ''
+        question_dictionary_list = data_manager.get_data('question')
+        question_dictionary_list.append(new_question)
+        data_manager.write_data('question', question_dictionary_list)
+    return question_list()
+
+
+
 
 
 

@@ -19,7 +19,11 @@
                 <tr>
                     {% for question_item in question_dictionary_list %}
                         {% for header_item in header %}
-                            <td>{{question_item[header_item]}}</td>
+                            {% if  header_item == 'id' %}
+                                <td><a href="/question/{{question_item[header_item]}}">{{question_item[header_item]}}</a></td>
+                            {% else %}
+                                <td>{{question_item[header_item]}}</td>
+                            {% endif %}
                         {% endfor %}
                 </tr>
                     {% endfor %}

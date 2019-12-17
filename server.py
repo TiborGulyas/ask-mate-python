@@ -17,9 +17,18 @@ def question_list():
 
 
 @app.route('/question', methods=['GET', 'POST'])
-def add_question():
-    if request.method == 'GET':
+@app.route('/question/<question_id>', methods=['GET', 'POST'])
+def add_question(question_id = 'None'):
+    if question_id.isdigit() == True and request.method == 'GET':
+        question_dictionary_list = data_manager.get_data('question')
+        for question in question_dictionary_list:
+            if int(question['id']) == int(question_id):
+                question_for_display = question
+                return render_template('question.html', question_for_display=question_for_display, header=DATA_HEADER_question)
+
+    elif request.method == 'GET':
         return render_template('add_new_question.html')
+
     elif request.method == "POST":
         new_question = {
             'title': request.form.get('title'),
@@ -33,11 +42,7 @@ def add_question():
         question_dictionary_list = data_manager.get_data('question')
         question_dictionary_list.append(new_question)
         data_manager.write_data('question', question_dictionary_list)
-    return question_list()
-
-
-
-
+        return render_template('question.html', question_for_display=new_question, header=DATA_HEADER_question)
 
 
 

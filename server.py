@@ -88,6 +88,25 @@ def add_answer(question_id):
         return redirect(f'/question/{question_id}')
 
 
+@app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
+def edit_question(question_id, output_dict='None'):
+    if request.method == 'GET':
+        data = data_manager.get_data('question')
+        for dict in data:
+            if dict['id'] == int(question_id):
+                output_dict = dict
+        return render_template('add_new_question.html', output_dict=output_dict)
+    elif request.method == 'POST':
+        question_dictionary_list = data_manager.get_data('question')
+        for number, dict in enumerate(question_dictionary_list):
+            if dict['id'] == int(request.form.get('id')):
+                question_dictionary_list[number]['message'] = request.form.get('message')
+                question_dictionary_list[number]['title'] = request.form.get('title')
+                question_dictionary_list[number]['submission_time'] = data_manager.generate_time()
+        data_manager.write_data('question', question_dictionary_list)
+        return redirect('/')
+
+
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',

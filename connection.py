@@ -19,6 +19,5 @@ def write_file(file_path, header, data):
         fieldnames = header
         writer = csv.DictWriter(source_file, fieldnames=fieldnames)
         writer.writeheader()
-        print(data)
         for question in data:
             writer.writerow(question)

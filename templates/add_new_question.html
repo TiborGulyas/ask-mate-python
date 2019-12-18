@@ -4,19 +4,40 @@
         <meta charset="utf-8">
         <title>AskMate-Add-Question</title>
     </head>
-    <h1>Add new question</h1>
+    {% if output_dict %}
+        <h1>Edit question</h1>
+        <form action="/question/{{ output_dict['id'] }}/edit" method="post">
+            <p>
+                <laber for="id">Question ID</laber><br>
+                <input type="text" name="id" id="id" readonly value='{{ output_dict['id'] }}'>
+            </p>
+            <p>
+                <label for="title">Question Title</label><br>
+                <input type="text" name="title" id="title" required minlength="5" value='{{ output_dict['title'] }}'>
+            </p>
+            <p>
+                <label for="question">Question:</label><br>
+                <textarea name="message" id="question" cols="40" rows="6">{{ output_dict['message'] }}</textarea>
+            </p>
+            <p>
+                <button type="submit">Submit question</button>
+            </p>
+        </form>
+    {% else %}
+        <h1>Add new question</h1>
+        <form action="/question" method="post">
+            <p>
+                <label for="title">Question Title</label><br>
+                <input type="text" name="title" id="title" required minlength="5">
+            </p>
+            <p>
+                <label for="question">Question:</label><br>
+                <textarea name="message" id="question" cols="40" rows="6"></textarea>
+            </p>
+            <p>
+                <button type="submit">Submit question</button>
+            </p>
+        </form>
+    {% endif %}
 
-    <form action="/question" method="post">
-        <p>
-            <label for="title">Question Title</label><br>
-            <input type="text" name="title" id="title" required minlength="5">
-        </p>
-        <p>
-            <label for="question">Question:</label><br>
-            <textarea name="message" id="question" cols="40" rows="6"></textarea>
-        </p>
-        <p>
-            <button type="submit">Submit question</button>
-        </p>
-    </form>
 </html>

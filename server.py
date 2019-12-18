@@ -87,6 +87,23 @@ def add_answer(question_id):
                 answer_for_display.append(answer)
         return redirect(f'/question/{question_id}')
 
+@app.route('/answer/<answer_id>', methods=['GET', 'POST'])
+def show_answer(answer_id):
+    for answer in data_manager.get_data('answer'):
+        if answer['id'] == int(answer_id):
+            answer_for_display = answer
+    return render_template('answer.html', answer_for_display=answer_for_display, answer_header=DATA_HEADER_answer)
+
+
+@app.route('/answer/<answer_id>/delete', methods=['GET', 'POST'])
+def delete_answer(answer_id):
+    answer_dictionary_list = data_manager.get_data('answer')
+    for number, dict in enumerate(answer_dictionary_list):
+        if dict['id'] == int(answer_id):
+            del answer_dictionary_list[number]
+    data_manager.write_data('answer', answer_dictionary_list)
+    return redirect('/')
+
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
 def edit_question(question_id, output_dict='None'):

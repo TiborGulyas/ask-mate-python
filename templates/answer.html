@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <title>Display Answer</title>
+    </head>
+    <body>
+        <h1>Answer Title: {{answer_for_display['title']}}</h1>
+        <table>
+            <thead>
+                <tr>
+                    {% for header_item in answer_header %}
+                        {% if header_item != 'question_id' %}
+                            <th>{{ header_item }}</th>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+               <tr>
+                    {% for header_item in answer_header %}
+                        {% if  header_item == 'id' %}
+                            <td><a href="/answer/{{answer_for_display[header_item]}}">{{answer_for_display[header_item]}}</a></td>
+                        {% elif header_item != 'question_id' %}
+                            <td>{{ answer_for_display[header_item] }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+        <p>
+            <a href='/'>Go back to question list</a>
+        </p>
+        <p>
+            <a href="/answer/{{ answer_for_display['id'] }}/delete">Delete displayed answer</a>
+        </p>
+    </body>
+</html>

@@ -40,7 +40,9 @@
                 {% for answer in answer_for_display %}
                     <tr>
                         {% for header_item in answer_header %}
-                            {% if header_item != 'question_id' %}
+                            {% if  header_item == 'id' %}
+                                <td><a href="/answer/{{answer[header_item]}}">{{answer[header_item]}}</a></td>
+                            {% elif header_item != 'question_id' %}
                                 <td>{{ answer[header_item] }}</td>
                             {% endif %}
                         {% endfor %}

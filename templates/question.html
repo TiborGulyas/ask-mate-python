@@ -46,6 +46,8 @@
                                 <td>{{ answer[header_item] }}</td>
                             {% endif %}
                         {% endfor %}
+                        <td><a href="/answer/{{ answer['id'] }}/vote_up"><img src="{{url_for('static', filename='img/up.png')}}" height="20px" width="20px"></a></td>
+                        <td><a href="/answer/{{ answer['id'] }}/vote_down"><img src="{{url_for('static', filename='img/down.png')}}" height="20px" width="20px"></a></td>
                     </tr>
                 {% endfor %}
             </tbody>

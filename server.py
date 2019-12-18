@@ -30,12 +30,14 @@ def add_question(question_id = 'None'):
         question_dictionary_list = data_manager.get_data('question')
         answer_dictionary_list = data_manager.get_data('answer')
         answer_for_display = []
-        for question in question_dictionary_list:
+        for number, question in enumerate(question_dictionary_list):
             if int(question['id']) == int(question_id):
                 question_for_display = question
+                question_dictionary_list[number]['view_number'] += 1
         for answer in answer_dictionary_list:
             if int(answer['question_id']) == int(question_id):
                 answer_for_display.append(answer)
+        data_manager.write_data('question', question_dictionary_list)
         return render_template('question.html', question_for_display=question_for_display, header=DATA_HEADER_question, answer_for_display=answer_for_display, answer_header=DATA_HEADER_answer)
 
     elif request.method == 'GET':
@@ -87,6 +89,7 @@ def add_answer(question_id):
                 answer_for_display.append(answer)
         return redirect(f'/question/{question_id}')
 
+
 @app.route('/answer/<answer_id>', methods=['GET', 'POST'])
 def show_answer(answer_id):
     for answer in data_manager.get_data('answer'):
@@ -135,7 +138,7 @@ def delete_question(question_id):
 
 
 @app.route('/question/<question_id>/<vote>', methods=['GET', 'POST'])
-def vote_up(question_id, vote):
+def question_vote(question_id, vote):
     question_dictionary_list = data_manager.get_data('question')
     for number, dict in enumerate(question_dictionary_list):
         if dict['id'] == int(question_id):
@@ -145,6 +148,20 @@ def vote_up(question_id, vote):
                 question_dictionary_list[number]['vote_number'] -= 1
     data_manager.write_data('question', question_dictionary_list)
     return redirect('/')
+
+
+@app.route('/answer/<answer_id>/<vote>', methods=['GET', 'POST'])
+def answer_vote(answer_id, vote):
+    answer_dictionary_list = data_manager.get_data('answer')
+    for number, dict in enumerate(answer_dictionary_list):
+        if dict['id'] == int(answer_id):
+            if vote == "vote_up":
+                answer_dictionary_list[number]['vote_number'] += 1
+            else:
+                answer_dictionary_list[number]['vote_number'] -= 1
+            question_id = dict['question_id']
+    data_manager.write_data('answer', answer_dictionary_list)
+    return redirect(f'/question/{question_id}')
 
 
 if __name__ == '__main__':

@@ -15,6 +15,7 @@ def get_data(path):
     output_list = connection.read_file(file_path,header)
     return output_list
 
+
 def write_data(path, data):
     if path == 'question':
         file_path = 'sample_data/question.csv'
@@ -23,6 +24,7 @@ def write_data(path, data):
         file_path = 'sample_data/answer.csv'
         header = DATA_HEADER_answer
     connection.write_file(file_path, header, data)
+
 
 def generate_id(type):
     list = get_data(type)
@@ -34,6 +36,7 @@ def generate_id(type):
     else:
         new_id = max(id_list) + 1
         return str(new_id)
+
 
 def generate_time():
     t = int(time())

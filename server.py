@@ -47,10 +47,37 @@ def add_question(question_id = 'None'):
         question_dictionary_list = data_manager.get_data('question')
         question_dictionary_list.append(new_question)
         data_manager.write_data('question', question_dictionary_list)
-        return render_template('question.html', question_for_display=new_question, header=DATA_HEADER_question)
+        return redirect("/question/" + new_question['id'])
+
+#        return render_template('question.html', question_for_display=new_question, header=DATA_HEADER_question)
 
 
-
+@app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
+def add_answer(question_id):
+    question_dictionary_list = data_manager.get_data('question')
+    for question in question_dictionary_list:
+        if int(question['id']) == int(question_id):
+            question_for_display = question
+    if request.method == 'GET':
+        return render_template('new-answer.html', question_for_display=question_for_display, header=DATA_HEADER_question, question_id=question_id)
+    elif request.method == "POST":
+        new_answer = {
+            'message': request.form.get('message'),
+        }
+        new_answer['id'] = data_manager.generate_id('answer')
+        new_answer['submission_time'] = data_manager.generate_time()
+        new_answer['vote_number'] = '0'
+        new_answer['image'] = ''
+        new_answer['question_id'] = int(question_id)
+        answer_dictionary_list = data_manager.get_data('answer')
+        answer_dictionary_list.append(new_answer)
+        data_manager.write_data('answer', answer_dictionary_list)
+        answer_dictionary_list = data_manager.get_data('answer')
+        answer_for_display = []
+        for answer in answer_dictionary_list:
+            if int(answer['question_id']) == int(question_id):
+                answer_for_display.append(answer)
+        return redirect(f'/question/{question_id}')
 
 
 if __name__ == '__main__':

@@ -21,10 +21,15 @@ def question_list():
 def add_question(question_id = 'None'):
     if question_id.isdigit() == True and request.method == 'GET':
         question_dictionary_list = data_manager.get_data('question')
+        answer_dictionary_list = data_manager.get_data('answer')
+        answer_for_display = []
         for question in question_dictionary_list:
             if int(question['id']) == int(question_id):
                 question_for_display = question
-                return render_template('question.html', question_for_display=question_for_display, header=DATA_HEADER_question)
+        for answer in answer_dictionary_list:
+            if int(answer['question_id']) == int(question_id):
+                answer_for_display.append(answer)
+        return render_template('question.html', question_for_display=question_for_display, header=DATA_HEADER_question, answer_for_display=answer_for_display, answer_header=DATA_HEADER_answer)
 
     elif request.method == 'GET':
         return render_template('add_new_question.html')

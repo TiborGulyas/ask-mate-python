@@ -25,6 +25,28 @@
             </tr>
         </tbody>
     </table>
+    <table>
+        <thead>
+            <tr>
+                {% for header_item in answer_header %}
+                    {% if header_item != 'question_id' %}
+                        <th>{{ header_item }}</th>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for answer in answer_for_display %}
+                <tr>
+                    {% for header_item in answer_header %}
+                        {% if header_item != 'question_id' %}
+                            <td>{{ answer[header_item] }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     <body>
         <p>
             <a href="/question/">Edit displayed question</a>

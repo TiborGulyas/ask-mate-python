@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 import data_manager
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 DATA_HEADER_question = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 DATA_HEADER_answer = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
@@ -130,6 +130,19 @@ def delete_question(question_id):
     for number, dict in enumerate(question_dictionary_list):
         if dict['id'] == int(question_id):
             del question_dictionary_list[number]
+    data_manager.write_data('question', question_dictionary_list)
+    return redirect('/')
+
+
+@app.route('/question/<question_id>/<vote>', methods=['GET', 'POST'])
+def vote_up(question_id, vote):
+    question_dictionary_list = data_manager.get_data('question')
+    for number, dict in enumerate(question_dictionary_list):
+        if dict['id'] == int(question_id):
+            if vote == "vote_up":
+                question_dictionary_list[number]['vote_number'] += 1
+            else:
+                question_dictionary_list[number]['vote_number'] -= 1
     data_manager.write_data('question', question_dictionary_list)
     return redirect('/')
 

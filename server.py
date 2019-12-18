@@ -8,17 +8,13 @@ DATA_HEADER_answer = ['id', 'submission_time', 'vote_number', 'question_id', 'me
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/list', methods=['GET', 'POST'])
-def question_list(field = 'None', direction = 'None'):
+def question_list():
     if request.args:
         args = dict(request.args)
         direction = args['order_direction']
         question_dictionary_list = data_manager.get_data('question')
-        if direction == "desc":
-            direction = True
-        else:
-            direction = False
-        sorted_question_dictionary_list = sorted(question_dictionary_list, key=lambda question: question[args['order_by']], reverse=direction)
-        return render_template('list.html', question_dictionary_list=sorted_question_dictionary_list, header=DATA_HEADER_question)
+        sorted_question_dictionary_list = sorted(question_dictionary_list, key=lambda question: question[args['order_by']], reverse=True if direction == "desc" else False)
+        return render_template('list.html', question_dictionary_list=sorted_question_dictionary_list, header=DATA_HEADER_question, direction=direction)
     elif request.method == 'GET':
         sort_by = 'id'
         question_dictionary_list = data_manager.get_data('question')

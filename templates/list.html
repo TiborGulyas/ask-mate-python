@@ -11,7 +11,11 @@
             <thead>
                 <tr>
                     {% for header_item in header %}
-                        <th>{{header_item}}</th>
+                        {% if direction == 'desc' %}
+                        <th><a href="/list?order_by={{ header_item }}&order_direction=asc">{{header_item}}</a></th>
+                        {% else %}
+                        <th><a href="/list?order_by={{ header_item }}&order_direction=desc">{{header_item}}</a></th>
+                        {% endif %}
                     {% endfor %}
                 </tr>
             </thead>

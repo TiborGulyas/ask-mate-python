@@ -30,7 +30,7 @@ def generate_id(type):
     list = get_data(type)
     id_list = []
     for ids in list:
-        id_list.append(ids['id'])
+        id_list.append(int(ids['id']))
     if not id_list:
         return "0"
     else:

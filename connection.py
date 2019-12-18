@@ -6,13 +6,12 @@ def read_file(file_path,header):
         for line in csv.DictReader(source_file, delimiter=","):
             source_dictionary = {}
             for source_header in header:
-                try:
+                if source_header == 'id' or source_header == 'submission_time' or source_header == 'view_number' or source_header == 'vote_number' or source_header == 'question_id':
                     source_dictionary[source_header] = int(line[source_header])
-                except ValueError:
+                else:
                     source_dictionary[source_header] = line[source_header]
             output_list.append(source_dictionary)
     return output_list
-
 
 
 def write_file(file_path, header, data):

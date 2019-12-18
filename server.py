@@ -107,6 +107,16 @@ def edit_question(question_id, output_dict='None'):
         return redirect('/')
 
 
+@app.route('/question/<question_id>/delete', methods=['GET', 'POST'])
+def delete_question(question_id):
+    question_dictionary_list = data_manager.get_data('question')
+    for number, dict in enumerate(question_dictionary_list):
+        if dict['id'] == int(question_id):
+            del question_dictionary_list[number]
+    data_manager.write_data('question', question_dictionary_list)
+    return redirect('/')
+
+
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',

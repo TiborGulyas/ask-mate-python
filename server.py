@@ -6,7 +6,7 @@ app = Flask(__name__, static_url_path='/static')
 
 DATA_HEADER_question = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 DATA_HEADER_answer = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
-UPLOAD_folder = '/home/nkornel/codecool/02_Web/01_TW/ask-mate-python/uploaded_image/'
+UPLOAD_folder = './uploaded_image/'
 ALLOWED_extensions = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_folder
 

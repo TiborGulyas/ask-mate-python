@@ -1,6 +1,6 @@
 id,submission_time,view_number,vote_number,title,message,image
-0,1576748459,43,9,How to make lists in Python?,"I am totally new to this, any hints?",uploaded-image/0.gif
-1,1576748494,18,9,Wordpress loading multiple jQuery Versions,"I developed a plugin that uses the jquery booklet plugin (http://builtbywill.com/booklet/#/) this plugin binds a function to $ so I cann call $('.myBook').booklet();
+0,1576748459,45,9,How to make lists in Python?,"I am totally new to this, any hints?",uploaded-image/0.gif
+1,1576748494,19,9,Wordpress loading multiple jQuery Versions,"I developed a plugin that uses the jquery booklet plugin (http://builtbywill.com/booklet/#/) this plugin binds a function to $ so I cann call $('.myBook').booklet();
 
 I could easy managing the loading order with wp_enqueue_script so first I load jquery then I load booklet so everything is fine.
 
@@ -9,21 +9,6 @@ BUT in my theme i also using jquery via webpack so the loading order is now foll
 jquery
 booklet
 app.js (bundled file with webpack, including jquery)",uploaded-image/1.gif
-2,1576747260,1381,57,Drawing canvas with an image picked with Cordova Camera Plugin,"I'm getting an image from device and drawing a canvas with filters using Pixi JS. It works all well using computer to get an image. But when I'm on IOS, it throws errors such as cross origin issue, or that I'm trying to use an unknown format.
+2,1576747260,1383,57,Drawing canvas with an image picked with Cordova Camera Plugin,"I'm getting an image from device and drawing a canvas with filters using Pixi JS. It works all well using computer to get an image. But when I'm on IOS, it throws errors such as cross origin issue, or that I'm trying to use an unknown format.
 
 This is the code I'm using to draw the image (that works on web/desktop but not cordova built ios app)",uploaded-image/2.gif
-4,1576584452,0,0,4ik kerdes,dkjcbfklekdncd,
-6,1576584597,0,0,finaltest,kjsbckjedb45t5kjgbrtk,
-7,1576590531,0,0,agdsfrgrtg,111111111111111111111sddfvdfvdf,
-8,1576590690,0,0,tesztlista,sjdnkjdfbvdkfjvbdkv,
-9,1576590983,0,0,agdsf_testfergfergver,d2222222222222dfedrfe,
-10,1576591064,0,0,10ik kerder,sdvdfnvoidfnvoidfvnfd,
-11,1576591141,0,0,11ik kerdes,"ksdjhbffde
-ef
-ev
-rgrthbthntb",
-12,1576656895,0,0,aaaaa,445645645646654,
-13,1576661918,0,0,75dcsa768dsa,das78ds4a56,
-14,1576662004,0,0,kdaskdsal,dsaádlsaáélas,
-15,1576665719,0,0,asdsad,"asdasdas
-",

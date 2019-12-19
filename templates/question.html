@@ -19,8 +19,10 @@
             <tbody>
                 <tr>
                     {% for header_item in header %}
-                        {% if header_item != 'title' %}
+                        {% if header_item != 'title' and header_item != 'image' %}
                             <td>{{ question_for_display[header_item] }}</td>
+                        {% elif header_item == 'image' %}
+                            <td><a href="../{{ question_for_display[header_item] }}"><img src="../{{ question_for_display[header_item] }}" height="150px" width="150px"></a></td>
                         {% endif %}
                     {% endfor %}
                 </tr>

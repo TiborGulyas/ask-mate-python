@@ -1,9 +1,19 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
 import data_manager
+import os
+from werkzeug.utils import secure_filename
 app = Flask(__name__, static_url_path='/static')
 
 DATA_HEADER_question = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 DATA_HEADER_answer = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
+UPLOAD_folder = '/home/nkornel/codecool/02_Web/01_TW/ask-mate-python/uploaded_image/'
+ALLOWED_extensions = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_folder
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_extensions
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -117,12 +127,20 @@ def edit_question(question_id, output_dict='None'):
                 output_dict = dict
         return render_template('add_new_question.html', output_dict=output_dict)
     elif request.method == 'POST':
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file and allowed_file(file.filename):
+            filename_original = file.filename.split('.')
+            filename = ".".join([question_id, filename_original[-1]])
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         question_dictionary_list = data_manager.get_data('question')
         for number, dict in enumerate(question_dictionary_list):
             if dict['id'] == int(request.form.get('id')):
                 question_dictionary_list[number]['message'] = request.form.get('message')
                 question_dictionary_list[number]['title'] = request.form.get('title')
                 question_dictionary_list[number]['submission_time'] = data_manager.generate_time()
+                question_dictionary_list[number]['image'] = "uploaded-image/" + filename
         data_manager.write_data('question', question_dictionary_list)
         return redirect('/')
 
@@ -132,6 +150,11 @@ def delete_question(question_id):
     question_dictionary_list = data_manager.get_data('question')
     for number, dict in enumerate(question_dictionary_list):
         if dict['id'] == int(question_id):
+            try:
+                question_dictionary_list[number]['image'] = list(question_dictionary_list[number]['image'].split('/'))[1]
+                os.remove(os.path.join(app.config['UPLOAD_FOLDER'], question_dictionary_list[number]['image']))
+            except IndexError:
+                pass
             del question_dictionary_list[number]
     data_manager.write_data('question', question_dictionary_list)
     return redirect('/')
@@ -162,6 +185,12 @@ def answer_vote(answer_id, vote):
             question_id = dict['question_id']
     data_manager.write_data('answer', answer_dictionary_list)
     return redirect(f'/question/{question_id}')
+
+
+@app.route('/uploaded-image/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
 
 
 if __name__ == '__main__':

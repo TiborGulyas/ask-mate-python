@@ -1,12 +1,13 @@
 import csv
 
-def read_file(file_path,header):
+
+def read_file(file_path, header):
     output_list = []
     with open(file_path, newline='') as source_file:
         for line in csv.DictReader(source_file, delimiter=","):
             source_dictionary = {}
             for source_header in header:
-                if source_header == 'id' or source_header == 'submission_time' or source_header == 'view_number' or source_header == 'vote_number' or source_header == 'question_id':
+                if source_header in ['id', 'submission_time', 'view_number', 'vote_number', 'question_id']:
                     source_dictionary[source_header] = int(line[source_header])
                 else:
                     source_dictionary[source_header] = line[source_header]

@@ -27,10 +27,13 @@
             </tbody>
         </table>
         <h1>Add new answer</h1>
-        <form action='/question/{{ question_id }}/new-answer' method='post'>
+        <form action='/question/{{ question_id }}/new-answer' method='post' enctype="multipart/form-data">
         <p>
             <label for="answer">Answer:</label><br>
             <textarea name="message" id="answer" cols="40" rows="6"></textarea>
+        </p>
+         <p>
+            <input type=file name=file>
         </p>
         <p>
             <button type="submit">Submit answer</button>

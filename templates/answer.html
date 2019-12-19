@@ -21,6 +21,8 @@
                     {% for header_item in answer_header %}
                         {% if  header_item == 'id' %}
                             <td><a href="/answer/{{answer_for_display[header_item]}}">{{answer_for_display[header_item]}}</a></td>
+                        {% elif header_item == 'image' %}
+                            <td><a href="../{{answer_for_display[header_item]}}"><img src="../{{answer_for_display[header_item]}}" height="150px" width="150px"></a></td>
                         {% elif header_item != 'question_id' %}
                             <td>{{ answer_for_display[header_item] }}</td>
                         {% endif %}

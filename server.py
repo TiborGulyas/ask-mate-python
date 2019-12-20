@@ -34,29 +34,9 @@ def question_list():
 
 
 @app.route('/question', methods=['GET', 'POST'])
-@app.route('/question/<question_id>', methods=['GET', 'POST'])
-def add_question(question_id='None'):
+def add_question():
     if request.method == 'GET':
-        if question_id.isdigit():
-            question_dictionary_list = data_manager.get_data('question')
-            answer_dictionary_list = data_manager.get_data('answer')
-            answer_for_display = []
-            for number, question in enumerate(question_dictionary_list):
-                if int(question['id']) == int(question_id):
-                    question_for_display = question
-                    question_dictionary_list[number]['view_number'] += 1
-            for answer in answer_dictionary_list:
-                if int(answer['question_id']) == int(question_id):
-                    answer_for_display.append(answer)
-            data_manager.write_data('question', question_dictionary_list)
-            return render_template(
-                'question.html',
-                question_for_display=question_for_display,
-                header=DATA_HEADER_question,
-                answer_for_display=answer_for_display,
-                answer_header=DATA_HEADER_answer)
-        else:
-            return render_template('add_new_question.html')
+        return render_template('add_new_question.html')
 
     elif request.method == "POST":
         new_question = {'title': request.form.get('title'), 'message': request.form.get('message'),
@@ -77,30 +57,39 @@ def add_question(question_id='None'):
         return redirect("/question/" + new_question['id'])
 
 
-@app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
-def edit_question(question_id, output_dict='None'):
-    if request.method == 'GET':
-        data = data_manager.get_data('question')
-        for dict_in_data in data:
-            if dict_in_data['id'] == int(question_id):
-                output_dict = dict_in_data
-        return render_template('add_new_question.html', output_dict=output_dict)
-    elif request.method == 'POST':
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit an empty part without filename
-        if file and util.allowed_file(file.filename):
-            filename_original = file.filename.split('.')
-            filename = ".".join([question_id, filename_original[-1]])
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+@app.route('/question/<question_id>', methods=['GET', 'POST'])
+def view_question(question_id):
+    if request.method == 'GET' and question_id.isdigit():
         question_dictionary_list = data_manager.get_data('question')
-        for number, dict_in_data in enumerate(question_dictionary_list):
-            if dict_in_data['id'] == int(request.form.get('id')):
-                question_dictionary_list[number]['message'] = request.form.get('message')
-                question_dictionary_list[number]['title'] = request.form.get('title')
-                question_dictionary_list[number]['submission_time'] = util.generate_time()
-                question_dictionary_list[number]['image'] = "uploaded-image/" + filename
+        answer_dictionary_list = data_manager.get_data('answer')
+        answer_for_display = []
+        for number, question in enumerate(question_dictionary_list):
+            if int(question['id']) == int(question_id):
+                question_for_display = question
+                question_dictionary_list[number]['view_number'] += 1
+        for answer in answer_dictionary_list:
+            if int(answer['question_id']) == int(question_id):
+                answer_for_display.append(answer)
         data_manager.write_data('question', question_dictionary_list)
+        return render_template(
+            'question.html',
+            question_for_display=question_for_display,
+            header=DATA_HEADER_question,
+            answer_for_display=answer_for_display,
+            answer_header=DATA_HEADER_answer)
+
+
+@app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
+def edit_question(question_id):
+    if request.method == 'GET':
+        return render_template('add_new_question.html', output_dict=util.get_data_of_editable_question(question_id))
+    elif request.method == 'POST':
+        try:
+            filename = util.generate_file_name_for_image(request.files['file'], question_id)
+            request.files['file'].save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        except TypeError:
+            filename = ""
+        util.update_question(question_id, request.form.get('message'), request.form.get('title'), filename)
         return redirect('/')
 
 
@@ -135,10 +124,7 @@ def question_vote(question_id, vote):
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
 def add_answer(question_id):
-    question_dictionary_list = data_manager.get_data('question')
-    for question in question_dictionary_list:
-        if int(question['id']) == int(question_id):
-            question_for_display = question
+    question_for_display = util.get_data_of_editable_question(question_id)
     if request.method == 'GET':
         return render_template(
             'new-answer.html',

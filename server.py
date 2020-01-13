@@ -99,10 +99,10 @@ def delete_question(question_id):
     for number, dict_in_data in enumerate(question_dictionary_list):
         if dict_in_data['id'] == int(question_id):
             try:
-                question_dictionary_list[number]['image'] = list(question_dictionary_list[number]['image'].split('/'))[
-                    1]
+                question_dictionary_list[number]['image'] = \
+                    list(question_dictionary_list[number]['image'].split('/'))[1]
                 os.remove(os.path.join(app.config['UPLOAD_FOLDER'], question_dictionary_list[number]['image']))
-            except IndexError:
+            except IsADirectoryError:
                 pass
             del question_dictionary_list[number]
     data_manager.write_data('question', question_dictionary_list)

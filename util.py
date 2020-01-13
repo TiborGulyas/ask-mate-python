@@ -28,7 +28,8 @@ def sort_by_type(data, data_type, direction):
     return sorted(
         data,
         key=lambda question: question[data_type],
-        reverse=True if direction == 'desc' else False)
+        reverse=True if direction == 'desc' else False
+    )
 
 
 def get_data_of_editable_question(question_id):

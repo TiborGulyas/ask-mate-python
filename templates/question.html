@@ -1,72 +1,103 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset='utf-8'>
-        <title>Display Question</title>
-    </head>
-    <body>
-        <h1>Question Title: {{question_for_display['title']}}</h1>
-        <table>
-            <thead>
-                <tr>
-                    {% for header_item in question_for_display %}
-                        {% if header_item != 'title' %}
-                            <th>{{header_item}}</th>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    {% for header_item in question_for_display %}
-                        {% if header_item != 'title' and header_item != 'image' %}
-                            <td>{{ question_for_display[header_item] }}</td>
-                        {% elif header_item == 'image' %}
-                            <td><a href="../{{ question_for_display[header_item] }}"><img src="../{{ question_for_display[header_item] }}" height="150px" width="150px"></a></td>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-            </tbody>
-        </table>
-        <table>
-            <thead>
-                <tr>
-                    {% for header_item in answer_for_display[0].keys() %}
-                        {% if header_item != 'question_id' %}
-                            <th>{{ header_item }}</th>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for answer in answer_for_display %}
-                    <tr>
-                        {% for header_item in answer %}
-                            {% if  header_item == 'id' %}
-                                <td><a href="/answer/{{answer[header_item]}}">{{answer[header_item]}}</a></td>
-                            {% elif header_item == 'image' %}
-                                <td><a href="../{{ answer[header_item] }}"><img src="../{{ answer[header_item] }}" height="150px" width="150px"></a></td>
-                            {% elif header_item != 'question_id' %}
-                                <td>{{ answer[header_item] }}</td>
-                            {% endif %}
-                        {% endfor %}
-                        <td><a href="/answer/{{ answer['id'] }}/vote_up"><img src="{{url_for('static', filename='img/up.png')}}" height="20px" width="20px"></a></td>
-                        <td><a href="/answer/{{ answer['id'] }}/vote_down"><img src="{{url_for('static', filename='img/down.png')}}" height="20px" width="20px"></a></td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <p>
-            <a href='/question/{{ question_for_display['id']  }}/new-answer'>Add new answer</a>
-        </p>
-        <p>
-            <a href='/question/{{ question_for_display['id'] }}/edit'>Edit displayed question</a>
-        </p>
-        <p>
-            <a href='/'>Go back to question list</a>
-        </p>
-        <p>
-            <a href="/question/{{ question_for_display['id'] }}/delete">Delete displayed question</a>
-        </p>
-    </body>
+<head>
+    <meta charset='utf-8'>
+    <title>Display Question</title>
+</head>
+<body>
+<h1>Question Title: {{ question_for_display['title'] }}</h1>
+<table>
+    <thead>
+    <tr>
+        {% for header_item in question_for_display %}
+            {% if header_item != 'title' %}
+                <th>{{ header_item }}</th>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        {% for header_item in question_for_display %}
+            {% if header_item != 'title' and header_item != 'image' %}
+                <td>{{ question_for_display[header_item] }}</td>
+            {% elif header_item == 'image' %}
+                <td><a href="../{{ question_for_display[header_item] }}"><img
+                        src="../{{ question_for_display[header_item] }}" height="150px" width="150px"></a></td>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    </tbody>
+</table>
+<table>
+    <thead>
+    <tr>
+        {% for header_item in comment_for_display[0] %}
+            {% if header_item == 'message' or  header_item == 'submission_time' %}
+                <th>{{ header_item }}</th>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for comment in comment_for_display %}
+        <tr>
+            {% for header_item in comment %}
+                {% if header_item == 'message' or header_item == 'submission_time' %}
+                    <td>{{ comment[header_item] }}</td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+<table>
+    <thead>
+    <tr>
+        {% for header_item in answer_for_display[0].keys() %}
+            {% if header_item != 'question_id' %}
+                <th>{{ header_item }}</th>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for answer in answer_for_display %}
+        <tr>
+            {% for header_item in answer %}
+                {% if  header_item == 'id' %}
+                    <td><a href="/answer/{{ answer[header_item] }}">{{ answer[header_item] }}</a></td>
+                {% elif header_item == 'image' %}
+                    <td><a href="../{{ answer[header_item] }}"><img src="../{{ answer[header_item] }}" height="150px"
+                                                                    width="150px"></a></td>
+                {% elif header_item != 'question_id' %}
+                    <td>{{ answer[header_item] }}</td>
+                {% endif %}
+            {% endfor %}
+            <td><a href="/answer/{{ answer['id'] }}/vote_up"><img src="{{ url_for('static', filename='img/up.png') }}"
+                                                                  height="20px" width="20px"></a></td>
+            <td><a href="/answer/{{ answer['id'] }}/vote_down"><img
+                    src="{{ url_for('static', filename='img/down.png') }}" height="20px" width="20px"></a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<p>
+    <a href='/question/{{ question_for_display['id'] }}/new-answer'>Add new answer</a>
+</p>
+<p>
+    <a href='/question/{{ question_for_display['id'] }}/new-comment'>Add new comment</a>
+</p>
+
+<p>
+    <a href='/question/{{ question_for_display['id'] }}/edit'>Edit displayed question</a>
+</p>
+<p>
+    <a href='/'>Go back to question list</a>
+</p>
+<p>
+    <a href="/question/{{ question_for_display['id'] }}/delete">Delete displayed question</a>
+</p>
+</body>
 </html>

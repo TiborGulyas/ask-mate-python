@@ -59,11 +59,13 @@ def view_question(question_id):
     if request.method == 'GET' and question_id.isdigit():
         question_for_display = data_manager.get_question_by_id(question_id)
         answer_for_display = data_manager.get_answer_by_question_id(question_id)
+        comment_for_display = data_manager.get_comment_by_id(question_id)
+        print(comment_for_display)
         if len(answer_for_display) == 0:
             answer_for_display = [{'message': 'No answer yet', 'submission_time': '', 'vote_number': '', 'image': ''}]
         return render_template(
             'question.html',
-            question_for_display=question_for_display, answer_for_display=answer_for_display)
+            question_for_display=question_for_display, answer_for_display=answer_for_display, comment_for_display=comment_for_display)
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
@@ -176,6 +178,28 @@ def answer_vote(answer_id, vote):
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
+
+
+@app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
+def add_comment(question_id):
+    question_for_display = data_manager.get_question_by_id(question_id)
+    if request.method == 'GET':
+        return render_template(
+            'new-comment.html',
+            question_for_display=question_for_display)
+
+    elif request.method == 'POST':
+        new_comment = {'id_type': 'question_id',
+                       'question_id': int(question_id),
+                       'message': request.form.get('comment'),
+                       'submission_time': util.generate_time(),
+                       'edited_count': '0'}
+
+        print(new_comment.values())
+        data_manager.insert_new_comment(*new_comment.values())
+        return redirect(f'/question/{question_id}')
+
+
 
 
 if __name__ == '__main__':

@@ -139,3 +139,20 @@ def insert_image(cursor, id, table, image):
     SET image = '{image}'
     WHERE id={id};
     """)
+
+@connection.connection_handler
+def insert_new_comment(cursor, id_type, id, message, submission_time, edited_count):
+    cursor.execute(f"""
+    INSERT INTO comment
+    ({id_type}, message, submission_time, edited_count)
+    VALUES ('{id}', '{message}', '{submission_time}', '{edited_count}')
+    """)
+
+@connection.connection_handler
+def get_comment_by_id(cursor, id):
+    cursor.execute(f"""
+    SELECT * FROM comment
+    WHERE question_id={id};
+    """)
+    comment = cursor.fetchall()
+    return comment

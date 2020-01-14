@@ -73,13 +73,17 @@ def get_answer_by_question_id(cursor, question_id):
 
 
 @connection.connection_handler
-def insert_new_answer(cursor, message, submission_time, vote_number, image, question_id):
+def insert_new_answer(cursor, message, submission_time, vote_number, question_id, image):
     cursor.execute(f"""
     INSERT INTO answer
-    (message, submission_time, vote_number, image, question_id)
-    VALUES ('{message}', '{submission_time}', '{vote_number}', '{image}', '{question_id}')
+    (message, submission_time, vote_number, question_id, image)
+    VALUES ('{message}', '{submission_time}', '{vote_number}', '{question_id}', '{image}');
     """)
-
+    cursor.execute(f"""
+    SELECT id FROM answer
+    WHERE submission_time='{submission_time}';""")
+    id = cursor.fetchall()
+    return str(id[0]['id'])
 
 @connection.connection_handler
 def get_answer_by_id(cursor, id):

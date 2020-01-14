@@ -45,16 +45,10 @@ def add_question():
             file = request.files['file']
             if file and util.allowed_file(file.filename):
                 filename_original = file.filename.split('.')
-                print('filename original megvan')
                 filename = ".".join([new_question['id'], filename_original[-1]])
-                print('filename megvan')
-                print(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                print('file mentés megvan')
                 new_question['image'] = "uploaded-image/" + filename
-                print('sql kapcsolat megvan')
         except FileNotFoundError:
-            print('nem találom')
             pass
         data_manager.insert_image(new_question['id'], 'question', new_question['image'])
         return redirect("/question/" + new_question['id'])
@@ -79,11 +73,15 @@ def edit_question(question_id):
     elif request.method == 'POST':
         filename = 'not found'
         try:
-            filename = util.generate_file_name_for_image(request.files['file'], question_id)
-            request.files['file'].save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file = request.files['file']
+            if file and util.allowed_file(file.filename):
+                filename_original = file.filename.split('.')
+                filename = ".".join([question_id, filename_original[-1]])
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                image = "uploaded-image/" + filename
         except TypeError:
             filename = 'TypeError'
-        data_manager.update_question(question_id, request.form.get('message'), request.form.get('title'), filename, util.generate_time())
+        data_manager.update_question(question_id, request.form.get('message'), request.form.get('title'), image, util.generate_time())
         return redirect('/')
 
 
@@ -112,18 +110,20 @@ def add_answer(question_id):
             question_id=question_id)
     elif request.method == "POST":
         new_answer = {'message': request.form.get('message'),
-                      'submission_time': util.generate_time(), 'vote_number': '0', 'image': '',
-                      'question_id': int(question_id), 'image': 'not found'}
+                      'submission_time': util.generate_time(), 'vote_number': '0', 'question_id': int(question_id),
+                      'image': 'not found'}
+        print(new_answer)
+        new_answer_id = data_manager.insert_new_answer(*new_answer.values())
         try:
             file = request.files['file']
             if file and util.allowed_file(file.filename):
                 filename_original = file.filename.split('.')
-                filename = ".".join(['a', new_answer['id'], filename_original[-1]])
+                filename = ".".join([new_answer_id, filename_original[-1]])
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 new_answer['image'] = "uploaded-image/" + filename
         except FileNotFoundError:
-            new_answer['image'] = ''
-
+            pass
+        print(*new_answer.values())
         data_manager.insert_new_answer(*new_answer.values())
         return redirect(f'/question/{question_id}')
 

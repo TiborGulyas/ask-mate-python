@@ -31,7 +31,7 @@
         <table>
             <thead>
                 <tr>
-                    {% for header_item in answer_header %}
+                    {% for header_item in answer_for_display[0].keys() %}
                         {% if header_item != 'question_id' %}
                             <th>{{ header_item }}</th>
                         {% endif %}
@@ -41,7 +41,7 @@
             <tbody>
                 {% for answer in answer_for_display %}
                     <tr>
-                        {% for header_item in answer_header %}
+                        {% for header_item in answer %}
                             {% if  header_item == 'id' %}
                                 <td><a href="/answer/{{answer[header_item]}}">{{answer[header_item]}}</a></td>
                             {% elif header_item == 'image' %}

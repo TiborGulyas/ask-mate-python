@@ -10,6 +10,16 @@ def get_all_questions(cursor, order={'order_by': 'id', 'order_direction': 'asc'}
     questions = cursor.fetchall()
     return questions
 
+@connection.connection_handler
+def get_first_five_questions(cursor):
+    cursor.execute(f"""
+    SELECT * FROM question
+    ORDER BY submission_time desc 
+    LIMIT 5;
+    """)
+    questions = cursor.fetchall()
+    return questions
+
 
 @connection.connection_handler
 def insert_new_question(cursor, title, message, submission_time, view_number, vote_number, image):
@@ -140,6 +150,7 @@ def insert_image(cursor, id, table, image):
     WHERE id={id};
     """)
 
+
 @connection.connection_handler
 def insert_new_comment(cursor, id_type, id, message, submission_time, edited_count):
     cursor.execute(f"""
@@ -156,3 +167,4 @@ def get_comment_by_id(cursor, id):
     """)
     comment = cursor.fetchall()
     return comment
+

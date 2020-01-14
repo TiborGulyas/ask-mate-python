@@ -14,6 +14,26 @@ print(app.config)
 
 
 @app.route('/', methods=['GET', 'POST'])
+def first_five_question_list():
+    if request.args:
+        args = dict(request.args)
+        question_dictionary = data_manager.get_first_five_questions()
+        return render_template(
+            'list.html',
+            question_dictionary_list=question_dictionary,
+            direction=args['order_direction'],
+            first_five='first five')
+
+    elif request.method == 'GET':
+        question_dictionary = data_manager.get_first_five_questions()
+        return render_template(
+            'list.html',
+            question_dictionary_list=question_dictionary,
+            first_five='first five')
+
+
+
+
 @app.route('/list', methods=['GET', 'POST'])
 def question_list():
     if request.args:
@@ -53,6 +73,10 @@ def add_question():
         data_manager.insert_image(new_question['id'], 'question', new_question['image'])
         return redirect("/question/" + new_question['id'])
 
+@app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
+def new_tag(question_id):
+    if request.method == 'GET' and question_id.isdigit():
+        question_for_display = data_manager.get_question_by_id(question_id)
 
 @app.route('/question/<question_id>', methods=['GET', 'POST'])
 def view_question(question_id):

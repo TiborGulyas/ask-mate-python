@@ -37,7 +37,10 @@
                         <td><a href="/question/{{ row['id'] }}/vote_down"><img src="{{url_for('static', filename='img/down.png')}}" height="20px" width="20px"></a></td>
                 </tr>
                     {% endfor %}
-
+                {% if first_five == 'first five' %}
+                    <a href="/list">To all questions</a>
+                {% else %}
+                {% endif %}
             </tbody>
         </table>
     </body>

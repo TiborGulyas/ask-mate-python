@@ -124,7 +124,7 @@ def add_answer(question_id):
         except FileNotFoundError:
             pass
         print(*new_answer.values())
-        data_manager.insert_new_answer(*new_answer.values())
+        data_manager.update_answer(new_answer_id, new_answer['message'], new_answer['image'], new_answer['submission_time'])
         return redirect(f'/question/{question_id}')
 
 
@@ -132,6 +132,29 @@ def add_answer(question_id):
 def show_answer(answer_id):
     answer_for_display = data_manager.get_answer_by_id(answer_id)
     return render_template('answer.html', answer_for_display=answer_for_display[0])
+
+
+@app.route('/answer/<answer_id>/edit', methods=['GET', 'POST'])
+def edit_answer(answer_id):
+    if request.method == 'GET':
+        answer_for_display = data_manager.get_answer_by_id(answer_id)
+        print(answer_for_display[0])
+        question_for_display = data_manager.get_question_by_id(answer_for_display[0]['question_id'])
+        return render_template('new-answer.html', output_dict=answer_for_display[0], question_for_display=question_for_display)
+    elif request.method == 'POST':
+        image = 'not found'
+        try:
+            file = request.files['file']
+            if file and util.allowed_file(file.filename):
+                filename_original = file.filename.split('.')
+                filename = ".".join(['a', answer_id, filename_original[-1]])
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                image = "uploaded-image/" + filename
+        except TypeError:
+            image = 'TypeError'
+        data_manager.update_answer(answer_id, request.form.get('message'), image, util.generate_time())
+        question_id = data_manager.get_answer_by_id(answer_id)[0]['question_id']
+        return redirect(f'/question/{question_id}')
 
 
 @app.route('/answer/<answer_id>/delete', methods=['GET', 'POST'])

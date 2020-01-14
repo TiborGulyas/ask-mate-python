@@ -85,6 +85,7 @@ def insert_new_answer(cursor, message, submission_time, vote_number, question_id
     id = cursor.fetchall()
     return str(id[0]['id'])
 
+
 @connection.connection_handler
 def get_answer_by_id(cursor, id):
     cursor.execute(f"""
@@ -93,6 +94,15 @@ def get_answer_by_id(cursor, id):
     """)
     answer = cursor.fetchall()
     return answer
+
+
+@connection.connection_handler
+def update_answer(cursor, id, message, filename, time):
+    cursor.execute(f"""
+    UPDATE answer
+    SET message='{message}', image='{filename}', submission_time='{time}'
+    WHERE id={id};
+    """)
 
 
 @connection.connection_handler

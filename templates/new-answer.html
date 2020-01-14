@@ -1,45 +1,66 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset='utf-8'>
-        <title>Display Question</title>
-    </head>
-    <body>
-        <h1>Question Title: {{question_for_display['title']}}</h1>
-        <table>
-            <thead>
-                <tr>
-                    {% for header_item in question_for_display %}
-                        {% if header_item != 'title' %}
-                            <th>{{header_item}}</th>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    {% for header_item in question_for_display %}
-                        {% if header_item== 'image' %}
-                            <td><a href="../../{{question_for_display[header_item]}}"><img src="../../{{question_for_display[header_item]}}" height="150px" width="150px"></a></td>
-                        {% elif header_item != 'title' %}
-                            <td>{{ question_for_display[header_item] }}</td>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-            </tbody>
-        </table>
-        <h1>Add new answer</h1>
-        <form action='/question/{{ question_id }}/new-answer' method='post' enctype="multipart/form-data">
+<head>
+    <meta charset='utf-8'>
+    <title>Display Question</title>
+</head>
+<body>
+<h1>Question Title: {{ question_for_display['title'] }}</h1>
+<table>
+    <thead>
+    <tr>
+        {% for header_item in question_for_display %}
+            {% if header_item != 'title' %}
+                <th>{{ header_item }}</th>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        {% for header_item in question_for_display %}
+            {% if header_item== 'image' %}
+                <td><a href="../../{{ question_for_display[header_item] }}"><img
+                        src="../../{{ question_for_display[header_item] }}" height="150px" width="150px"></a></td>
+            {% elif header_item != 'title' %}
+                <td>{{ question_for_display[header_item] }}</td>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    </tbody>
+</table>
+{% if output_dict %}
+    <h1>Edit answer</h1>
+    <form action="/answer/{{ output_dict['id'] }}/edit" method="post" enctype=multipart/form-data>
+        <p>
+            <label for="id">Answer ID</label><br>
+            <input type="text" name="id" id="id" readonly value='{{ output_dict['id'] }}'>
+        </p>
+        <p>
+            <label for="answer">Answer:</label><br/>
+            <textarea name="message" id="answer" cols="40" rows="6">{{ output_dict['message'] }}</textarea>
+        </p>
+        <p>
+            <input type="file" name="file">
+        </p>
+        <p>
+            <button type="submit">Submit answer</button>
+        </p>
+    </form>
+{% else %}
+    <h1>Add new answer</h1>
+    <form action='/question/{{ question_id }}/new-answer' method='post' enctype="multipart/form-data">
         <p>
             <label for="answer">Answer:</label><br>
             <textarea name="message" id="answer" cols="40" rows="6"></textarea>
         </p>
-         <p>
+        <p>
             <input type=file name=file>
         </p>
         <p>
             <button type="submit">Submit answer</button>
         </p>
     </form>
-    </body>
+{% endif %}
+</body>
 </html>

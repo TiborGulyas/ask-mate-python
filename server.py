@@ -7,8 +7,10 @@ app = Flask(__name__, static_url_path='/static')
 
 DATA_HEADER_question = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 DATA_HEADER_answer = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
-UPLOAD_folder = './'
+UPLOAD_folder = 'uploaded_image'
+print(app.config)
 app.config['UPLOAD_FOLDER'] = UPLOAD_folder
+print(app.config)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -47,7 +49,7 @@ def add_question():
                 filename = ".".join([new_question['id'], filename_original[-1]])
                 print('filename megvan')
                 print(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                file.save(filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 print('file mentés megvan')
                 new_question['image'] = "uploaded-image/" + filename
                 print('sql kapcsolat megvan')

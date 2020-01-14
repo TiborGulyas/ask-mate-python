@@ -1,3 +1,4 @@
+import datetime
 from time import time
 import data_manager
 
@@ -5,7 +6,7 @@ ALLOWED_extensions = {'png', 'jpg', 'jpeg', 'gif'}
 
 
 def generate_time():
-    return str(int(time()))
+    return str(datetime.datetime.today())
 
 
 def generate_id(data_type):

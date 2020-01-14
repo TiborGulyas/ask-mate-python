@@ -9,7 +9,7 @@
         <table>
             <thead>
                 <tr>
-                    {% for header_item in header %}
+                    {% for header_item in question_for_display %}
                         {% if header_item != 'title' %}
                             <th>{{header_item}}</th>
                         {% endif %}
@@ -18,7 +18,7 @@
             </thead>
             <tbody>
                 <tr>
-                    {% for header_item in header %}
+                    {% for header_item in question_for_display %}
                         {% if header_item != 'title' and header_item != 'image' %}
                             <td>{{ question_for_display[header_item] }}</td>
                         {% elif header_item == 'image' %}

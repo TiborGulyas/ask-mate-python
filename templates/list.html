@@ -10,7 +10,7 @@
         <table border="1">
             <thead>
                 <tr>
-                    {% for header_item in header %}
+                    {% for header_item in question_dictionary_list[0].keys() %}
                         {% if direction == 'desc' %}
                         <th><a href="/list?order_by={{ header_item }}&order_direction=asc">{{header_item}}</a></th>
                         {% else %}
@@ -21,20 +21,20 @@
             </thead>
             <tbody>
                 <tr>
-                    {% for question_item in question_dictionary_list %}
-                        {% for header_item in header %}
+                    {% for row in question_dictionary_list %}
+                        {% for header_item in row.keys() %}
                             {% if  header_item == 'id' %}
-                                <td align="center"><a href="/question/{{question_item[header_item]}}">{{question_item[header_item]}}</a></td>
+                                <td align="center"><a href="/question/{{row[header_item]}}">{{row[header_item]}}</a></td>
                             {% elif header_item == 'image' %}
-                                <td><a href="{{ question_item[header_item] }}"><img src="{{ question_item[header_item] }}" height="150px" width="150px"></a></td>
+                                <td><a href="{{ row[header_item] }}"><img src="{{ row[header_item] }}" height="150px" width="150px"></a></td>
                             {% elif header_item== 'message' %}
-                                <td style="text-align: justify">{{question_item[header_item]}}</td>
+                                <td style="text-align: justify">{{row[header_item]}}</td>
                             {% else %}
-                                <td align="center">{{question_item[header_item]}}</td>
+                                <td align="center">{{row[header_item]}}</td>
                             {% endif %}
                         {% endfor %}
-                        <td><a href="/question/{{ question_item['id'] }}/vote_up"><img src="{{url_for('static', filename='img/up.png')}}" height="20px" width="20px"></a></td>
-                        <td><a href="/question/{{ question_item['id'] }}/vote_down"><img src="{{url_for('static', filename='img/down.png')}}" height="20px" width="20px"></a></td>
+                        <td><a href="/question/{{ row['id'] }}/vote_up"><img src="{{url_for('static', filename='img/up.png')}}" height="20px" width="20px"></a></td>
+                        <td><a href="/question/{{ row['id'] }}/vote_down"><img src="{{url_for('static', filename='img/down.png')}}" height="20px" width="20px"></a></td>
                 </tr>
                     {% endfor %}
 

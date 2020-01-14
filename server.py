@@ -16,32 +16,28 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_folder
 def question_list():
     if request.args:
         args = dict(request.args)
-        sorted_question_dictionary_list = \
-            util.sort_by_type(data_manager.get_data('question'), args['order_by'], args['order_direction'])
+        question_dictionary = data_manager.get_all_questions(args)
         return render_template(
             'list.html',
-            question_dictionary_list=sorted_question_dictionary_list,
-            header=DATA_HEADER_question,
+            question_dictionary_list=question_dictionary,
             direction=args['order_direction'])
 
     elif request.method == 'GET':
-        sorted_question_dictionary_list = \
-            util.sort_by_type(data_manager.get_data('question'), 'id', 'asc')
+        question_dictionary = data_manager.get_all_questions()
         return render_template(
             'list.html',
-            question_dictionary_list=sorted_question_dictionary_list,
-            header=DATA_HEADER_question)
+            question_dictionary_list=question_dictionary)
 
 
 @app.route('/question', methods=['GET', 'POST'])
 def add_question():
     if request.method == 'GET':
-        return render_template('add_new_question.html')
+        return render_template('new-question.html')
 
     elif request.method == "POST":
         new_question = {'title': request.form.get('title'), 'message': request.form.get('message'),
-                        'id': util.generate_id('question'), 'submission_time': util.generate_time(),
-                        'view_number': '0', 'vote_number': '0'}
+                        'submission_time': util.generate_time(), 'view_number': '0', 'vote_number': '0',
+                        'image': 'not found'}
         try:
             file = request.files['file']
             if file and util.allowed_file(file.filename):
@@ -50,33 +46,19 @@ def add_question():
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 new_question['image'] = "uploaded-image/" + filename
         except FileNotFoundError:
-            new_question['image'] = ''
-        question_dictionary_list = data_manager.get_data('question')
-        question_dictionary_list.append(new_question)
-        data_manager.write_data('question', question_dictionary_list)
+            pass
+        new_question['id'] = data_manager.insert_new_question(*new_question.values())
+
         return redirect("/question/" + new_question['id'])
 
 
 @app.route('/question/<question_id>', methods=['GET', 'POST'])
 def view_question(question_id):
     if request.method == 'GET' and question_id.isdigit():
-        question_dictionary_list = data_manager.get_data('question')
-        answer_dictionary_list = data_manager.get_data('answer')
-        answer_for_display = []
-        for number, question in enumerate(question_dictionary_list):
-            if int(question['id']) == int(question_id):
-                question_for_display = question
-                question_dictionary_list[number]['view_number'] += 1
-        for answer in answer_dictionary_list:
-            if int(answer['question_id']) == int(question_id):
-                answer_for_display.append(answer)
-        data_manager.write_data('question', question_dictionary_list)
+        question_for_display = data_manager.get_question_by_id(question_id)
         return render_template(
             'question.html',
-            question_for_display=question_for_display,
-            header=DATA_HEADER_question,
-            answer_for_display=answer_for_display,
-            answer_header=DATA_HEADER_answer)
+            question_for_display=question_for_display)
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])

@@ -1,23 +1,35 @@
 import connection
-import server
 
 
-def get_data(path):
-    if path == 'question':
-        file_path = 'sample_data/question.csv'
-        header = server.DATA_HEADER_question
-    elif path == 'answer':
-        file_path = 'sample_data/answer.csv'
-        header = server.DATA_HEADER_answer
-    output_list = connection.read_file(file_path, header)
-    return output_list
+@connection.connection_handler
+def get_all_questions(cursor, order={'order_by': 'id', 'order_direction': 'asc'}):
+    cursor.execute(f"""
+    SELECT * FROM question
+    ORDER BY {order['order_by']} {order['order_direction'].upper()};
+    """)
+    questions = cursor.fetchall()
+    return questions
 
 
-def write_data(path, data):
-    if path == 'question':
-        file_path = 'sample_data/question.csv'
-        header = server.DATA_HEADER_question
-    elif path == 'answer':
-        file_path = 'sample_data/answer.csv'
-        header = server.DATA_HEADER_answer
-    connection.write_file(file_path, header, data)
+@connection.connection_handler
+def insert_new_question(cursor, title, message, submission_time, view_number, vote_number, image):
+    cursor.execute(f"""
+    INSERT INTO question
+    (title, message, submission_time, view_number, vote_number, image)
+    VALUES ('{ title }', '{ message }', '{submission_time}', '{view_number}', '{vote_number}', '{image}')
+    """)
+    cursor.execute(f"""
+    SELECT id FROM question
+    WHERE submission_time='{submission_time}';""")
+    id = cursor.fetchall()
+    print(id[0]['id'])
+    return str(id[0]['id'])
+
+
+@connection.connection_handler
+def get_question_by_id(cursor, id):
+    cursor.execute(f"""
+    SELECT * FROM question
+    WHERE id={id}""")
+    question = cursor.fetchall()
+    return question[0]

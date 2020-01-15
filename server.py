@@ -15,12 +15,17 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_folder
 def first_five_question_list():
     if request.args:
         args = dict(request.args)
-        question_dictionary = data_manager.get_first_five_questions()
-        return render_template(
-            'list.html',
-            question_dictionary_list=question_dictionary,
-            direction=args['order_direction'],
-            first_five='first five')
+        if 'order_by' in args.keys():
+            question_dictionary = data_manager.get_first_five_questions()
+            return render_template(
+                'list.html',
+                question_dictionary_list=question_dictionary,
+                direction=args['order_direction'],
+                first_five='first five')
+
+    elif request.method == 'POST':
+        detail = request.form.get('search')
+        return redirect(f"/search?q={detail}")
 
     elif request.method == 'GET':
         question_dictionary = data_manager.get_first_five_questions()
@@ -30,17 +35,21 @@ def first_five_question_list():
             first_five='first five')
 
 
-
-
 @app.route('/list', methods=['GET', 'POST'])
 def question_list():
     if request.args:
         args = dict(request.args)
-        question_dictionary = data_manager.get_all_questions(args)
-        return render_template(
-            'list.html',
-            question_dictionary_list=question_dictionary,
-            direction=args['order_direction'])
+        if 'order_by' in args.keys():
+            print(args)
+            question_dictionary = data_manager.get_all_questions(args)
+            return render_template(
+                'list.html',
+                question_dictionary_list=question_dictionary,
+                direction=args['order_direction'])
+
+    elif request.method == 'POST':
+        detail = request.form.get('search')
+        return redirect(f"/search?q={detail}")
 
     elif request.method == 'GET':
         question_dictionary = data_manager.get_all_questions()
@@ -71,6 +80,7 @@ def add_question():
         data_manager.insert_image(new_question['id'], 'question', new_question['image'])
         return redirect("/question/" + new_question['id'])
 
+
 @app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
 def new_tag(question_id):
     if request.method == 'GET' and question_id.isdigit():
@@ -94,6 +104,7 @@ def new_tag(question_id):
             return redirect('/list')
 
 
+
 @app.route('/question/<question_id>', methods=['GET', 'POST'])
 def view_question(question_id):
     if request.method == 'GET' and question_id.isdigit():
@@ -108,25 +119,12 @@ def view_question(question_id):
             'question.html', question_id=question_id,
             question_for_display=question_for_display, answer_for_display=answer_for_display, tags_for_display=tags_for_display, number_of_tags=number_of_tags)
 
+
 @app.route('/question/<question_id>/tag/<tag_id>/delete', methods=['GET', 'POST'])
 def delete_tag(question_id, tag_id):
     if request.method == 'GET':
         data_manager.delete_tag(question_id,tag_id)
         return redirect(f'/question/{question_id}')
-
-        question_comment_for_display = data_manager.get_comment_by_id(question_id)
-        answer_comment_for_display = data_manager.get_all_comments()
-        answer_with_comment = []
-        for answer in answer_for_display:
-            for comment in answer_comment_for_display:
-                if answer['id'] == comment['answer_id']:
-                    answer_with_comment.append(answer['id'])
-        if len(answer_for_display) == 0:
-            answer_for_display = [{'message': 'No answer yet', 'submission_time': '', 'vote_number': '', 'image': ''}]
-        return render_template(
-            'question.html',
-            question_for_display=question_for_display, answer_for_display=answer_for_display, question_comment_for_display=question_comment_for_display, answer_comment_for_display=answer_comment_for_display, answer_with_comment=answer_with_comment)
-
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
@@ -144,7 +142,8 @@ def edit_question(question_id):
                 image = "uploaded-image/" + filename
         except TypeError:
             filename = 'TypeError'
-        data_manager.update_question(question_id, request.form.get('message'), request.form.get('title'), image, util.generate_time())
+        data_manager.update_question(question_id, request.form.get('message'), request.form.get('title'), image,
+                                     util.generate_time())
         return redirect('/')
 
 
@@ -185,7 +184,8 @@ def add_answer(question_id):
                 new_answer['image'] = "uploaded-image/" + filename
         except FileNotFoundError:
             pass
-        data_manager.update_answer(new_answer_id, new_answer['message'], new_answer['image'], new_answer['submission_time'])
+        data_manager.update_answer(new_answer_id, new_answer['message'], new_answer['image'],
+                                   new_answer['submission_time'])
         return redirect(f'/question/{question_id}')
 
 
@@ -201,7 +201,8 @@ def edit_answer(answer_id):
         answer_for_display = data_manager.get_answer_by_id(answer_id)
         print(answer_for_display[0])
         question_for_display = data_manager.get_question_by_id(answer_for_display[0]['question_id'])
-        return render_template('new-answer.html', output_dict=answer_for_display[0], question_for_display=question_for_display)
+        return render_template('new-answer.html', output_dict=answer_for_display[0],
+                               question_for_display=question_for_display)
     elif request.method == 'POST':
         image = 'not found'
         try:
@@ -276,6 +277,30 @@ def add_answer_comment(answer_id):
         print(new_comment.values())
         data_manager.insert_new_comment(*new_comment.values())
         return redirect(f'/question/{answer_for_display[0]["question_id"]}')
+
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    if request.method == 'POST':
+        detail = request.form.get('search')
+        return redirect(f"/search?q={detail}")
+    detail = dict(request.args)['q']
+    questions = data_manager.get_question_by_search(detail)
+    question_ids = data_manager.get_question_ids_by_search_from_answers(detail)
+    for question in question_ids:
+        found_question = data_manager.get_question_by_id(question['question_id'])
+        if found_question not in questions:
+            questions.append(found_question)
+    print(questions)
+    questions = fancy_search(questions, detail)
+    return render_template(
+        'list.html', question_dictionary_list=questions)
+
+
+def fancy_search(questions, detail):
+    for row in questions:
+        row['message'] = str(row['message']).replace(f"{detail}", f"<b>{detail}</b>")
+    return questions
 
 
 if __name__ == '__main__':

@@ -7,6 +7,11 @@
     <body>
         <h1>Questions</h1>
         <a href="/question">Add new question</a>
+
+
+
+        {% include 'search.html' %}
+
         <table border="1">
             <thead>
                 <tr>
@@ -28,7 +33,7 @@
                             {% elif header_item == 'image' %}
                                 <td><a href="{{ row[header_item] }}"><img src="{{ row[header_item] }}" height="150px" width="150px"></a></td>
                             {% elif header_item== 'message' %}
-                                <td style="text-align: justify">{{row[header_item]}}</td>
+                                <td style="text-align: justify"><p>{{row[header_item]}}</p></td>
                             {% else %}
                                 <td align="center">{{row[header_item]}}</td>
                             {% endif %}
@@ -38,7 +43,7 @@
                 </tr>
                     {% endfor %}
                 {% if first_five == 'first five' %}
-                    <a href="/list">To all questions</a>
+                    <p><a href="/list">To all questions</a></p>
                 {% else %}
                 {% endif %}
             </tbody>

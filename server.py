@@ -104,7 +104,6 @@ def new_tag(question_id):
             return redirect('/list')
 
 
-
 @app.route('/question/<question_id>', methods=['GET', 'POST'])
 def view_question(question_id):
     if request.method == 'GET' and question_id.isdigit():
@@ -286,20 +285,20 @@ def search():
         return redirect(f"/search?q={detail}")
     detail = dict(request.args)['q']
     questions = data_manager.get_question_by_search(detail)
-    question_ids = data_manager.get_question_ids_by_search_from_answers(detail)
-    for question in question_ids:
-        found_question = data_manager.get_question_by_id(question['question_id'])
+    answers = data_manager.get_question_ids_by_search_from_answers(detail)
+    for answer in answers:
+        found_question = data_manager.get_question_by_id(answer['question_id'])
         if found_question not in questions:
             questions.append(found_question)
     print(questions)
     questions = fancy_search(questions, detail)
     return render_template(
-        'list.html', question_dictionary_list=questions)
+        'list.html', question_dictionary_list=questions, answer_dictionary_list=answers)
 
 
 def fancy_search(questions, detail):
     for row in questions:
-        row['message'] = str(row['message']).replace(f"{detail}", f"<b>{detail}</b>")
+        row['message'] = str(row['message']).replace(f"{detail}", f'<b>{detail}</b>')
     return questions
 
 

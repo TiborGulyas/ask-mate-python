@@ -232,7 +232,7 @@ def get_question_by_search(cursor, detail):
 @connection.connection_handler
 def get_question_ids_by_search_from_answers(cursor, detail):
     cursor.execute(f"""
-    SELECT question_id FROM answer
+    SELECT * FROM answer
     WHERE message LIKE '%{detail}%';
     """)
     found_question_ids = cursor.fetchall()

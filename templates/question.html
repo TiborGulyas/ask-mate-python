@@ -99,31 +99,35 @@
                 </tr>
             </tbody>
         </table>
-        <h4>Comments to answer:</h4>
-        {% for answer_comment in answer_comment_for_display %}
-            {% if answer_comment['answer_id'] == answer['id'] %}
-                <table>
-                    <thead>
-                    <tr>
-                        {% for header_item in answer_comment %}
-                            {% if header_item == 'message' or  header_item == 'submission_time' %}
-                                <th>{{ header_item }}</th>
-                            {% endif %}
-                        {% endfor %}
-                    </tr>
-                    </thead>
-                    <tbody>
+        {% if answer['id'] in answer_with_comment %}
+            <h4>Comments to answer:</h4>
+            {% for answer_comment in answer_comment_for_display %}
+                {% if answer_comment['answer_id'] == answer['id'] %}
+                    <table>
+                        <thead>
                         <tr>
                             {% for header_item in answer_comment %}
-                                {% if header_item == 'message' or header_item == 'submission_time' %}
-                                    <td>{{ answer_comment[header_item] }}</td>
+                                {% if header_item == 'message' or  header_item == 'submission_time' %}
+                                    <th>{{ header_item }}</th>
                                 {% endif %}
                             {% endfor %}
                         </tr>
-                    </tbody>
-                </table>
-            {% endif %}
-        {% endfor %}
+                        </thead>
+                        <tbody>
+                            <tr>
+                                {% for header_item in answer_comment %}
+                                    {% if header_item == 'message' or header_item == 'submission_time' %}
+                                        <td>{{ answer_comment[header_item] }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                        </tbody>
+                    </table>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <h4>No answer comments yet</h4>
+        {% endif %}
     {% endfor %}
 <p>
     <a href='/question/{{ question_for_display['id'] }}/new-answer'>Add new answer</a>

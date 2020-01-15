@@ -83,11 +83,16 @@ def view_question(question_id):
         answer_for_display = data_manager.get_answer_by_question_id(question_id)
         question_comment_for_display = data_manager.get_comment_by_id(question_id)
         answer_comment_for_display = data_manager.get_all_comments()
+        answer_with_comment = []
+        for answer in answer_for_display:
+            for comment in answer_comment_for_display:
+                if answer['id'] == comment['answer_id']:
+                    answer_with_comment.append(answer['id'])
         if len(answer_for_display) == 0:
             answer_for_display = [{'message': 'No answer yet', 'submission_time': '', 'vote_number': '', 'image': ''}]
         return render_template(
             'question.html',
-            question_for_display=question_for_display, answer_for_display=answer_for_display, question_comment_for_display=question_comment_for_display, answer_comment_for_display=answer_comment_for_display)
+            question_for_display=question_for_display, answer_for_display=answer_for_display, question_comment_for_display=question_comment_for_display, answer_comment_for_display=answer_comment_for_display, answer_with_comment=answer_with_comment)
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])

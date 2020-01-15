@@ -176,3 +176,23 @@ def get_all_comments(cursor):
     """)
     comment = cursor.fetchall()
     return comment
+
+
+@connection.connection_handler
+def get_question_by_search(cursor, detail):
+    cursor.execute(f"""
+    SELECT * FROM question
+    WHERE title LIKE '%{detail}%' or message LIKE '%{detail}%';
+    """)
+    found_questions = cursor.fetchall()
+    return found_questions
+
+
+@connection.connection_handler
+def get_question_ids_by_search_from_answers(cursor, detail):
+    cursor.execute(f"""
+    SELECT question_id FROM answer
+    WHERE message LIKE '%{detail}%';
+    """)
+    found_question_ids = cursor.fetchall()
+    return found_question_ids

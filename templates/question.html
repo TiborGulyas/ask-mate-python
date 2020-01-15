@@ -59,6 +59,7 @@
                             <td>{{ comment[header_item] }}</td>
                         {% endif %}
                     {% endfor %}
+                    <td><a href="/comment/{{ comment['id'] }}/edit">Edit comment</a></td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -120,6 +121,7 @@
                                         <td>{{ answer_comment[header_item] }}</td>
                                     {% endif %}
                                 {% endfor %}
+                                <td><a href="/comment/{{ answer_comment['id'] }}/edit">Edit comment</a></td>
                             </tr>
                         </tbody>
                     </table>

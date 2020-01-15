@@ -77,17 +77,43 @@ def add_question():
 def new_tag(question_id):
     if request.method == 'GET' and question_id.isdigit():
         question_for_display = data_manager.get_question_by_id(question_id)
+        tags_already_have = data_manager.get_tags_by_id(question_id)
+        all_tags = data_manager.get_all_tags()
+        tags_for_choose = [tag for tag in tags_already_have + all_tags if tag not in tags_already_have or tag not in all_tags]
+        number_of_tags = len(tags_for_choose)
+        return render_template('add-tag.html', question_id=question_id,
+            question_for_display=question_for_display, tags_for_choose=tags_for_choose, number_of_tags=number_of_tags)
+
+    elif request.method == 'POST':
+        if request.form.get('submit_new_tag') != "":
+            new_tag = {'new_tag': request.form.get('submit_new_tag')}
+            data_manager.save_new_tag(new_tag['new_tag'])
+            data_manager.save_tag_for_question(new_tag['new_tag'], question_id)
+            return redirect('/list')
+        elif request.form.get('submit_new_tag') == "":
+            new_tag = {'new_tag': request.form.get('submit_existing_tag')}
+            data_manager.save_tag_for_question(new_tag['new_tag'], question_id)
+            return redirect('/list')
+
 
 @app.route('/question/<question_id>', methods=['GET', 'POST'])
 def view_question(question_id):
     if request.method == 'GET' and question_id.isdigit():
         question_for_display = data_manager.get_question_by_id(question_id)
         answer_for_display = data_manager.get_answer_by_question_id(question_id)
+        tags_for_display = data_manager.get_tags_by_id(question_id)
+        number_of_tags = len(tags_for_display)
         if len(answer_for_display) == 0:
             answer_for_display = [{'message': 'No answer yet', 'submission_time': '', 'vote_number': '', 'image': ''}]
         return render_template(
-            'question.html',
-            question_for_display=question_for_display, answer_for_display=answer_for_display)
+            'question.html', question_id=question_id,
+            question_for_display=question_for_display, answer_for_display=answer_for_display, tags_for_display=tags_for_display, number_of_tags=number_of_tags)
+
+@app.route('/question/<question_id>/tag/<tag_id>/delete', methods=['GET', 'POST'])
+def delete_tag(question_id, tag_id):
+    if request.method == 'GET':
+        data_manager.delete_tag(question_id,tag_id)
+        return redirect(f'/question/{question_id}')
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
@@ -136,7 +162,6 @@ def add_answer(question_id):
         new_answer = {'message': request.form.get('message'),
                       'submission_time': util.generate_time(), 'vote_number': '0', 'question_id': int(question_id),
                       'image': 'not found'}
-        print(new_answer)
         new_answer_id = data_manager.insert_new_answer(*new_answer.values())
         try:
             file = request.files['file']

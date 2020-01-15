@@ -56,6 +56,18 @@
                 {% endfor %}
             </tbody>
         </table>
+        <ul>
+            {% if number_of_tags  %}
+                <h2>Tags:</h2>
+                    {% for tag in tags_for_display %}
+                        <li>{{ tag['name'] }} </li><a href="/question/{{ question_id }}/tag/{{ tag['id'] }}/delete">
+                        <img src="{{url_for('static', filename='img/x.png')}}" height="20px" width="20px"></a>
+                    {% endfor %}
+            {%  endif %}
+        </ul>
+         <p>
+            <a href='/question/{{ question_for_display['id']  }}/new-tag'>Add new tag</a>
+        </p>
         <p>
             <a href='/question/{{ question_for_display['id']  }}/new-answer'>Add new answer</a>
         </p>

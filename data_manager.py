@@ -149,3 +149,43 @@ def insert_image(cursor, id, table, image):
     SET image = '{image}'
     WHERE id={id};
     """)
+
+@connection.connection_handler
+def get_tags_by_id(cursor, id):
+    cursor.execute(f"""
+    SELECT name, id FROM tag
+    INNER JOIN question_tag ON id = tag_id
+    WHERE question_id = {id};
+    """)
+    tags = cursor.fetchall()
+    return tags
+
+@connection.connection_handler
+def get_all_tags(cursor):
+    cursor.execute("""
+    SELECT name FROM tag
+    """)
+    tags = cursor.fetchall()
+    return tags
+
+@connection.connection_handler
+def save_new_tag(cursor, new_tag):
+    cursor.execute(f"""
+    INSERT INTO tag (name)
+    VALUES ('{new_tag}');
+    """)
+
+@connection.connection_handler
+def save_tag_for_question(cursor, tag, question_id):
+    cursor.execute(f"""
+        INSERT INTO question_tag (question_id,tag_id)
+        VALUES ('{question_id}', (SELECT id FROM tag WHERE name = '{tag}'));
+        
+    """)
+
+@connection.connection_handler
+def delete_tag(cursor, question_id,tag_id):
+    cursor.execute(f"""
+    DELETE FROM question_tag 
+    WHERE tag_id={tag_id} AND question_id={question_id};
+    """)

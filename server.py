@@ -8,9 +8,7 @@ app = Flask(__name__, static_url_path='/static')
 DATA_HEADER_question = ['id', 'submission_time', 'view_number', 'vote_number', 'title', 'message', 'image']
 DATA_HEADER_answer = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
 UPLOAD_folder = 'uploaded_image'
-print(app.config)
 app.config['UPLOAD_FOLDER'] = UPLOAD_folder
-print(app.config)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -83,13 +81,13 @@ def view_question(question_id):
     if request.method == 'GET' and question_id.isdigit():
         question_for_display = data_manager.get_question_by_id(question_id)
         answer_for_display = data_manager.get_answer_by_question_id(question_id)
-        comment_for_display = data_manager.get_comment_by_id(question_id)
-        print(comment_for_display)
+        question_comment_for_display = data_manager.get_comment_by_id(question_id)
+        answer_comment_for_display = data_manager.get_all_comments()
         if len(answer_for_display) == 0:
             answer_for_display = [{'message': 'No answer yet', 'submission_time': '', 'vote_number': '', 'image': ''}]
         return render_template(
             'question.html',
-            question_for_display=question_for_display, answer_for_display=answer_for_display, comment_for_display=comment_for_display)
+            question_for_display=question_for_display, answer_for_display=answer_for_display, question_comment_for_display=question_comment_for_display, answer_comment_for_display=answer_comment_for_display)
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
@@ -138,7 +136,6 @@ def add_answer(question_id):
         new_answer = {'message': request.form.get('message'),
                       'submission_time': util.generate_time(), 'vote_number': '0', 'question_id': int(question_id),
                       'image': 'not found'}
-        print(new_answer)
         new_answer_id = data_manager.insert_new_answer(*new_answer.values())
         try:
             file = request.files['file']
@@ -149,7 +146,6 @@ def add_answer(question_id):
                 new_answer['image'] = "uploaded-image/" + filename
         except FileNotFoundError:
             pass
-        print(*new_answer.values())
         data_manager.update_answer(new_answer_id, new_answer['message'], new_answer['image'], new_answer['submission_time'])
         return redirect(f'/question/{question_id}')
 
@@ -205,7 +201,7 @@ def uploaded_file(filename):
 
 
 @app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
-def add_comment(question_id):
+def add_question_comment(question_id):
     question_for_display = data_manager.get_question_by_id(question_id)
     if request.method == 'GET':
         return render_template(
@@ -219,11 +215,28 @@ def add_comment(question_id):
                        'submission_time': util.generate_time(),
                        'edited_count': '0'}
 
-        print(new_comment.values())
         data_manager.insert_new_comment(*new_comment.values())
         return redirect(f'/question/{question_id}')
 
 
+@app.route('/answer/<answer_id>/new-comment', methods=['GET', 'POST'])
+def add_answer_comment(answer_id):
+    answer_for_display = data_manager.get_answer_by_id(answer_id)
+    if request.method == 'GET':
+        return render_template(
+            'new-comment.html',
+            answer_for_display=answer_for_display[0])
+
+    elif request.method == 'POST':
+        new_comment = {'id_type': 'answer_id',
+                       'answer_id': int(answer_id),
+                       'message': request.form.get('comment'),
+                       'submission_time': util.generate_time(),
+                       'edited_count': '0'}
+
+        print(new_comment.values())
+        data_manager.insert_new_comment(*new_comment.values())
+        return redirect(f'/question/{answer_for_display[0]["question_id"]}')
 
 
 if __name__ == '__main__':

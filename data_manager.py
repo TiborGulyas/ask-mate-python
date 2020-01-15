@@ -168,3 +168,11 @@ def get_comment_by_id(cursor, id):
     comment = cursor.fetchall()
     return comment
 
+
+@connection.connection_handler
+def get_all_comments(cursor):
+    cursor.execute(f"""
+    SELECT * FROM comment;
+    """)
+    comment = cursor.fetchall()
+    return comment

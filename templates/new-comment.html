@@ -1,42 +1,85 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset='utf-8'>
-        <title>Display Question</title>
-    </head>
-    <body>
-        <h1>Question Title: {{question_for_display['title']}}</h1>
-        <table>
-            <thead>
-                <tr>
-                    {% for header_item in question_for_display %}
-                        {% if header_item != 'title' %}
-                            <th>{{header_item}}</th>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    {% for header_item in question_for_display %}
-                        {% if header_item== 'image' %}
-                            <td><a href="../../{{question_for_display[header_item]}}"><img src="../../{{question_for_display[header_item]}}" height="150px" width="150px"></a></td>
-                        {% elif header_item != 'title' %}
-                            <td>{{ question_for_display[header_item] }}</td>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-            </tbody>
-        </table>
-        <h1>Add new comment</h1>
-        <form action='/question/{{ question_for_display['id'] }}/new-comment' method='post' enctype="multipart/form-data">
-        <p>
-            <label for="comment">Comment:</label><br>
-            <textarea name="comment" id="comment" cols="40" rows="6"></textarea>
-        </p>
-        <p>
-            <button type="submit">Submit comment</button>
-        </p>
-    </form>
-    </body>
+    {% if question_for_display %}
+        <head>
+            <meta charset='utf-8'>
+            <title>Display Question</title>
+        </head>
+        <body>
+            <h1>Question Title: {{question_for_display['title']}}</h1>
+            <table>
+                <thead>
+                    <tr>
+                        {% for header_item in question_for_display %}
+                            {% if header_item != 'title' %}
+                                <th>{{header_item}}</th>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for header_item in question_for_display %}
+                            {% if header_item== 'image' %}
+                                <td><a href="../../{{question_for_display[header_item]}}"><img src="../../{{question_for_display[header_item]}}" height="150px" width="150px"></a></td>
+                            {% elif header_item != 'title' %}
+                                <td>{{ question_for_display[header_item] }}</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+            <h1>Add new comment</h1>
+            <form action='/question/{{ question_for_display['id'] }}/new-comment' method='post' enctype="multipart/form-data">
+            <p>
+                <label for="comment">Comment:</label><br>
+                <textarea name="comment" id="comment" cols="40" rows="6"></textarea>
+            </p>
+            <p>
+                <button type="submit">Submit comment</button>
+            </p>
+        </form>
+        </body>
+    {% endif %}
+    {% if answer_for_display %}
+        <head>
+            <meta charset='utf-8'>
+            <title>Display Answer</title>
+        </head>
+        <body>
+            <h1>Answer Title: {{answer_for_display['title']}}</h1>
+            <table>
+                <thead>
+                    <tr>
+                        {% for header_item in answer_for_display %}
+                            {% if header_item != 'title' %}
+                                <th>{{header_item}}</th>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for header_item in answer_for_display %}
+                            {% if header_item== 'image' %}
+                                <td><a href="../../{{answer_for_display[header_item]}}"><img src="../../{{answer_for_display[header_item]}}" height="150px" width="150px"></a></td>
+                            {% elif header_item != 'title' %}
+                                <td>{{ answer_for_display[header_item] }}</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+            <h1>Add new comment</h1>
+            <form action='/answer/{{ answer_for_display['id'] }}/new-comment' method='post' enctype="multipart/form-data">
+            <p>
+                <label for="comment">Comment:</label><br>
+                <textarea name="comment" id="comment" cols="40" rows="6"></textarea>
+            </p>
+            <p>
+                <button type="submit">Submit comment</button>
+            </p>
+            </form>
+        </body>
+    {% endif %}
 </html>

@@ -96,7 +96,9 @@
                                                                           height="20px" width="20px"></a></td>
                     <td><a href="/answer/{{ answer['id'] }}/vote_down"><img
                             src="{{ url_for('static', filename='img/down.png') }}" height="20px" width="20px"></a></td>
-                    <td><a href='/answer/{{ answer['id'] }}/new-comment'>Add new comment to answer</a></td>
+                    {% if answer['submission_time'] != "" %}
+                        <td><a href='/answer/{{ answer['id'] }}/new-comment'>Add new comment to answer</a></td>
+                    {% endif %}
                 </tr>
             </tbody>
         </table>
@@ -112,18 +114,6 @@
         </ul>
          <p>
             <a href='/question/{{ question_for_display['id']  }}/new-tag'>Add new tag</a>
-        </p>
-        <p>
-            <a href='/question/{{ question_for_display['id']  }}/new-answer'>Add new answer</a>
-        </p>
-        <p>
-            <a href='/question/{{ question_for_display['id'] }}/edit'>Edit displayed question</a>
-        </p>
-        <p>
-            <a href='/'>Go back to question list</a>
-        </p>
-        <p>
-            <a href="/question/{{ question_for_display['id'] }}/delete">Delete displayed question</a>
         </p>
     </body>
 

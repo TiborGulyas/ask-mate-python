@@ -100,6 +100,33 @@
                 </tr>
             </tbody>
         </table>
+
+        <ul>
+            {% if number_of_tags  %}
+                <h2>Tags:</h2>
+                    {% for tag in tags_for_display %}
+                        <li>{{ tag['name'] }} </li><a href="/question/{{ question_id }}/tag/{{ tag['id'] }}/delete">
+                        <img src="{{url_for('static', filename='img/x.png')}}" height="20px" width="20px"></a>
+                    {% endfor %}
+            {%  endif %}
+        </ul>
+         <p>
+            <a href='/question/{{ question_for_display['id']  }}/new-tag'>Add new tag</a>
+        </p>
+        <p>
+            <a href='/question/{{ question_for_display['id']  }}/new-answer'>Add new answer</a>
+        </p>
+        <p>
+            <a href='/question/{{ question_for_display['id'] }}/edit'>Edit displayed question</a>
+        </p>
+        <p>
+            <a href='/'>Go back to question list</a>
+        </p>
+        <p>
+            <a href="/question/{{ question_for_display['id'] }}/delete">Delete displayed question</a>
+        </p>
+    </body>
+
         {% if answer['id'] in answer_with_comment %}
             <h4>Comments to answer:</h4>
             {% for answer_comment in answer_comment_for_display %}
@@ -139,4 +166,5 @@
     <a href='/'>Go back to question list</a>
 </p>
 </body>
+
 </html>

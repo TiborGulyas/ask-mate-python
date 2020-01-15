@@ -150,6 +150,7 @@ def insert_image(cursor, id, table, image):
     WHERE id={id};
     """)
 
+
 @connection.connection_handler
 def get_tags_by_id(cursor, id):
     cursor.execute(f"""
@@ -189,3 +190,31 @@ def delete_tag(cursor, question_id,tag_id):
     DELETE FROM question_tag 
     WHERE tag_id={tag_id} AND question_id={question_id};
     """)
+
+
+@connection.connection_handler
+def insert_new_comment(cursor, id_type, id, message, submission_time, edited_count):
+    cursor.execute(f"""
+    INSERT INTO comment
+    ({id_type}, message, submission_time, edited_count)
+    VALUES ('{id}', '{message}', '{submission_time}', '{edited_count}')
+    """)
+
+@connection.connection_handler
+def get_comment_by_id(cursor, id):
+    cursor.execute(f"""
+    SELECT * FROM comment
+    WHERE question_id={id};
+    """)
+    comment = cursor.fetchall()
+    return comment
+
+
+@connection.connection_handler
+def get_all_comments(cursor):
+    cursor.execute(f"""
+    SELECT * FROM comment;
+    """)
+    comment = cursor.fetchall()
+    return comment
+

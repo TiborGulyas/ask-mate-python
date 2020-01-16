@@ -1,15 +1,25 @@
-.rounded_corner {
-    border-radius: 25px;
-    border: 2px solid ;
-
-    background-color: aqua;
-}
-
 table {
-    border-collapse:separate;
-    border:solid #73AD21 2px;
+    border:solid #818479 2px;
     border-radius:25px;
     padding: 1%;
     margin: 5px;
+    background-color: #D2E4C4;
+}
+
+table td {
+  border-top: solid #818479 2px;
+}
+
+h1{
+    color: #0F0F0F;
+    font-size: 5em;
+    font-family: 'Merienda One', cursive;
+    text-align: center;
+}
+
+
+body {
+    color: #0A100D;
+    background-color: #FBFBFB;
 }
 

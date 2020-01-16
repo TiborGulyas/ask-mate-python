@@ -4,15 +4,22 @@
     <meta charset="utf-8">
     <title>AskMate</title>
     <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Merienda+One&display=swap" rel="stylesheet">
 </head>
 <body>
 <h1>Questions</h1>
-<a href="/question">Add new question</a>
+<table>
+    <tr>
+        <td><a href="/question">Add new question</a></td>
+        <td>{% include 'search.html' %}</td>
+    </tr>
+</table>
 
 
-{% include 'search.html' %}
+
+
 {% if not answer_dictionary_list %}
-    <table border="1" width="100%">
+    <table width="100%">
     <thead>
     <tr>
         {% for header_item in question_dictionary_list[0].keys() %}
@@ -69,14 +76,14 @@
             height="20px" width="20px"></a></td>
     <td><a href="/question/{{ row['id'] }}/vote_down"><img
             src="{{ url_for('static', filename='img/down.png') }}" height="20px" width="20px"></a></td>
-</div>
+    </div>
 </tr>
 {% if answer_dictionary_list %}
 
     {% if row['id'] in question_ids %}
         </tbody>
         </table>
-        <table width="90%" style="margin-left: 10%" border="1">
+        <table width="90%" style="margin-left: 10%">
         <thead>
         <tr>
             {% for header_item in answer_dictionary_list[0].keys() %}

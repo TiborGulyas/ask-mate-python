@@ -128,14 +128,9 @@ def update_answer(cursor, id, message, filename, time):
 @connection.connection_handler
 def delete_answer(cursor, id):
     cursor.execute(f"""
-    SELECT question_id FROM answer
-    WHERE id={id};""")
-    question_id = cursor.fetchall()
-    cursor.execute(f"""
     DELETE FROM answer
     WHERE id={id};
     """)
-    return str(question_id[0]['question_id'])
 
 
 @connection.connection_handler

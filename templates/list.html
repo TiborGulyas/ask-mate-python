@@ -49,7 +49,7 @@
                                                       width="150px"></a>
             </td>
         {% elif header_item== 'message' %}
-            <td style="text-align: justify"><p>{{ row[header_item] }}</p></td>
+            <td style="text-align: justify"><p>{{ row[header_item] | safe }}</p></td>
         {% else %}
             <td align="center">{{ row[header_item] }}</td>
         {% endif %}
@@ -89,7 +89,7 @@
                                 src="../{{ answer[header_item] }}" height="150px"
                                 width="150px"></a></td>
                     {% elif header_item != 'question_id' %}
-                        <td>{{ answer[header_item] }}</td>
+                        <td>{{ answer[header_item] | safe }}</td>
                     {% endif %}
                 {% endfor %}
                 <td><a href="/answer/{{ answer['id'] }}/vote_up"><img

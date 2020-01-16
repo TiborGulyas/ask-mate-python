@@ -60,9 +60,13 @@
         {% if  header_item == 'id' %}
             <td align="center"><a href="/question/{{ row[header_item] }}?vote_up=1">{{ row[header_item] }}</a></td>
         {% elif header_item == 'image' %}
-            <td><a href="{{ row[header_item] }}"><img src="{{ row[header_item] }}" height="150px"
-                                                      width="150px"></a>
-            </td>
+            {% if row['image'][-4:] == '.png' or row['image'][-4:] == '.jpg' or row['image'][-4:] == '.gif' or row['image'][-5:] == 'jpeg' %}
+                <td><a href="{{ row[header_item] }}"><img src="{{ row[header_item] }}" height="150px"
+                                                          width="150px"></a>
+                </td>
+            {% else %}
+                <td><img src="{{ url_for('static', filename='img/no-image-available.png') }}" height="20px" width="20px"></td>
+            {% endif %}
         {% elif header_item== 'message' %}
             {% if search %}
                 <td style="text-align: justify"><p>{{ row[header_item] | safe }}</p></td>

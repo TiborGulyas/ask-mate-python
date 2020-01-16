@@ -93,7 +93,6 @@ def new_tag(question_id):
             question_for_display=question_for_display, tags_for_choose=all_tags, number_of_tags=number_of_tags,
             tags_for_display=tags_already_have)
 
-
     elif request.method == 'POST':
         if request.form.get('submit_new_tag') != "":
             new_tag = {'new_tag': request.form.get('submit_new_tag')}
@@ -104,12 +103,25 @@ def new_tag(question_id):
                     inside = True
             if inside is False:
                 data_manager.save_new_tag(new_tag['new_tag'])
-            data_manager.save_tag_for_question(new_tag['new_tag'], question_id)
+            tags_already_have = data_manager.get_tags_by_id(question_id)
+            used = False
+            if tags_already_have != []:
+                for tag in tags_already_have:
+                    if tag['name'] == new_tag['new_tag']:
+                        used = True
+            if not used:
+                data_manager.save_tag_for_question(new_tag['new_tag'], question_id)
             return redirect('/list')
         else:
             new_tag = {'new_tag': request.form.get('tags')}
-            print(new_tag)
-            data_manager.save_tag_for_question(new_tag['new_tag'], question_id)
+            tags_already_have = data_manager.get_tags_by_id(question_id)
+            used = False
+            if tags_already_have != []:
+                for tag in tags_already_have:
+                    if tag['name'] == new_tag['new_tag']:
+                        used = True
+            if not used:
+                data_manager.save_tag_for_question(new_tag['new_tag'], question_id)
             return redirect('/list')
 
 

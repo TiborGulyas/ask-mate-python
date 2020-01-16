@@ -8,14 +8,14 @@
     <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
 </head>
 <body>
-<h1>Questions</h1>
+<a href="/"><h1>Questions</h1></a>
 <table class="menu">
     <tr>
-        <td><a href="/question" id = "add_q">Add new question</a></td>
+        <td><a href="/question" id = "round">Add new question</a></td>
         <td>{% include 'search.html' %}</td>
         <td>
             {% if first_five == 'first five' %}
-            <p><a href="/list">To all questions</a></p>
+            <p><a href="/list" id = 'round'>To all questions</a></p>
             {% endif %}
         </td>
     </tr>
@@ -30,9 +30,9 @@
     <tr>
         {% for header_item in question_dictionary_list[0].keys() %}
             {% if direction == 'desc' %}
-                <th><a href="/list?order_by={{ header_item }}&order_direction=asc">{{ header_item }}</a></th>
+                <th><a href="/list?order_by={{ header_item }}&order_direction=asc" class = add_q>{{ header_item }}</a></th>
             {% else %}
-                <th><a href="/list?order_by={{ header_item }}&order_direction=desc">{{ header_item }}</a></th>
+                <th><a href="/list?order_by={{ header_item }}&order_direction=desc" class="add_q">{{ header_item }}</a></th>
             {% endif %}
         {% endfor %}
     </tr>
@@ -58,7 +58,7 @@
 
     {% for header_item in row.keys() %}
         {% if  header_item == 'id' %}
-            <td align="center"><a href="/question/{{ row[header_item] }}?vote_up=1">{{ row[header_item] }}</a></td>
+            <td align="center"><a href="/question/{{ row[header_item] }}?vote_up=1" id = "round">{{ row[header_item] }}</a></td>
         {% elif header_item == 'image' %}
             {% if row['image'][-4:] == '.png' or row['image'][-4:] == '.jpg' or row['image'][-4:] == '.gif' or row['image'][-5:] == 'jpeg' %}
                 <td><a href="{{ row[header_item] }}"><img src="{{ row[header_item] }}" height="150px"

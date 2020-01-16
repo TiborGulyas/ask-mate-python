@@ -13,6 +13,11 @@
     <tr>
         <td><a href="/question">Add new question</a></td>
         <td>{% include 'search.html' %}</td>
+        <td>
+            {% if first_five == 'first five' %}
+            <p><a href="/list">To all questions</a></p>
+            {% endif %}
+        </td>
     </tr>
 </table>
 
@@ -125,10 +130,7 @@
 {% endif %}
 
 {% endfor %}
-{% if first_five == 'first five' %}
-    <p><a href="/list">To all questions</a></p>
-{% else %}
-{% endif %}
+
 </tbody>
 </table>
 </body>

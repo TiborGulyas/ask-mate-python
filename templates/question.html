@@ -4,6 +4,7 @@
     <meta charset='utf-8'>
     <title>Display Question</title>
     <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <link rel="stylesheet" type="text/css" href="../static/buttons.css">
     <link href="https://fonts.googleapis.com/css?family=Merienda+One&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
 </head>
@@ -11,9 +12,9 @@
 <h1>Question Title: {{ question_for_display['title'] }}</h1>
 <table class="menu">
     <tr>
-        <td><a href='/question/{{ question_for_display['id'] }}/new-tag'>Add new tag</a></td>
-        <td><a href='/question/{{ question_for_display['id'] }}/new-comment'>Add new comment to question</a></td>
-        <td><a href='/question/{{ question_for_display['id'] }}/new-answer'>Add new answer</a></td>
+        <td><a href='/question/{{ question_for_display['id'] }}/new-tag' class="round-button">Add new tag</a></td>
+        <td><a href='/question/{{ question_for_display['id'] }}/new-comment' class="round-button">Add new comment to question</a></td>
+        <td><a href='/question/{{ question_for_display['id'] }}/new-answer' class="round-button">Add new answer</a></td>>>>>>>> 1405b86c99b7e1b17a07a8e305707a044f8db9d7
     </tr>
 </table>
 <table>
@@ -56,8 +57,6 @@
     </table>
 {% endif %}
 
-
-
 <h3>Question comments:</h3>
 {% if question_comment_for_display %}
     <table class="comments">
@@ -78,8 +77,8 @@
                     <td>{{ comment[header_item] }}</td>
                 {% endif %}
             {% endfor %}
-            <td><a href="/comment/{{ comment['id'] }}/edit">Edit comment</a></td>
-            <td><a href="/comments/{{ comment['id'] }}/delete?question_id={{ comment['question_id'] }}">Delete
+            <td><a href="/comment/{{ comment['id'] }}/edit" class="round-button">Edit comment</a></td>
+            <td><a href="/comments/{{ comment['id'] }}/delete?question_id={{ comment['question_id'] }}" class="round-button">Delete
                 comment</a></td>
         </tr>
     {% endfor %}
@@ -106,7 +105,7 @@
             <tr>
                 {% for header_item in answer %}
                     {% if  header_item == 'id' %}
-                        <td><a href="/answer/{{ answer[header_item] }}">{{ answer[header_item] }}</a></td>
+                        <td><a href="/answer/{{ answer[header_item] }}" class="list-id">{{ answer[header_item] }}</a></td>
                     {% elif header_item == 'image' %}
                         {% if answer['image'][-4:] == '.png' or answer['image'][-4:] == '.jpg' or answer['image'][-4:] == '.gif' or answer['image'][-5:] == 'jpeg' %}
                             <td><a href="../{{ answer[header_item] }}"><img src="../{{ answer[header_item] }}"
@@ -126,7 +125,7 @@
                 <td><a href="/answer/{{ answer['id'] }}/vote_down"><img
                         src="{{ url_for('static', filename='img/down.png') }}" height="20px" width="20px"></a></td>
                 {% if answer['submission_time'] != "" %}
-                    <td><a href='/answer/{{ answer['id'] }}/new-comment'>Add new comment to answer</a></td>
+                    <td><a href='/answer/{{ answer['id'] }}/new-comment' class="round-button">Add new comment to answer</a></td>
                 {% endif %}
             </tr>
             </tbody>
@@ -156,9 +155,9 @@
                                     <td>{{ answer_comment[header_item] }}</td>
                                 {% endif %}
                             {% endfor %}
-                            <td><a href="/comment/{{ answer_comment['id'] }}/edit">Edit comment</a></td>
+                            <td><a href="/comment/{{ answer_comment['id'] }}/edit" class="round-button">Edit comment</a></td>
                             <td>
-                                <a href="/comments/{{ answer_comment['id'] }}/delete?question_id={{ answer['question_id'] }}">Delete
+                                <a href="/comments/{{ answer_comment['id'] }}/delete?question_id={{ answer['question_id'] }}" class="round-button">Delete
                                     comment</a></td>
                         </tr>
                     {% endif %}
@@ -174,9 +173,9 @@
 {% endif %}
 <table class="menu">
     <tr>
-        <td><a href='/'>Go back to question list</a></td>
-        <td><a href='/question/{{ question_for_display['id'] }}/edit'>Edit displayed question</a></td>
-        <td><a href="/question/{{ question_for_display['id'] }}/delete">Delete displayed question</a></td>
+        <td><a href='/' class="round-button">Go back to question list</a></td>
+        <td><a href='/question/{{ question_for_display['id'] }}/edit' class="round-button">Edit displayed question</a></td>
+        <td><a href="/question/{{ question_for_display['id'] }}/delete" class="round-button">Delete displayed question</a></td>
     </tr>
 </table>
 </body>

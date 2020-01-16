@@ -4,19 +4,20 @@
     <meta charset='utf-8'>
     <title>Display Answer</title>
     <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <link rel="stylesheet" type="text/css" href="../static/buttons.css">
     <link href="https://fonts.googleapis.com/css?family=Merienda+One&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
 </head>
 <body>
 <table class="menu">
     <tr><td><p>
-        <a href='/'>Go back to question list</a>
+        <a href='/' class="round-button">Go back to question list</a>
     </p></td>
     <td><p>
-        <a href='/answer/{{ answer_for_display['id'] }}/edit'>Edit displayed answer</a>
+        <a href='/answer/{{ answer_for_display['id'] }}/edit' class="round-button">Edit displayed answer</a>
     </p></td>
     <td><p>
-        <a href="/answer/{{ answer_for_display['id'] }}/delete">Delete displayed answer</a>
+        <a href="/answer/{{ answer_for_display['id'] }}/delete" class="round-button">Delete displayed answer</a>
     </p></td></tr>
 </table>
 <table>
@@ -33,7 +34,7 @@
     <tr>
         {% for header_item in answer_for_display %}
             {% if  header_item == 'id' %}
-                <td><a href="/answer/{{ answer_for_display[header_item] }}">{{ answer_for_display[header_item] }}</a>
+                <td><a href="/answer/{{ answer_for_display[header_item] }}" class="list-id">{{ answer_for_display[header_item] }}</a>
                 </td>
             {% elif header_item == 'image' %}
                 {% if answer_for_display['image'][-4:] == '.png' or answer_for_display['image'][-4:] == '.jpg' or answer_for_display['image'][-4:] == '.gif' or answer_for_display['image'][-5:] == 'jpeg' %}

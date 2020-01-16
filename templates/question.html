@@ -61,7 +61,7 @@
 
 <h2>Question comments:</h2>
 {% if question_comment_for_display %}
-    <table>
+    <table class="comments">
     <thead>
     <tr>
         {% for header_item in question_comment_for_display[0] %}
@@ -93,7 +93,7 @@
 <h2>Answers:</h2>
 {% if answer_for_display %}
 {% for answer in answer_for_display %}
-    <table>
+    <table class="answer_on_question">
         <thead>
         <tr>
             {% for header_item in answer_for_display[0].keys() %}
@@ -137,7 +137,7 @@
 
     {% if answer['id'] in answer_with_comment %}
         <h4>Comments to answer:</h4>
-        <table>
+        <table class="comments">
             <thead>
             <tr>
                 {% for header_item in answer_comment_for_display[0] %}
@@ -172,13 +172,12 @@
 {% else %}
     <h4>No answers yet</h4>
 {% endif %}
-<p>
-    <a href='/question/{{ question_for_display['id'] }}/new-answer'>Add new answer</a>
-</p>
-
-<p>
-    <a href='/'>Go back to question list</a>
-</p>
+<table class="menu">
+<tr>
+    <td><a href='/question/{{ question_for_display['id'] }}/new-answer'>Add new answer</a></td>
+    <td><a href='/'>Go back to question list</a></td>
+</tr>
+</table>
 </body>
 
 </html>

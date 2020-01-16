@@ -1,0 +1,15 @@
+.rounded_corner {
+    border-radius: 25px;
+    border: 2px solid ;
+
+    background-color: aqua;
+}
+
+table {
+    border-collapse:separate;
+    border:solid #73AD21 2px;
+    border-radius:25px;
+    padding: 1%;
+    margin: 5px;
+}
+

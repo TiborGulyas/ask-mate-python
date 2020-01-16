@@ -87,11 +87,13 @@ def new_tag(question_id):
         question_for_display = data_manager.get_question_by_id(question_id)
         tags_already_have = data_manager.get_tags_by_id(question_id)
         all_tags = data_manager.get_all_tags()
-        tags_for_choose = [tag for tag in tags_already_have + all_tags if tag not in tags_already_have or tag not in all_tags]
+        tags_for_choose = [tag for tag in tags_already_have + all_tags if
+                           tag not in tags_already_have or tag not in all_tags]
         number_of_tags = len(all_tags)
         return render_template('add-tag.html', question_id=question_id,
-            question_for_display=question_for_display, tags_for_choose=all_tags, number_of_tags=number_of_tags,
-            tags_for_display=tags_already_have)
+                               question_for_display=question_for_display, tags_for_choose=all_tags,
+                               number_of_tags=number_of_tags,
+                               tags_for_display=tags_already_have)
 
 
     elif request.method == 'POST':
@@ -323,7 +325,8 @@ def search():
     if len(questions) < 1:
         return redirect('/')
     return render_template(
-        'list.html', question_dictionary_list=questions, answer_dictionary_list=answers, question_ids=question_ids, search=True)
+        'list.html', question_dictionary_list=questions, answer_dictionary_list=answers, question_ids=question_ids,
+        search=True)
 
 
 def fancy_search(questions, detail):
@@ -378,7 +381,6 @@ def edit_comment(comment_id):
         else:
             comment_data = data_manager.get_comment_by_id(comment_id)
             return redirect(f'/question/{comment_data[0]["question_id"]}')
-
 
 
 @app.route('/comments/<comment_id>/delete', methods=['GET'])

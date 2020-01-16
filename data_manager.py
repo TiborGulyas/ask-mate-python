@@ -246,3 +246,13 @@ def update_comment(cursor, update_comment):
     SET message = '{update_comment['message']}', submission_time = '{update_comment['submission_time']}'
     WHERE id = {update_comment['id']};
     """)
+
+@connection.connection_handler
+def get_comment_by_question_id(cursor, id):
+    cursor.execute(f"""
+    SELECT * FROM comment
+    WHERE question_id={id};
+    """)
+    comment = cursor.fetchall()
+    return comment
+

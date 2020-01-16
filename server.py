@@ -109,7 +109,7 @@ def view_question(question_id):
     if request.method == 'GET' and question_id.isdigit():
         question_for_display = data_manager.get_question_by_id(question_id)
         answer_for_display = data_manager.get_answer_by_question_id(question_id)
-        question_comment_for_display = data_manager.get_comment_by_id(question_id)
+        question_comment_for_display = data_manager.get_comment_by_question_id(question_id)
         answer_comment_for_display = data_manager.get_all_comments()
         answer_with_comment = []
         for answer in answer_for_display:
@@ -137,7 +137,7 @@ def edit_question(question_id):
     if request.method == 'GET':
         return render_template('new-question.html', output_dict=data_manager.get_question_by_id(question_id))
     elif request.method == 'POST':
-        filename = 'not found'
+        image = 'not found'
         try:
             file = request.files['file']
             if file and util.allowed_file(file.filename):
@@ -147,7 +147,7 @@ def edit_question(question_id):
                 image = "uploaded-image/" + filename
         except TypeError:
             filename = 'TypeError'
-        data_manager.update_question(question_id, request.form.get('message'), request.form.get('title'), image,
+        data_manager.update_question(question_id, request.form.get('title'), request.form.get('message'), image,
                                      util.generate_time())
         return redirect('/')
 

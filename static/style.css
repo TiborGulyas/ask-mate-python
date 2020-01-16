@@ -26,12 +26,12 @@ h1{
 body {
     color: #0A100D;
     background-color: #FBFBFB;
+    font-family: 'Quicksand', sans-serif;
 }
 
 .menu {
     width: 80%;
     margin: 0px 10% 0px 10%;
-    font-family: 'Quicksand', sans-serif;
     font-size: 2em;
     text-transform: capitalize;
 }
@@ -68,7 +68,6 @@ body {
 
 
 .table_header{
-    font-family: 'Quicksand', sans-serif;
     font-size: 1.5em;
     text-align: center;
     text-transform: capitalize;

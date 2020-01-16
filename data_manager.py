@@ -72,6 +72,15 @@ def vote_question(cursor, id, vote):
 
 
 @connection.connection_handler
+def view_question(cursor, id):
+    cursor.execute(f"""
+    UPDATE question
+    SET view_number = view_number + 1
+    WHERE id={id};
+    """)
+
+
+@connection.connection_handler
 def get_answer_by_question_id(cursor, question_id):
     cursor.execute(f"""
     SELECT * FROM answer

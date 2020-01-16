@@ -148,7 +148,7 @@ def view_question(question_id):
         tags_for_display = data_manager.get_tags_by_id(question_id)
         number_of_tags = len(tags_for_display)
         if len(answer_for_display) == 0:
-            answer_for_display = [{'message': 'No answer yet', 'submission_time': '', 'vote_number': '', 'image': ''}]
+            answer_for_display = False
         return render_template(
             'question.html', question_id=question_id,
             question_for_display=question_for_display, answer_for_display=answer_for_display,

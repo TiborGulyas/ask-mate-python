@@ -52,7 +52,7 @@
 
     {% for header_item in row.keys() %}
         {% if  header_item == 'id' %}
-            <td align="center"><a href="/question/{{ row[header_item] }}">{{ row[header_item] }}</a></td>
+            <td align="center"><a href="/question/{{ row[header_item] }}?vote_up=1">{{ row[header_item] }}</a></td>
         {% elif header_item == 'image' %}
             <td><a href="{{ row[header_item] }}"><img src="{{ row[header_item] }}" height="150px"
                                                       width="150px"></a>

@@ -40,7 +40,6 @@ def question_list():
     if request.args:
         args = dict(request.args)
         if 'order_by' in args.keys():
-            print(args)
             question_dictionary = data_manager.get_all_questions(args)
             return render_template(
                 'list.html',
@@ -129,6 +128,13 @@ def new_tag(question_id):
 
 @app.route('/question/<question_id>', methods=['GET', 'POST'])
 def view_question(question_id):
+    try:
+        vote_up = int(request.args.get('vote_up'))
+        question_for_display = data_manager.get_question_by_id(question_id)
+        question_for_display['vote_number'] += 1
+        data_manager.view_question(question_id)
+    except TypeError:
+        pass
     if request.method == 'GET' and question_id.isdigit():
         question_for_display = data_manager.get_question_by_id(question_id)
         answer_for_display = data_manager.get_answer_by_question_id(question_id)

@@ -23,3 +23,11 @@ body {
     background-color: #FBFBFB;
 }
 
+.menu {
+    width: 80%;
+    margin: 0px 10% 0px 10%;
+}
+
+.menu td{
+    border: none;
+}

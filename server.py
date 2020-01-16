@@ -165,9 +165,10 @@ def delete_tag(question_id, tag_id):
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
-def edit_question(question_id):
+def edit_question2(question_id):
     if request.method == 'GET':
         return render_template('new-question.html', output_dict=data_manager.get_question_by_id(question_id))
+
     elif request.method == 'POST':
         image = 'not found'
         try:

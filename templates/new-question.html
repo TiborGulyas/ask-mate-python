@@ -3,47 +3,82 @@
 <head>
     <meta charset="utf-8">
     <title>AskMate-Add-Question</title>
-    <link rel="stylesheet" type="text/css" href="../static/new-question-style.css">
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Merienda+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
 </head>
+<body>
 {% if output_dict %}
+    <link rel="stylesheet" type="text/css" href="../../static/style.css">
     <h1 class="edit_button">Edit question</h1>
-    <form action="/question/{{ output_dict['id'] }}/edit" method="post" enctype=multipart/form-data>
-        <p>
-            <label for="id">Question ID</label><br>
-            <input type="text" name="id" id="id" readonly value='{{ output_dict['id'] }}'>
-        </p>
-        <p>
-            <label for="title" class="title">Question Title</label><br>
-            <input type="text" name="title" id="title" required minlength="5" value='{{ output_dict['title'] }}' class="title_input">
-        </p>
-        <p>
-            <label for="question" class="question">Question:</label><br/>
-            <textarea name="message" id="question" cols="40" rows="6" class="question_input">{{ output_dict['message'] }}</textarea>
-        </p>
-        <p>
-            <input type="file" name="file">
-        </p>
-        <p>
-            <button type="submit" class="button">Submit question</button>
-        </p>
-    </form>
+    <table class="new_input_data">
+        <form action="/question/{{ output_dict['id'] }}/edit" method="post" enctype=multipart/form-data>
+            <tr>
+                <td><p>
+                    <label for="id">Question ID</label><br>
+                    <input type="text" name="id" id="id" readonly value='{{ output_dict['id'] }}'>
+                </p></td>
+            </tr>
+            <tr>
+                <td><p>
+                    <label for="title" class="title">Question Title</label><br>
+                    <input type="text" name="title" required minlength="5" value='{{ output_dict['title'] }}'
+                           class="title_input">
+                </p></td>
+            </tr>
+            <tr>
+                <td><p>
+                    <label for="question" class="question">Question:</label><br/>
+                    <textarea name="message" id="question" cols="40" rows="6"
+                              class="question_input">{{ output_dict['message'] }}</textarea>
+                </p></td>
+            </tr>
+            <tr>
+                <td><p>
+                    <input type="file" name="file">
+                </p></td>
+            </tr>
+            <tr>
+                <td>
+                    <p>
+                        <button type="submit" class="button">Submit question</button>
+                    </p>
+                </td>
+            </tr>
+        </form>
+    </table>
 {% else %}
     <h1>Add new question</h1>
-    <form action="/question" method="post" enctype=multipart/form-data>
-        <p>
-            <label for="title" class="title">Question Title</label><br>
-            <input type="text" name="title" id="title" required minlength="5" class="title_input">
-        </p>
-        <p>
-            <label for="question" class="question">Question:</label><br>
-            <textarea name="message" id="question" cols="40" rows="6" class="question_input"></textarea>
-        </p>
-        <p>
-            <input type="file" name="file" class="button">
-        </p>
-        <p>
-            <button type="submit" class="button">Submit question</button>
-        </p>
-    </form>
+    <table class="new_input_data">
+        <form action="/question" method="post" enctype=multipart/form-data>
+            <tr>
+                <td><p>
+                    <label for="title" class="title">Question Title</label><br>
+                    <input type="text" name="title" required minlength="5" class="title_input">
+                </p></td>
+            </tr>
+            <tr>
+                <td><p>
+                    <label for="question" class="question">Question:</label><br>
+                    <textarea name="message" id="question" cols="40" rows="6" class="question_input"></textarea>
+                </p>
+            </tr>
+            </td>
+            <tr>
+                <td><p>
+                    <input type="file" name="file" class="button">
+                </p>
+            </tr>
+            </td>
+            <tr>
+                <td>
+                    <p>
+                        <button type="submit" class="button">Submit question</button>
+                    </p>
+            </tr>
+            </td>
+        </form>
+    </table>
 {% endif %}
+</body>
 </html>

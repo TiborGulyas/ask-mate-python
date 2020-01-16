@@ -306,7 +306,7 @@ def search():
     questions = fancy_search(questions, detail)
     answers = fancy_search(answers, detail)
     return render_template(
-        'list.html', question_dictionary_list=questions, answer_dictionary_list=answers, question_ids=question_ids)
+        'list.html', question_dictionary_list=questions, answer_dictionary_list=answers, question_ids=question_ids, search=True)
 
 
 def fancy_search(questions, detail):

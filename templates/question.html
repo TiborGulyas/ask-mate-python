@@ -3,93 +3,14 @@
 <head>
     <meta charset='utf-8'>
     <title>Display Question</title>
-    <link rel="stylesheet" type="text/css" href="../static/style.css">
-    <link href="https://fonts.googleapis.com/css?family=Merienda+One&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
 </head>
 <body>
-<h1>Question Title: {{ question_for_display['title'] }}</h1>
-<table class="menu">
-    <tr>
-        <td><a href='/question/{{ question_for_display['id'] }}/new-tag'>Add new tag</a></td>
-        <td><a href='/question/{{ question_for_display['id'] }}/edit'>Edit displayed question</a></td>
-        <td>{% include 'search.html' %}</td>
-        <td><a href="/question/{{ question_for_display['id'] }}/delete">Delete displayed question</a></td>
-        <td><a href='/question/{{ question_for_display['id'] }}/new-comment'>Add new comment to question</a></td>
-    </tr>
-</table>
-<table>
-    <thead>
-    <tr>
-        {% for header_item in question_for_display %}
-            {% if header_item != 'title' %}
-                <th>{{ header_item }}</th>
-            {% endif %}
-        {% endfor %}
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        {% for header_item in question_for_display %}
-            {% if header_item != 'title' and header_item != 'image' %}
-                <td>{{ question_for_display[header_item] }}</td>
-            {% elif header_item == 'image' %}
-                <td><a href="../{{ question_for_display[header_item] }}"><img
-                        src="../{{ question_for_display[header_item] }}" height="150px" width="150px"></a></td>
-            {% endif %}
-        {% endfor %}
-    </tr>
-    </tbody>
-</table>
-<ul>
-    {% if number_of_tags %}
-        <h2>Tags:</h2>
-        {% for tag in tags_for_display %}
-            <li>{{ tag['name'] }} </li><a href="/question/{{ question_id }}/tag/{{ tag['id'] }}/delete">
-            <img src="{{ url_for('static', filename='img/x.png') }}" height="20px" width="20px"></a>
-        {% endfor %}
-    {% endif %}
-</ul>
-
-
-<h2>Question comments:</h2>
-{% if question_comment_for_display %}
-    <table>
-    <thead>
-    <tr>
-        {% for header_item in question_comment_for_display[0] %}
-            {% if header_item == 'message' or  header_item == 'submission_time' %}
-                <th>{{ header_item }}</th>
-            {% endif %}
-        {% endfor %}
-    </tr>
-    </thead>
-    <tbody>
-    {% for comment in question_comment_for_display %}
-        <tr>
-            {% for header_item in comment %}
-                {% if header_item == 'message' or header_item == 'submission_time' %}
-                    <td>{{ comment[header_item] }}</td>
-                {% endif %}
-            {% endfor %}
-            <td><a href="/comment/{{ comment['id'] }}/edit">Edit comment</a></td>
-            <td><a href="/comments/{{ comment['id'] }}/delete?question_id={{ comment['question_id'] }}">Delete
-                comment</a></td>
-        </tr>
-    {% endfor %}
-    </tbody>
-{% else %}
-    <h4>No question comments yet</h4>
-{% endif %}
-</table>
-
-<h2>Answers:</h2>
-{% for answer in answer_for_display %}
+    <h1>Question Title: {{ question_for_display['title'] }}</h1>
     <table>
         <thead>
         <tr>
-            {% for header_item in answer_for_display[0].keys() %}
-                {% if header_item != 'question_id' %}
+            {% for header_item in question_for_display %}
+                {% if header_item != 'title' %}
                     <th>{{ header_item }}</th>
                 {% endif %}
             {% endfor %}
@@ -97,9 +18,9 @@
         </thead>
         <tbody>
         <tr>
-            {% for header_item in answer %}
-                {% if  header_item == 'id' %}
-                    <td><a href="/answer/{{ answer[header_item] }}">{{ answer[header_item] }}</a></td>
+            {% for header_item in question_for_display %}
+                {% if header_item != 'title' and header_item != 'image' %}
+                    <td>{{ question_for_display[header_item] }}</td>
                 {% elif header_item == 'image' %}
                     {% if question_for_display['image'][-4:] == '.png' or question_for_display['image'][-4:] == '.jpg' or question_for_display['image'][-4:] == '.gif' or question_for_display['image'][-5:] == 'jpeg' %}
                         <td><a href="../{{ question_for_display[header_item] }}"><img
@@ -109,25 +30,37 @@
                     {% endif %}
                 {% endif %}
             {% endfor %}
-            <td><a href="/answer/{{ answer['id'] }}/vote_up"><img src="{{ url_for('static', filename='img/up.png') }}"
-                                                                  height="20px" width="20px"></a></td>
-            <td><a href="/answer/{{ answer['id'] }}/vote_down"><img
-                    src="{{ url_for('static', filename='img/down.png') }}" height="20px" width="20px"></a></td>
-            {% if answer['submission_time'] != "" %}
-                <td><a href='/answer/{{ answer['id'] }}/new-comment'>Add new comment to answer</a></td>
-            {% endif %}
         </tr>
         </tbody>
     </table>
+    <ul>
+        {% if number_of_tags  %}
+            <h2>Tags:</h2>
+                {% for tag in tags_for_display %}
+                    <li>{{ tag['name'] }} </li><a href="/question/{{ question_id }}/tag/{{ tag['id'] }}/delete">
+                    <img src="{{url_for('static', filename='img/x.png')}}" height="20px" width="20px"></a>
+                {% endfor %}
+        {%  endif %}
+    </ul>
+     <p>
+        <a href='/question/{{ question_for_display['id']  }}/new-tag'>Add new tag</a>
+     </p>
+<p>
+    <a href='/question/{{ question_for_display['id'] }}/edit'>Edit displayed question</a>
+</p>
+<p>
+    <a href="/question/{{ question_for_display['id'] }}/delete">Delete displayed question</a>
+</p>
+<p>
+    <a href='/question/{{ question_for_display['id'] }}/new-comment'>Add new comment to question</a>
+</p>
 
-    </body>
-
-    {% if answer['id'] in answer_with_comment %}
-        <h4>Comments to answer:</h4>
+    <h2>Question comments:</h2>
+    {% if question_comment_for_display %}
         <table>
             <thead>
             <tr>
-                {% for header_item in answer_comment_for_display[0] %}
+                {% for header_item in question_comment_for_display[0] %}
                     {% if header_item == 'message' or  header_item == 'submission_time' %}
                         <th>{{ header_item }}</th>
                     {% endif %}
@@ -135,27 +68,33 @@
             </tr>
             </thead>
             <tbody>
+            {% for comment in question_comment_for_display %}
+                <tr>
+                    {% for header_item in comment %}
+                        {% if header_item == 'message' or header_item == 'submission_time' %}
+                            <td>{{ comment[header_item] }}</td>
+                        {% endif %}
+                    {% endfor %}
+                    <td><a href="/comment/{{ comment['id'] }}/edit">Edit comment</a></td>
+                    <td><a href="/comments/{{ comment['id'] }}/delete?question_id={{ comment['question_id'] }}">Delete comment</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    {% else %}
+        <h4>No question comments yet</h4>
+    {% endif %}
+    </table>
 
+    <h2>Answers:</h2>
+    {% for answer in answer_for_display %}
+        <table>
+            <thead>
             <tr>
-                {% for header_item in answer %}
-                    {% if  header_item == 'id' %}
-                        <td><a href="/answer/{{ answer[header_item] }}">{{ answer[header_item] }}</a></td>
-                    {% elif header_item == 'image' %}
-                        <td><a href="../{{ answer[header_item] }}"><img src="../{{ answer[header_item] }}"
-                                                                        height="150px"
-                                                                        width="150px"></a></td>
-                    {% elif header_item != 'question_id' %}
-                        <td>{{ answer[header_item] }}</td>
+                {% for header_item in answer_for_display[0].keys() %}
+                    {% if header_item != 'question_id' %}
+                        <th>{{ header_item }}</th>
                     {% endif %}
                 {% endfor %}
-                <td><a href="/answer/{{ answer['id'] }}/vote_up"><img
-                        src="{{ url_for('static', filename='img/up.png') }}"
-                        height="20px" width="20px"></a></td>
-                <td><a href="/answer/{{ answer['id'] }}/vote_down"><img
-                        src="{{ url_for('static', filename='img/down.png') }}" height="20px" width="20px"></a></td>
-                {% if answer['submission_time'] != "" %}
-                    <td><a href='/answer/{{ answer['id'] }}/new-comment'>Add new comment to answer</a></td>
-                {% endif %}
             </tr>
             </thead>
             <tbody>
@@ -185,43 +124,40 @@
             </tbody>
         </table>
 
-        </body>
+    </body>
 
         {% if answer['id'] in answer_with_comment %}
             <h4>Comments to answer:</h4>
-            <table>
-                <thead>
-                <tr>
-                    {% for header_item in answer_comment_for_display[0] %}
-                        {% if header_item == 'message' or  header_item == 'submission_time' %}
-                            <th>{{ header_item }}</th>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-                </thead>
-                <tbody>
-                {% for answer_comment in answer_comment_for_display %}
-                    {% if answer_comment['answer_id'] == answer['id'] %}
+                <table>
+                    <thead>
                         <tr>
-                            {% for header_item in answer_comment %}
-                                {% if header_item == 'message' or header_item == 'submission_time' %}
-                                    <td>{{ answer_comment[header_item] }}</td>
+                            {% for header_item in answer_comment_for_display[0] %}
+                                {% if header_item == 'message' or  header_item == 'submission_time' %}
+                                    <th>{{ header_item }}</th>
                                 {% endif %}
                             {% endfor %}
-                            <td><a href="/comment/{{ answer_comment['id'] }}/edit">Edit comment</a></td>
-                            <td>
-                                <a href="/comments/{{ answer_comment['id'] }}/delete?question_id={{ answer['question_id'] }}">Delete
-                                    comment</a></td>
                         </tr>
-                    {% endif %}
-                {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for answer_comment in answer_comment_for_display %}
+                            {% if answer_comment['answer_id'] == answer['id'] %}
+                                <tr>
+                                    {% for header_item in answer_comment %}
+                                        {% if header_item == 'message' or header_item == 'submission_time' %}
+                                            <td>{{ answer_comment[header_item] }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <td><a href="/comment/{{ answer_comment['id'] }}/edit">Edit comment</a></td>
+                                    <td><a href="/comments/{{ answer_comment['id'] }}/delete?question_id={{ answer['question_id'] }}">Delete comment</a></td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
         {% else %}
             <h4>No answer comments yet</h4>
         {% endif %}
-    {% endif %}
-{% endfor %}
+    {% endfor %}
 <p>
     <a href='/question/{{ question_for_display['id'] }}/new-answer'>Add new answer</a>
 </p>

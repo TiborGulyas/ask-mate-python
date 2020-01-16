@@ -1,36 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-            <meta charset='utf-8'>
-            <title>Add Tag</title>
-            <link rel="stylesheet" type="text/css" href="../static/buttons.css">
-    </head>
-    <body>
-        <h1>Question Title: {{question_for_display['title']}}</h1>
-        <h2>Message: {{question_for_display['message']}}</h2>
-        <ul>
-            {% if number_of_tags  %}
-                <h2>Tags:</h2>
+<head>
+    <meta charset='utf-8'>
+    <title>Add Tag</title>
+    <link rel="stylesheet" type="text/css" href="../../static/style.css">
+    <link rel="stylesheet" type="text/css" href="../static/buttons.css">
+    <link href="https://fonts.googleapis.com/css?family=Merienda+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+</head>
+<body>
+<h1>Question Title: {{ question_for_display['title'] }}</h1>
+<table class="new_input_data">
+    <tr>
+        <td>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <h2>Message: {{ question_for_display['message'] }}</h2>
+            <ul>
+                {% if number_of_tags %}
+                    <h2>Tags:</h2>
                     {% for tag in tags_for_display %}
-                        <li>{{ tag['name'] }} / </li>
+                        <li>{{ tag['name'] }} /</li>
                     {% endfor %}
-            {%  endif %}
-        </ul>
-        <form action="/question/{{ question_id }}/new-tag" method="post" enctype=multipart/form-data>
-        <p>
-            <label for="title">New tag</label><br>
-            <input type="text" name="submit_new_tag" id="title">
-            <button type="submit_new_tag", class="round-button"><span>Submit new tag</span></button>
-        </p>
-        <form action="/question/{{ question_id }}/new-tag" method="post" enctype=multipart/form-data>
-            <select style = 'width : 100px' name="tags" id="tags">
-                {% for tag_index in range(number_of_tags) %}
-                    {% for tag in tags_for_choose[tag_index].values() %}
-                        <option value = "{{ tag }}">{{ tag }}</option>
-                    {% endfor %}
-                {% endfor %}
-            </select>
-            <button type="submit_existing_tag", class="round-button"><span>Submit existing tag</span></button>
-        </form>
-    </body>
+                {% endif %}
+            </ul>
+    </tr>
+    </td>
+    <form action="/question/{{ question_id }}/new-tag" method="post" enctype=multipart/form-data>
+        <tr>
+            <td>
+                <p>
+                    <label for="title">New tag</label><br>
+                    <input type="text" name="submit_new_tag" id="tags">
+                    <button type="submit_new_tag" , class="button"><span>Submit new tag</span></button>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <form action="/question/{{ question_id }}/new-tag" method="post" enctype=multipart/form-data>
+                    <select style='width : 100px' name="tags" id="tags">
+                        {% for tag_index in range(number_of_tags) %}
+                            {% for tag in tags_for_choose[tag_index].values() %}
+                                <option value="{{ tag }}">{{ tag }}</option>
+                            {% endfor %}
+                        {% endfor %}
+                    </select>
+                    <button type="submit_existing_tag" , class="round-button" ><span>Submit existing tag</span></button>
+            </td>
+        </tr>
+    </form>
+</table>
+</body>
 </html>

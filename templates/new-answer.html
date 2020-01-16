@@ -3,12 +3,15 @@
 <head>
     <meta charset='utf-8'>
     <title>Display Question</title>
+    <link rel="stylesheet" type="text/css" href="../../static/style.css">
     <link rel="stylesheet" type="text/css" href="../static/buttons.css">
+    <link href="https://fonts.googleapis.com/css?family=Merienda+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
 </head>
 <body>
 <h1>Question Title: {{ question_for_display['title'] }}</h1>
 <table>
-    <thead>
+    <thead class="table_header">
     <tr>
         {% for header_item in question_for_display %}
             {% if header_item != 'title' %}
@@ -20,52 +23,59 @@
     <tbody>
     <tr>
         {% for header_item in question_for_display %}
-            {% if header_item== 'image' %}
-                {% if question_for_display['image'][-4:] == '.png' or question_for_display['image'][-4:] == '.jpg' or question_for_display['image'][-4:] == '.gif' or question_for_display['image'][-5:] == 'jpeg' %}
-                    <td><a href="../../{{ question_for_display[header_item] }}"><img
-                            src="../../{{ question_for_display[header_item] }}" height="150px" width="150px"></a></td>
-                {% else %}
-                    <td><img src="{{ url_for('static', filename='img/no-image-available.png') }}" height="20px" width="20px"></td>
-                {% endif %}
-            {% elif header_item != 'title' %}
+            {% if header_item != 'title' and header_item != 'image' %}
                 <td>{{ question_for_display[header_item] }}</td>
+            {% elif header_item == 'image' %}
+                {% if question_for_display['image'][-4:] == '.png' or question_for_display['image'][-4:] == '.jpg' or question_for_display['image'][-4:] == '.gif' or question_for_display['image'][-5:] == 'jpeg' %}
+                    <td><a href="../{{ question_for_display[header_item] }}"><img
+                            src="../{{ question_for_display[header_item] }}" height="150px" width="150px"></a></td>
+                {% else %}
+                    <td><img src="{{ url_for('static', filename='img/no-image-available.png') }}" height="20px"
+                             width="20px"></td>
+                {% endif %}
             {% endif %}
         {% endfor %}
     </tr>
     </tbody>
 </table>
+</table>
 {% if output_dict %}
     <h1>Edit answer</h1>
+    <table class="new_input_data">
     <form action="/answer/{{ output_dict['id'] }}/edit" method="post" enctype=multipart/form-data>
-        <p>
+        <tr><td><p>
             <label for="id">Answer ID</label><br>
             <input type="text" name="id" id="id" readonly value='{{ output_dict['id'] }}'>
-        </p>
-        <p>
+        </p></td></tr>
+        <tr><td><p>
             <label for="answer">Answer:</label><br/>
             <textarea name="message" id="answer" cols="40" rows="6">{{ output_dict['message'] }}</textarea>
-        </p>
-        <p>
+        </p></tr><p>
+        <tr><td><p>
             <input type="file" name="file">
-        </p>
-        <p>
+        </p></tr><p>
+        <tr><td><p>
             <button type="submit" class="round-button">Submit answer</button>
-        </p>
+        </p></tr><p>
+
     </form>
+    </table>
 {% else %}
     <h1>Add new answer</h1>
+    <table class="new_input_data">
     <form action='/question/{{ question_id }}/new-answer' method='post' enctype="multipart/form-data">
-        <p>
+        <tr><td><p>
             <label for="answer">Answer:</label><br>
             <textarea name="message" id="answer" cols="40" rows="6"></textarea>
-        </p>
-        <p>
+        </p></td></tr>
+        <tr><td><p>
             <input type=file name=file>
-        </p>
-        <p>
+        </p></td></tr>
+        <tr><td><p>
             <button type="submit" class="round-button">Submit answer</button>
-        </p>
+        </p></td></tr>
     </form>
+    </table>
 {% endif %}
 </body>
 </html>

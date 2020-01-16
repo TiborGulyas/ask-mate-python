@@ -308,6 +308,52 @@ def fancy_search(questions, detail):
     return questions
 
 
+@app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])
+def edit_comment(comment_id):
+    if request.method == 'GET':
+        comment_type = ""
+        all_comments = data_manager.get_all_comments()
+        for comment in all_comments:
+            if int(comment['id']) == int(comment_id):
+                print(comment['question_id'])
+                if comment['question_id'] is None:
+                    comment_type = 'answer'
+                    comment_for_display = comment
+                    answer_id = comment['answer_id']
+                else:
+                    comment_type = 'question'
+                    comment_for_display = comment
+                    question_id = comment['question_id']
+        if request.method == 'GET' and comment_type == 'answer':
+            answer_for_display = data_manager.get_answer_by_id(answer_id)
+            return render_template(
+                'new-comment.html',
+                answer_for_display=answer_for_display[0], comment_type=comment_type, comment_for_display=comment_for_display)
+
+
+        if request.method == 'GET' and comment_type == 'question':
+            question_for_display = dict(data_manager.get_question_by_id(question_id))
+            return render_template(
+                'new-comment.html',
+                question_for_display=question_for_display, comment_type=comment_type, comment_for_display=comment_for_display)
+
+    elif request.method == 'POST':
+        update_comment = {'id': comment_id,
+                       'message': request.form.get('comment'),
+                       'submission_time': util.generate_time()}
+        data_manager.update_comment(update_comment)
+        comment_data = data_manager.get_comment_by_id(comment_id)
+        if comment_data[0]['question_id'] is None:
+            question_id = data_manager.get_answer_by_id(comment_data[0]['answer_id'])[0]['question_id']
+            return redirect(f'/question/{question_id}')
+        else:
+            comment_data = data_manager.get_comment_by_id(comment_id)
+            return redirect(f'/question/{comment_data[0]["question_id"]}')
+
+
+
+
+
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',

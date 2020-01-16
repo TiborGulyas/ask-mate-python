@@ -204,7 +204,7 @@ def insert_new_comment(cursor, id_type, id, message, submission_time, edited_cou
 def get_comment_by_id(cursor, id):
     cursor.execute(f"""
     SELECT * FROM comment
-    WHERE question_id={id};
+    WHERE id={id};
     """)
     comment = cursor.fetchall()
     return comment
@@ -237,3 +237,12 @@ def get_question_ids_by_search_from_answers(cursor, detail):
     """)
     found_question_ids = cursor.fetchall()
     return found_question_ids
+
+
+@connection.connection_handler
+def update_comment(cursor, update_comment):
+    cursor.execute(f"""
+    UPDATE comment
+    SET message = '{update_comment['message']}', submission_time = '{update_comment['submission_time']}'
+    WHERE id = {update_comment['id']};
+    """)

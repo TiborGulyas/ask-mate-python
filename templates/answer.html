@@ -3,6 +3,7 @@
     <head>
         <meta charset='utf-8'>
         <title>Display Answer</title>
+        <link rel="stylesheet" type="text/css" href="../static/buttons.css">
     </head>
     <body>
         <h1>Answer Title: {{answer_for_display['title']}}</h1>
@@ -35,13 +36,13 @@
             </tbody>
         </table>
         <p>
-            <a href='/'>Go back to question list</a>
+            <a href='/' class="round-button">Go back to question list</a>
         </p>
         <p>
-            <a href='/answer/{{ answer_for_display['id'] }}/edit'>Edit displayed answer</a>
+            <a href='/answer/{{ answer_for_display['id'] }}/edit' class="round-button">Edit displayed answer</a>
         </p>
         <p>
-            <a href="/answer/{{ answer_for_display['id'] }}/delete">Delete displayed answer</a>
+            <a href="/answer/{{ answer_for_display['id'] }}/delete" class="round-button">Delete displayed answer</a>
         </p>
     </body>
 </html>

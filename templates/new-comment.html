@@ -4,6 +4,7 @@
         <head>
             <meta charset='utf-8'>
             <title>Display Question</title>
+            <link rel="stylesheet" type="text/css" href="../static/buttons.css">
         </head>
         <body>
             <h1>Question Title: {{question_for_display['title']}}</h1>
@@ -41,7 +42,7 @@
                     <textarea name="comment" id="comment" cols="40" rows="6">{{ comment_for_display['message'] }}</textarea>
                 </p>
                 <p>
-                    <button type="submit">Submit comment</button>
+                    <button type="submit" class="round-button">Submit comment</button>
                 </p>
                 </form>
             {% else %}
@@ -52,7 +53,7 @@
                     <textarea name="comment" id="comment" cols="40" rows="6"></textarea>
                 </p>
                 <p>
-                    <button type="submit">Submit comment</button>
+                    <button type="submit" class="round-button">Submit comment</button>
                 </p>
                 </form>
             {% endif %}
@@ -99,7 +100,7 @@
                     <textarea name="comment" id="comment" cols="40" rows="6">{{ comment_for_display['message'] }}</textarea>
                 </p>
                 <p>
-                    <button type="submit">Submit comment</button>
+                    <button type="submit" class="round-button">Submit comment</button>
                 </p>
                 </form>
             {% else %}
@@ -110,7 +111,7 @@
                     <textarea name="comment" id="comment" cols="40" rows="6"></textarea>
                 </p>
                 <p>
-                    <button type="submit">Submit comment</button>
+                    <button type="submit" class="round-button">Submit comment</button>
                 </p>
                 </form>
             {% endif %}

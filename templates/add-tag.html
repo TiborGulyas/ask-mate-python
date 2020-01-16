@@ -3,7 +3,7 @@
     <head>
             <meta charset='utf-8'>
             <title>Add Tag</title>
-
+            <link rel="stylesheet" type="text/css" href="../static/buttons.css">
     </head>
     <body>
         <h1>Question Title: {{question_for_display['title']}}</h1>
@@ -20,7 +20,7 @@
         <p>
             <label for="title">New tag</label><br>
             <input type="text" name="submit_new_tag" id="title">
-            <button type="submit_new_tag", class="button"><span>Submit new tag</span></button>
+            <button type="submit_new_tag", class="round-button"><span>Submit new tag</span></button>
         </p>
         <form action="/question/{{ question_id }}/new-tag" method="post" enctype=multipart/form-data>
             <select style = 'width : 100px' name="tags" id="tags">
@@ -30,7 +30,7 @@
                     {% endfor %}
                 {% endfor %}
             </select>
-            <button type="submit_existing_tag", class="button"><span>Submit existing tag</span></button>
+            <button type="submit_existing_tag", class="round-button"><span>Submit existing tag</span></button>
         </form>
     </body>
 </html>

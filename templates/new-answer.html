@@ -3,6 +3,7 @@
 <head>
     <meta charset='utf-8'>
     <title>Display Question</title>
+    <link rel="stylesheet" type="text/css" href="../static/buttons.css">
 </head>
 <body>
 <h1>Question Title: {{ question_for_display['title'] }}</h1>
@@ -48,7 +49,7 @@
             <input type="file" name="file">
         </p>
         <p>
-            <button type="submit">Submit answer</button>
+            <button type="submit" class="round-button">Submit answer</button>
         </p>
     </form>
 {% else %}
@@ -62,7 +63,7 @@
             <input type=file name=file>
         </p>
         <p>
-            <button type="submit">Submit answer</button>
+            <button type="submit" class="round-button">Submit answer</button>
         </p>
     </form>
 {% endif %}

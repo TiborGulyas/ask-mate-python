@@ -6,7 +6,10 @@ ALLOWED_extensions = {'png', 'jpg', 'jpeg', 'gif'}
 
 
 def generate_time():
-    return str(datetime.datetime.today())
+    date = str(datetime.datetime.today())
+    date = date[:-6]
+    date += "000000"
+    return date
 
 
 def generate_id(data_type):

@@ -162,6 +162,16 @@ def get_tags_by_id(cursor, id):
     return tags
 
 @connection.connection_handler
+def save_tag(cursor, name):
+    cursor.execute(f"""
+        SELECT name FROM tag
+        WHERE name = '{name}';
+        """)
+    answer = cursor.fetchall()
+    return answer
+
+
+@connection.connection_handler
 def get_all_tags(cursor):
     cursor.execute("""
     SELECT name FROM tag

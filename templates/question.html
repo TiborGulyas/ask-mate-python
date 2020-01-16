@@ -60,6 +60,7 @@
                         {% endif %}
                     {% endfor %}
                     <td><a href="/comment/{{ comment['id'] }}/edit">Edit comment</a></td>
+                    <td><a href="/comments/{{ comment['id'] }}/delete?question_id={{ comment['question_id'] }}">Delete comment</a></td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -139,6 +140,7 @@
                                     {% endif %}
                                 {% endfor %}
                                 <td><a href="/comment/{{ answer_comment['id'] }}/edit">Edit comment</a></td>
+                                <td><a href="/comments/{{ answer_comment['id'] }}/delete?question_id={{ answer['question_id'] }}">Delete comment</a></td>
                             </tr>
                         </tbody>
                     </table>

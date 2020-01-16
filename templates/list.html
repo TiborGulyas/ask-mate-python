@@ -1,52 +1,116 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>AskMate</title>
-    </head>
-    <body>
-        <h1>Questions</h1>
-        <a href="/question">Add new question</a>
+<head>
+    <meta charset="utf-8">
+    <title>AskMate</title>
+</head>
+<body>
+<h1>Questions</h1>
+<a href="/question">Add new question</a>
 
 
-
-        {% include 'search.html' %}
-
-        <table border="1">
-            <thead>
-                <tr>
-                    {% for header_item in question_dictionary_list[0].keys() %}
-                        {% if direction == 'desc' %}
-                        <th><a href="/list?order_by={{ header_item }}&order_direction=asc">{{header_item}}</a></th>
-                        {% else %}
-                        <th><a href="/list?order_by={{ header_item }}&order_direction=desc">{{header_item}}</a></th>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    {% for row in question_dictionary_list %}
-                        {% for header_item in row.keys() %}
-                            {% if  header_item == 'id' %}
-                                <td align="center"><a href="/question/{{row[header_item]}}">{{row[header_item]}}</a></td>
-                            {% elif header_item == 'image' %}
-                                <td><a href="{{ row[header_item] }}"><img src="{{ row[header_item] }}" height="150px" width="150px"></a></td>
-                            {% elif header_item== 'message' %}
-                                <td style="text-align: justify"><p>{{row[header_item]}}</p></td>
-                            {% else %}
-                                <td align="center">{{row[header_item]}}</td>
-                            {% endif %}
-                        {% endfor %}
-                        <td><a href="/question/{{ row['id'] }}/vote_up"><img src="{{url_for('static', filename='img/up.png')}}" height="20px" width="20px"></a></td>
-                        <td><a href="/question/{{ row['id'] }}/vote_down"><img src="{{url_for('static', filename='img/down.png')}}" height="20px" width="20px"></a></td>
-                </tr>
-                    {% endfor %}
-                {% if first_five == 'first five' %}
-                    <p><a href="/list">To all questions</a></p>
+{% include 'search.html' %}
+{% if not answer_dictionary_list %}
+    <table border="1" width="100%">
+    <thead>
+    <tr>
+        {% for header_item in question_dictionary_list[0].keys() %}
+            {% if direction == 'desc' %}
+                <th><a href="/list?order_by={{ header_item }}&order_direction=asc">{{ header_item }}</a></th>
+            {% else %}
+                <th><a href="/list?order_by={{ header_item }}&order_direction=desc">{{ header_item }}</a></th>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    </thead>
+{% endif %}
+{% for row in question_dictionary_list %}
+    {% if answer_dictionary_list %}
+        <table border="1" width="100%">
+        <thead>
+        <tr>
+            {% for header_item in question_dictionary_list[0].keys() %}
+                {% if direction == 'desc' %}
+                    <th><a href="/list?order_by={{ header_item }}&order_direction=asc">{{ header_item }}</a></th>
                 {% else %}
+                    <th><a href="/list?order_by={{ header_item }}&order_direction=desc">{{ header_item }}</a></th>
                 {% endif %}
-            </tbody>
+            {% endfor %}
+        </tr>
+        </thead>
+    {% endif %}
+<tbody>
+<tr>
+    {% for header_item in row.keys() %}
+        {% if  header_item == 'id' %}
+            <td align="center"><a href="/question/{{ row[header_item] }}">{{ row[header_item] }}</a></td>
+        {% elif header_item == 'image' %}
+            <td><a href="{{ row[header_item] }}"><img src="{{ row[header_item] }}" height="150px"
+                                                      width="150px"></a>
+            </td>
+        {% elif header_item== 'message' %}
+            <td style="text-align: justify"><p>{{ row[header_item] | safe }}</p></td>
+        {% else %}
+            <td align="center">{{ row[header_item] }}</td>
+        {% endif %}
+    {% endfor %}
+    <td><a href="/question/{{ row['id'] }}/vote_up"><img
+            src="{{ url_for('static', filename='img/up.png') }}"
+            height="20px" width="20px"></a></td>
+    <td><a href="/question/{{ row['id'] }}/vote_down"><img
+            src="{{ url_for('static', filename='img/down.png') }}" height="20px" width="20px"></a></td>
+</tr>
+{% if answer_dictionary_list %}
+
+        {% if row['id'] in question_ids %}
+        </tbody>
         </table>
-    </body>
+        <table width="90%" style="margin-left: 10%" border="1">
+        <thead>
+        <tr>
+            {% for header_item in answer_dictionary_list[0].keys() %}
+                {% if header_item != 'question_id' %}
+                    <th>{{ header_item }}</th>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        </thead>
+        {% endif %}
+{% for answer in answer_dictionary_list %}
+    {% if row['id'] == answer['question_id'] %}
+            <tbody>
+            <tr>
+                {% for header_item in answer %}
+                    {% if  header_item == 'id' %}
+                        <td><a href="/answer/{{ answer[header_item] }}">{{ answer[header_item] }}</a>
+                        </td>
+                    {% elif header_item == 'image' %}
+                        <td><a href="../{{ answer[header_item] }}"><img
+                                src="../{{ answer[header_item] }}" height="150px"
+                                width="150px"></a></td>
+                    {% elif header_item != 'question_id' %}
+                        <td>{{ answer[header_item] | safe }}</td>
+                    {% endif %}
+                {% endfor %}
+                <td><a href="/answer/{{ answer['id'] }}/vote_up"><img
+                        src="{{ url_for('static', filename='img/up.png') }}"
+                        height="20px" width="20px"></a></td>
+                <td><a href="/answer/{{ answer['id'] }}/vote_down"><img
+                        src="{{ url_for('static', filename='img/down.png') }}" height="20px"
+                        width="20px"></a></td>
+                <td><a href='/answer/{{ answer['id'] }}/new-comment'>Add new comment to answer</a></td>
+            </tr>
+            </tbody>
+    {% endif %}
+{% endfor %}
+{% endif %}
+
+{% endfor %}
+{% if first_five == 'first five' %}
+    <p><a href="/list">To all questions</a></p>
+{% else %}
+{% endif %}
+</tbody>
+</table>
+</body>
 </html>

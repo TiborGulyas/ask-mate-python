@@ -29,16 +29,29 @@
                     </tr>
                 </tbody>
             </table>
-            <h1>Add new comment</h1>
-            <form action='/question/{{ question_for_display['id'] }}/new-comment' method='post' enctype="multipart/form-data">
-            <p>
-                <label for="comment">Comment:</label><br>
-                <textarea name="comment" id="comment" cols="40" rows="6"></textarea>
-            </p>
-            <p>
-                <button type="submit">Submit comment</button>
-            </p>
-        </form>
+            {% if comment_type %}
+                <h1>Edit new comment</h1>
+                <form action='/comment/{{ comment_for_display['id'] }}/edit' method='post' enctype="multipart/form-data">
+                <p>
+                    <label for="comment">Comment:</label><br>
+                    <textarea name="comment" id="comment" cols="40" rows="6">{{ comment_for_display['message'] }}</textarea>
+                </p>
+                <p>
+                    <button type="submit">Submit comment</button>
+                </p>
+                </form>
+            {% else %}
+                <h1>Add new comment</h1>
+                <form action='/question/{{ question_for_display['id'] }}/new-comment' method='post' enctype="multipart/form-data">
+                <p>
+                    <label for="comment">Comment:</label><br>
+                    <textarea name="comment" id="comment" cols="40" rows="6"></textarea>
+                </p>
+                <p>
+                    <button type="submit">Submit comment</button>
+                </p>
+                </form>
+            {% endif %}
         </body>
     {% endif %}
     {% if answer_for_display %}
@@ -70,16 +83,29 @@
                     </tr>
                 </tbody>
             </table>
-            <h1>Add new comment</h1>
-            <form action='/answer/{{ answer_for_display['id'] }}/new-comment' method='post' enctype="multipart/form-data">
-            <p>
-                <label for="comment">Comment:</label><br>
-                <textarea name="comment" id="comment" cols="40" rows="6"></textarea>
-            </p>
-            <p>
-                <button type="submit">Submit comment</button>
-            </p>
-            </form>
+            {% if comment_type %}
+                <h1>Edit new comment</h1>
+                <form action='/comment/{{ comment_for_display['id'] }}/edit' method='post' enctype="multipart/form-data">
+                <p>
+                    <label for="comment">Comment:</label><br>
+                    <textarea name="comment" id="comment" cols="40" rows="6">{{ comment_for_display['message'] }}</textarea>
+                </p>
+                <p>
+                    <button type="submit">Submit comment</button>
+                </p>
+                </form>
+            {% else %}
+                <h1>Add new comment</h1>
+                <form action='/answer/{{ answer_for_display['id'] }}/new-comment' method='post' enctype="multipart/form-data">
+                <p>
+                    <label for="comment">Comment:</label><br>
+                    <textarea name="comment" id="comment" cols="40" rows="6"></textarea>
+                </p>
+                <p>
+                    <button type="submit">Submit comment</button>
+                </p>
+                </form>
+            {% endif %}
         </body>
     {% endif %}
 </html>

@@ -4,14 +4,12 @@ table {
     padding: 1%;
     margin: 1% 1% 1% 1%;
     background-color: #D2E4C4;
-    width: 98%
+    width: 98%;
+    border-collapse: separate;
 }
 
 table td {
     padding: 0px 10px 0px 10px;
-}
-
-table td{
     border-top: solid #818479 2px;
 }
 
@@ -34,12 +32,13 @@ body {
     margin: 0px 10% 0px 10%;
     font-size: 2em;
     text-transform: capitalize;
+    border: none none none none;
 }
 
-.menu tr td{
+.menu tr td {
     border: none;
-
 }
+
 #add_q{
   display: block;
   color: black;
@@ -73,7 +72,20 @@ body {
     text-transform: capitalize;
 }
 
-.table_header tr{
+.new_input_data{
+    width: 80%;
+    margin: 0px 10% 0px 10%;
+    font-size: 2em;
+    text-transform: capitalize;
+    border: none;
+    text-align: center;
+}
 
+.new_input_data tr td{
+    border: none
+}
 
+.title_input, .question_input, .button{
+    border-radius: 25px;
+    padding: 10px;
 }

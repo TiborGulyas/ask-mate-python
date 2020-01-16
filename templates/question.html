@@ -3,11 +3,22 @@
 <head>
     <meta charset='utf-8'>
     <title>Display Question</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Merienda+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
 </head>
 <body>
 <h1>Question Title: {{ question_for_display['title'] }}</h1>
+<table class="menu">
+    <tr>
+        <td><a href='/question/{{ question_for_display['id'] }}/new-tag'>Add new tag</a></td>
+        <td><a href='/question/{{ question_for_display['id'] }}/edit'>Edit displayed question</a></td>
+        <td><a href="/question/{{ question_for_display['id'] }}/delete">Delete displayed question</a></td>
+        <td><a href='/question/{{ question_for_display['id'] }}/new-comment'>Add new comment to question</a></td>
+    </tr>
+</table>
 <table>
-    <thead>
+    <thead class="table_header">
     <tr>
         {% for header_item in question_for_display %}
             {% if header_item != 'title' %}
@@ -34,27 +45,19 @@
     </tr>
     </tbody>
 </table>
-<ul>
-    {% if number_of_tags %}
-        <h2>Tags:</h2>
+{% if number_of_tags %}
+<table>
+    <tr>
+        <td><h2>Tags:</h2></td>
         {% for tag in tags_for_display %}
-            <li>{{ tag['name'] }} </li><a href="/question/{{ question_id }}/tag/{{ tag['id'] }}/delete">
-            <img src="{{ url_for('static', filename='img/x.png') }}" height="20px" width="20px"></a>
+        <td>{{ tag['name'] }} <a href="/question/{{ question_id }}/tag/{{ tag['id'] }}/delete">
+            <img src="{{ url_for('static', filename='img/x.png') }}" height="20px" width="20px"></a></td>
         {% endfor %}
-    {% endif %}
-</ul>
-<p>
-    <a href='/question/{{ question_for_display['id'] }}/new-tag'>Add new tag</a>
-</p>
-<p>
-    <a href='/question/{{ question_for_display['id'] }}/edit'>Edit displayed question</a>
-</p>
-<p>
-    <a href="/question/{{ question_for_display['id'] }}/delete">Delete displayed question</a>
-</p>
-<p>
-    <a href='/question/{{ question_for_display['id'] }}/new-comment'>Add new comment to question</a>
-</p>
+    </tr>
+</table>
+{% endif %}
+
+
 
 <h2>Question comments:</h2>
 {% if question_comment_for_display %}

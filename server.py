@@ -87,10 +87,12 @@ def new_tag(question_id):
         question_for_display = data_manager.get_question_by_id(question_id)
         tags_already_have = data_manager.get_tags_by_id(question_id)
         all_tags = data_manager.get_all_tags()
-        tags_for_choose = [tag for tag in tags_already_have + all_tags if tag not in tags_already_have or tag not in all_tags]
+        tags_for_choose = [tag for tag in tags_already_have + all_tags if
+                           tag not in tags_already_have or tag not in all_tags]
         number_of_tags = len(tags_for_choose)
         return render_template('add-tag.html', question_id=question_id,
-            question_for_display=question_for_display, tags_for_choose=tags_for_choose, number_of_tags=number_of_tags)
+                               question_for_display=question_for_display, tags_for_choose=tags_for_choose,
+                               number_of_tags=number_of_tags)
 
     elif request.method == 'POST':
         if request.form.get('submit_new_tag') != "":
@@ -122,13 +124,16 @@ def view_question(question_id):
             answer_for_display = [{'message': 'No answer yet', 'submission_time': '', 'vote_number': '', 'image': ''}]
         return render_template(
             'question.html', question_id=question_id,
-            question_for_display=question_for_display, answer_for_display=answer_for_display, tags_for_display=tags_for_display, number_of_tags=number_of_tags, question_comment_for_display=question_comment_for_display, answer_comment_for_display=answer_comment_for_display, answer_with_comment=answer_with_comment)
+            question_for_display=question_for_display, answer_for_display=answer_for_display,
+            tags_for_display=tags_for_display, number_of_tags=number_of_tags,
+            question_comment_for_display=question_comment_for_display,
+            answer_comment_for_display=answer_comment_for_display, answer_with_comment=answer_with_comment)
 
 
 @app.route('/question/<question_id>/tag/<tag_id>/delete', methods=['GET', 'POST'])
 def delete_tag(question_id, tag_id):
     if request.method == 'GET':
-        data_manager.delete_tag(question_id,tag_id)
+        data_manager.delete_tag(question_id, tag_id)
         return redirect(f'/question/{question_id}')
 
 
@@ -298,15 +303,19 @@ def search():
         found_question = data_manager.get_question_by_id(answer['question_id'])
         if found_question not in questions:
             questions.append(found_question)
-    print(questions)
     questions = fancy_search(questions, detail)
+    answers = fancy_search(answers, detail)
     return render_template(
         'list.html', question_dictionary_list=questions, answer_dictionary_list=answers, question_ids=question_ids)
 
 
 def fancy_search(questions, detail):
     for row in questions:
-        row['message'] = str(row['message']).replace(f"{detail}", f'<b>{detail}</b>')
+        row['message'] = str(row['message']).replace(f"{detail}", f'<strong>{detail}</strong>')
+        try:
+            row['title'] = str(row['title']).replace(f"{detail}", f'<strong>{detail}</strong>')
+        except KeyError:
+            pass
     return questions
 
 
@@ -330,19 +339,20 @@ def edit_comment(comment_id):
             answer_for_display = data_manager.get_answer_by_id(answer_id)
             return render_template(
                 'new-comment.html',
-                answer_for_display=answer_for_display[0], comment_type=comment_type, comment_for_display=comment_for_display)
-
+                answer_for_display=answer_for_display[0], comment_type=comment_type,
+                comment_for_display=comment_for_display)
 
         if request.method == 'GET' and comment_type == 'question':
             question_for_display = dict(data_manager.get_question_by_id(question_id))
             return render_template(
                 'new-comment.html',
-                question_for_display=question_for_display, comment_type=comment_type, comment_for_display=comment_for_display)
+                question_for_display=question_for_display, comment_type=comment_type,
+                comment_for_display=comment_for_display)
 
     elif request.method == 'POST':
         update_comment = {'id': comment_id,
-                       'message': request.form.get('comment'),
-                       'submission_time': util.generate_time()}
+                          'message': request.form.get('comment'),
+                          'submission_time': util.generate_time()}
         data_manager.update_comment(update_comment)
         comment_data = data_manager.get_comment_by_id(comment_id)
         if comment_data[0]['question_id'] is None:
@@ -351,9 +361,6 @@ def edit_comment(comment_id):
         else:
             comment_data = data_manager.get_comment_by_id(comment_id)
             return redirect(f'/question/{comment_data[0]["question_id"]}')
-
-
-
 
 
 if __name__ == '__main__':

@@ -188,10 +188,18 @@ def edit_question2(question_id):
 @app.route('/question/<question_id>/delete', methods=['GET', 'POST'])
 def delete_question(question_id):
     tag_id = data_manager.get_tag_id(question_id)
-    print(tag_id)
     if tag_id != []:
         tag_id = tag_id[0]
         delete_tag(question_id, tag_id['tag_id'])
+    data_manager.delete_comment_by_question_id(question_id)
+    answer_id_set = set()
+    answer_list = data_manager.get_answer_by_question_id(question_id)
+    for answer in answer_list:
+        answer_id_set.add(answer['id'])
+    if len(answer_id_set) > 0:
+        for answer_id in answer_id_set:
+            data_manager.delete_comment_by_answer_id(answer_id)
+            data_manager.delete_answer(answer_id)
     data_manager.delete_question(question_id)
     return redirect('/')
 

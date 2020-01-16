@@ -287,4 +287,17 @@ def delete_comment(cursor, comment_id):
     WHERE id={comment_id};
     """)
 
+@connection.connection_handler
+def delete_comment_by_question_id(cursor, question_id):
+    cursor.execute(f"""
+    DELETE FROM comment 
+    WHERE question_id={question_id};
+    """)
 
+
+@connection.connection_handler
+def delete_comment_by_answer_id(cursor, answer_id):
+    cursor.execute(f"""
+    DELETE FROM comment 
+    WHERE answer_id={answer_id};
+    """)

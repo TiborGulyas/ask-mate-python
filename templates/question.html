@@ -120,32 +120,32 @@
 
         {% if answer['id'] in answer_with_comment %}
             <h4>Comments to answer:</h4>
-            <table>
-                <thead>
-                    <tr>
-                        {% for header_item in answer_comment_for_display[0] %}
-                            {% if header_item == 'message' or  header_item == 'submission_time' %}
-                                <th>{{ header_item }}</th>
+                <table>
+                    <thead>
+                        <tr>
+                            {% for header_item in answer_comment_for_display[0] %}
+                                {% if header_item == 'message' or  header_item == 'submission_time' %}
+                                    <th>{{ header_item }}</th>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for answer_comment in answer_comment_for_display %}
+                            {% if answer_comment['answer_id'] == answer['id'] %}
+                                <tr>
+                                    {% for header_item in answer_comment %}
+                                        {% if header_item == 'message' or header_item == 'submission_time' %}
+                                            <td>{{ answer_comment[header_item] }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <td><a href="/comment/{{ answer_comment['id'] }}/edit">Edit comment</a></td>
+                                    <td><a href="/comments/{{ answer_comment['id'] }}/delete?question_id={{ answer['question_id'] }}">Delete comment</a></td>
+                                </tr>
                             {% endif %}
                         {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for answer_comment in answer_comment_for_display %}
-                        {% if answer_comment['answer_id'] == answer['id'] %}
-                            <tr>
-                                {% for header_item in answer_comment %}
-                                    {% if header_item == 'message' or header_item == 'submission_time' %}
-                                        <td>{{ answer_comment[header_item] }}</td>
-                                    {% endif %}
-                                {% endfor %}
-                                <td><a href="/comment/{{ answer_comment['id'] }}/edit">Edit comment</a></td>
-                                <td><a href="/comments/{{ answer_comment['id'] }}/delete?question_id={{ answer['question_id'] }}">Delete comment</a></td>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
         {% else %}
             <h4>No answer comments yet</h4>
         {% endif %}

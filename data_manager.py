@@ -84,7 +84,8 @@ def view_question(cursor, id):
 def get_answer_by_question_id(cursor, question_id):
     cursor.execute(f"""
     SELECT * FROM answer
-    WHERE question_id={question_id};
+    WHERE question_id={question_id}
+    ORDER BY submission_time DESC;
     """)
     answers = cursor.fetchall()
     print(answers)

@@ -111,11 +111,11 @@ def view_question(question_id):
         answer_for_display = data_manager.get_answer_by_question_id(question_id)
         question_comment_for_display = data_manager.get_comment_by_question_id(question_id)
         answer_comment_for_display = data_manager.get_all_comments()
-        answer_with_comment = []
+        answer_with_comment = set()
         for answer in answer_for_display:
             for comment in answer_comment_for_display:
                 if answer['id'] == comment['answer_id']:
-                    answer_with_comment.append(answer['id'])
+                    answer_with_comment.add(answer['id'])
         tags_for_display = data_manager.get_tags_by_id(question_id)
         number_of_tags = len(tags_for_display)
         if len(answer_for_display) == 0:
@@ -352,6 +352,12 @@ def edit_comment(comment_id):
             comment_data = data_manager.get_comment_by_id(comment_id)
             return redirect(f'/question/{comment_data[0]["question_id"]}')
 
+
+@app.route('/comments/<comment_id>/delete', methods=['GET'])
+def delete_comment(comment_id):
+    question_id = request.args.get('question_id')
+    data_manager.delete_comment(comment_id)
+    return redirect(f'/question/{question_id}')
 
 
 

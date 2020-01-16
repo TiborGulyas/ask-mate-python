@@ -256,3 +256,11 @@ def get_comment_by_question_id(cursor, id):
     comment = cursor.fetchall()
     return comment
 
+@connection.connection_handler
+def delete_comment(cursor, comment_id):
+    cursor.execute(f"""
+    DELETE FROM comment 
+    WHERE id={comment_id};
+    """)
+
+

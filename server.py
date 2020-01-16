@@ -307,6 +307,7 @@ def search():
         detail = request.form.get('search')
         return redirect(f"/search?q={detail}")
     detail = dict(request.args)['q']
+    print(detail)
     questions = data_manager.get_question_by_search(detail)
     answers = data_manager.get_question_ids_by_search_from_answers(detail)
     question_ids = set()
@@ -315,10 +316,14 @@ def search():
         found_question = data_manager.get_question_by_id(answer['question_id'])
         if found_question not in questions:
             questions.append(found_question)
+    print(f"questions: {questions}")
     questions = fancy_search(questions, detail)
     answers = fancy_search(answers, detail)
+    print(f"questions fancy: {questions}")
+    if len(questions) < 1:
+        return redirect('/')
     return render_template(
-        'list.html', question_dictionary_list=questions, answer_dictionary_list=answers, question_ids=question_ids)
+        'list.html', question_dictionary_list=questions, answer_dictionary_list=answers, question_ids=question_ids, search=True)
 
 
 def fancy_search(questions, detail):

@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>AskMate</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
 </head>
 <body>
 <h1>Questions</h1>
@@ -26,21 +27,22 @@
 {% endif %}
 {% for row in question_dictionary_list %}
     {% if answer_dictionary_list %}
-        <table border="1" width="100%">
+        <table width="100%">
         <thead>
         <tr>
             {% for header_item in question_dictionary_list[0].keys() %}
                 {% if direction == 'desc' %}
-                    <th><a href="/list?order_by={{ header_item }}&order_direction=asc">{{ header_item }}</a></th>
+                    <th>{{ header_item }}</th>
                 {% else %}
-                    <th><a href="/list?order_by={{ header_item }}&order_direction=desc">{{ header_item }}</a></th>
+                    <th>{{ header_item }}</th>
                 {% endif %}
             {% endfor %}
         </tr>
         </thead>
     {% endif %}
-<tbody>
+<tbody class="rounded_corner">
 <tr>
+
     {% for header_item in row.keys() %}
         {% if  header_item == 'id' %}
             <td align="center"><a href="/question/{{ row[header_item] }}">{{ row[header_item] }}</a></td>
@@ -67,6 +69,7 @@
             height="20px" width="20px"></a></td>
     <td><a href="/question/{{ row['id'] }}/vote_down"><img
             src="{{ url_for('static', filename='img/down.png') }}" height="20px" width="20px"></a></td>
+</div>
 </tr>
 {% if answer_dictionary_list %}
 

@@ -240,7 +240,8 @@ def get_comment_by_id(cursor, id):
 @connection.connection_handler
 def get_all_comments(cursor):
     cursor.execute(f"""
-    SELECT * FROM comment;
+    SELECT * FROM comment
+    ORDER BY submission_time DESC;
     """)
     comment = cursor.fetchall()
     return comment
@@ -278,7 +279,8 @@ def update_comment(cursor, update_comment):
 def get_comment_by_question_id(cursor, id):
     cursor.execute(f"""
     SELECT * FROM comment
-    WHERE question_id={id};
+    WHERE question_id={id}
+    ORDER BY submission_time DESC;
     """)
     comment = cursor.fetchall()
     return comment

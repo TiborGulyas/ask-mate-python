@@ -170,6 +170,14 @@ def save_tag(cursor, name):
     answer = cursor.fetchall()
     return answer
 
+@connection.connection_handler
+def get_tag_id(cursor, question_id):
+    cursor.execute(f"""
+    SELECT tag_id FROM question_tag
+    WHERE question_id={question_id};
+    """)
+    tag_id = cursor.fetchall()
+    return tag_id
 
 @connection.connection_handler
 def get_all_tags(cursor):
@@ -200,7 +208,6 @@ def delete_tag(cursor, question_id,tag_id):
     DELETE FROM question_tag 
     WHERE tag_id={tag_id} AND question_id={question_id};
     """)
-
 
 @connection.connection_handler
 def insert_new_comment(cursor, id_type, id, message, submission_time, edited_count):

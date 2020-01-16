@@ -166,6 +166,11 @@ def edit_question(question_id):
 
 @app.route('/question/<question_id>/delete', methods=['GET', 'POST'])
 def delete_question(question_id):
+    tag_id = data_manager.get_tag_id(question_id)
+    print(tag_id)
+    if tag_id != []:
+        tag_id = tag_id[0]
+        delete_tag(question_id, tag_id['tag_id'])
     data_manager.delete_question(question_id)
     return redirect('/')
 

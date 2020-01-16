@@ -84,7 +84,8 @@ def view_question(cursor, id):
 def get_answer_by_question_id(cursor, question_id):
     cursor.execute(f"""
     SELECT * FROM answer
-    WHERE question_id={question_id};
+    WHERE question_id={question_id}
+    ORDER BY submission_time DESC;
     """)
     answers = cursor.fetchall()
     print(answers)
@@ -239,7 +240,8 @@ def get_comment_by_id(cursor, id):
 @connection.connection_handler
 def get_all_comments(cursor):
     cursor.execute(f"""
-    SELECT * FROM comment;
+    SELECT * FROM comment
+    ORDER BY submission_time DESC;
     """)
     comment = cursor.fetchall()
     return comment
@@ -277,7 +279,8 @@ def update_comment(cursor, update_comment):
 def get_comment_by_question_id(cursor, id):
     cursor.execute(f"""
     SELECT * FROM comment
-    WHERE question_id={id};
+    WHERE question_id={id}
+    ORDER BY submission_time DESC;
     """)
     comment = cursor.fetchall()
     return comment

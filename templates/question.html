@@ -38,6 +38,9 @@
                 {% endfor %}
         {%  endif %}
     </ul>
+     <p>
+        <a href='/question/{{ question_for_display['id']  }}/new-tag'>Add new tag</a>
+     </p>
 <p>
     <a href='/question/{{ question_for_display['id'] }}/edit'>Edit displayed question</a>
 </p>
@@ -112,9 +115,7 @@
                 </tr>
             </tbody>
         </table>
-        <p>
-            <a href='/question/{{ question_for_display['id']  }}/new-tag'>Add new tag</a>
-        </p>
+
     </body>
 
         {% if answer['id'] in answer_with_comment %}

@@ -292,14 +292,16 @@ def search():
     detail = dict(request.args)['q']
     questions = data_manager.get_question_by_search(detail)
     answers = data_manager.get_question_ids_by_search_from_answers(detail)
+    question_ids = set()
     for answer in answers:
+        question_ids.add(answer['question_id'])
         found_question = data_manager.get_question_by_id(answer['question_id'])
         if found_question not in questions:
             questions.append(found_question)
     print(questions)
     questions = fancy_search(questions, detail)
     return render_template(
-        'list.html', question_dictionary_list=questions, answer_dictionary_list=answers)
+        'list.html', question_dictionary_list=questions, answer_dictionary_list=answers, question_ids=question_ids)
 
 
 def fancy_search(questions, detail):

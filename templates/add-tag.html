@@ -3,27 +3,34 @@
     <head>
             <meta charset='utf-8'>
             <title>Add Tag</title>
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/addtagstyle.css') }}">
     </head>
     <body>
         <h1>Question Title: {{question_for_display['title']}}</h1>
         <h2>Message: {{question_for_display['message']}}</h2>
-        <p>Tags:</p>
+        <ul>
+            {% if number_of_tags  %}
+                <h2>Tags:</h2>
+                    {% for tag in tags_for_display %}
+                        <li>{{ tag['name'] }} / </li>
+                    {% endfor %}
+            {%  endif %}
+        </ul>
         <form action="/question/{{ question_id }}/new-tag" method="post" enctype=multipart/form-data>
         <p>
             <label for="title">New tag</label><br>
             <input type="text" name="submit_new_tag" id="title">
-            <button type="submit_new_tag">Submit new tag</button>
+            <button type="submit_new_tag", class="button"><span>Submit new tag</span></button>
         </p>
-        <form>
-            <input list="tags" name="submit_existing_tag">
-            <datalist id="tags">
+        <form action="/question/{{ question_id }}/new-tag" method="post" enctype=multipart/form-data>
+            <select style = 'width : 100px' name="tags" id="tags">
                 {% for tag_index in range(number_of_tags) %}
                     {% for tag in tags_for_choose[tag_index].values() %}
-                        <option value= {{ tag }}>
+                        <option value = "{{ tag }}">{{ tag }}</option>
                     {% endfor %}
                 {% endfor %}
-            </datalist>
-            <button type="submit_existing_tag">Submit existing tag</button>
+            </select>
+            <button type="submit_existing_tag", class="button"><span>Submit existing tag</span></button>
         </form>
     </body>
 </html>

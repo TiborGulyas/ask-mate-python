@@ -88,7 +88,6 @@ def get_answer_by_question_id(cursor, question_id):
     ORDER BY submission_time DESC;
     """)
     answers = cursor.fetchall()
-    print(answers)
     return answers
 
 

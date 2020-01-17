@@ -189,11 +189,12 @@ def edit_question2(question_id):
 def delete_question(question_id):
     tag_id = data_manager.get_tag_id(question_id)
     if tag_id != []:
-        tag_id = tag_id[0]
-        delete_tag(question_id, tag_id['tag_id'])
+        for individual_tag in tag_id:
+            delete_tag(question_id, individual_tag['tag_id'])
     data_manager.delete_comment_by_question_id(question_id)
     answer_id_set = set()
     answer_list = data_manager.get_answer_by_question_id(question_id)
+    print(answer_id_set)
     for answer in answer_list:
         answer_id_set.add(answer['id'])
     if len(answer_id_set) > 0:

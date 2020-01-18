@@ -251,7 +251,6 @@ def show_answer(answer_id):
 def edit_answer(answer_id):
     if request.method == 'GET':
         answer_for_display = data_manager.get_answer_by_id(answer_id)
-        print(answer_for_display[0])
         question_for_display = data_manager.get_question_by_id(answer_for_display[0]['question_id'])
         return render_template('new-answer.html', output_dict=answer_for_display[0],
                                question_for_display=question_for_display)
@@ -328,7 +327,6 @@ def add_answer_comment(answer_id):
                        'submission_time': util.generate_time(),
                        'edited_count': '0'}
 
-        print(new_comment.values())
         data_manager.insert_new_comment(*new_comment.values())
         return redirect(f'/question/{answer_for_display[0]["question_id"]}')
 
@@ -339,10 +337,6 @@ def search():
         detail = request.form.get('search')
         return redirect(f"/search?q={detail}")
     detail = dict(request.args)['q']
-    print(detail.replace('<', '&lt').replace('>', '&gt'))
-
-    detail
-    print(detail)
     questions = data_manager.get_question_by_search(detail)
     answers = data_manager.get_question_ids_by_search_from_answers(detail)
     print(f'ezt_nezzuk: {answers}')
@@ -352,10 +346,8 @@ def search():
         found_question = data_manager.get_question_by_id(answer['question_id'])
         if found_question not in questions:
             questions.append(found_question)
-    print(f"questions: {questions}")
     questions = fancy_search(questions, detail)
     answers = fancy_search(answers, detail)
-    print(f"questions fancy: {questions}")
     if len(questions) < 1:
         return redirect('/')
     return render_template(
@@ -380,7 +372,6 @@ def edit_comment(comment_id):
         all_comments = data_manager.get_all_comments()
         for comment in all_comments:
             if int(comment['id']) == int(comment_id):
-                print(comment['question_id'])
                 if comment['question_id'] is None:
                     comment_type = 'answer'
                     comment_for_display = comment

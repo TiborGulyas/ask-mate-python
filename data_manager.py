@@ -96,7 +96,6 @@ def get_answer_by_question_id(cursor, question_id):
     """,
                    {'question_id': question_id})
     answers = cursor.fetchall()
-    print(answers)
     return answers
 
 

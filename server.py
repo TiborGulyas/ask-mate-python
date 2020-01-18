@@ -76,7 +76,7 @@ def add_question():
                 new_question['image'] = "uploaded-image/" + filename
         except FileNotFoundError:
             pass
-        data_manager.insert_image(new_question['id'], 'question', new_question['image'])
+        data_manager.insert_image_question(new_question['id'], new_question['image'])
         return redirect("/question/" + new_question['id'])
 
 
@@ -339,9 +339,13 @@ def search():
         detail = request.form.get('search')
         return redirect(f"/search?q={detail}")
     detail = dict(request.args)['q']
+    print(detail.replace('<', '&lt').replace('>', '&gt'))
+
+    detail
     print(detail)
     questions = data_manager.get_question_by_search(detail)
     answers = data_manager.get_question_ids_by_search_from_answers(detail)
+    print(f'ezt_nezzuk: {answers}')
     question_ids = set()
     for answer in answers:
         question_ids.add(answer['question_id'])
@@ -361,9 +365,9 @@ def search():
 
 def fancy_search(questions, detail):
     for row in questions:
-        row['message'] = str(row['message']).replace(f"{detail}", f'<strong>{detail}</strong>')
+        row['message'] = str(row['message']).replace('<', '&lt;').replace('>', '&gt;').replace(f"{detail.replace('<', '&lt;').replace('>', '&gt;')}", f"<strong>{detail.replace('<', '&lt;').replace('>', '&gt;')}</strong>")
         try:
-            row['title'] = str(row['title']).replace(f"{detail}", f'<strong>{detail}</strong>')
+            row['title'] = str(row['title']).replace('<', '&lt;').replace('>', '&gt;').replace(f"{detail.replace('<', '&lt;').replace('>', '&gt;')}", f"<strong>{detail.replace('<', '&lt;').replace('>', '&gt;')}</strong>")
         except KeyError:
             pass
     return questions

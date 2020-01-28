@@ -6,17 +6,19 @@
 -- Dumped by pg_dump version 9.5.6
 
 ALTER TABLE IF EXISTS ONLY public.question DROP CONSTRAINT IF EXISTS pk_question_id CASCADE;
+ALTER TABLE IF EXISTS ONLY public.question DROP CONSTRAINT IF EXISTS fk_users_id CASCADE;
 ALTER TABLE IF EXISTS ONLY public.answer DROP CONSTRAINT IF EXISTS pk_answer_id CASCADE;
 ALTER TABLE IF EXISTS ONLY public.answer DROP CONSTRAINT IF EXISTS fk_question_id CASCADE;
+ALTER TABLE IF EXISTS ONLY public.answer DROP CONSTRAINT IF EXISTS fk_users_id CASCADE;
 ALTER TABLE IF EXISTS ONLY public.comment DROP CONSTRAINT IF EXISTS pk_comment_id CASCADE;
 ALTER TABLE IF EXISTS ONLY public.comment DROP CONSTRAINT IF EXISTS fk_question_id CASCADE;
 ALTER TABLE IF EXISTS ONLY public.comment DROP CONSTRAINT IF EXISTS fk_answer_id CASCADE;
+ALTER TABLE IF EXISTS ONLY public.comment DROP CONSTRAINT IF EXISTS fk_users_id CASCADE;
 ALTER TABLE IF EXISTS ONLY public.question_tag DROP CONSTRAINT IF EXISTS pk_question_tag_id CASCADE;
 ALTER TABLE IF EXISTS ONLY public.question_tag DROP CONSTRAINT IF EXISTS fk_question_id CASCADE;
 ALTER TABLE IF EXISTS ONLY public.tag DROP CONSTRAINT IF EXISTS pk_tag_id CASCADE;
 ALTER TABLE IF EXISTS ONLY public.question_tag DROP CONSTRAINT IF EXISTS fk_tag_id CASCADE;
 ALTER TABLE IF EXISTS ONLY public.users DROP CONSTRAINT IF EXISTS pk_user_id CASCADE;
-ALTER TABLE IF EXISTS ONLY public.users DROP CONSTRAINT IF EXISTS fk_user_id CASCADE;
 
 
 DROP TABLE IF EXISTS public.question;
@@ -28,7 +30,8 @@ CREATE TABLE question (
     vote_number integer,
     title text,
     message text,
-    image text
+    image text,
+    user_id integer
 );
 
 DROP TABLE IF EXISTS public.answer;
@@ -39,7 +42,9 @@ CREATE TABLE answer (
     vote_number integer,
     question_id integer,
     message text,
-    image text
+    image text,
+    user_id integer,
+    accepted text DEFAULT 'no'
 );
 
 DROP TABLE IF EXISTS public.comment;
@@ -50,7 +55,8 @@ CREATE TABLE comment (
     answer_id integer,
     message text,
     submission_time timestamp without time zone,
-    edited_count integer
+    edited_count integer,
+    user_id integer
 );
 
 
@@ -73,7 +79,8 @@ CREATE TABLE users (
     id serial NOT NULL,
     submission_time timestamp without time zone,
     user_name text,
-    user_password text
+    user_password text,
+    reputation integer DEFAULT 0
 );
 
 
@@ -86,20 +93,29 @@ ALTER TABLE ONLY comment
 ALTER TABLE ONLY question
     ADD CONSTRAINT pk_question_id PRIMARY KEY (id);
 
-ALTER TABLE ONLY question_tag
-    ADD CONSTRAINT pk_question_tag_id PRIMARY KEY (question_id, tag_id);
+ALTER TABLE ONLY users
+    ADD CONSTRAINT pk_users_id PRIMARY KEY (id);
 
 ALTER TABLE ONLY tag
     ADD CONSTRAINT pk_tag_id PRIMARY KEY (id);
 
-ALTER TABLE ONLY users
-    ADD CONSTRAINT pk_users_id PRIMARY KEY (id);
+ALTER TABLE ONLY question_tag
+    ADD CONSTRAINT pk_question_tag_id PRIMARY KEY (question_id, tag_id);
+
+ALTER TABLE ONLY question
+    ADD CONSTRAINT fk_users_id FOREIGN KEY (user_id) REFERENCES users(id);
 
 ALTER TABLE ONLY comment
     ADD CONSTRAINT fk_answer_id FOREIGN KEY (answer_id) REFERENCES answer(id);
 
+ALTER TABLE ONLY comment
+    ADD CONSTRAINT fk_users_id FOREIGN KEY (user_id) REFERENCES users(id);
+
 ALTER TABLE ONLY answer
     ADD CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES question(id);
+
+ALTER TABLE ONLY answer
+    ADD CONSTRAINT fk_users_id FOREIGN KEY (user_id) REFERENCES users(id);
 
 ALTER TABLE ONLY question_tag
     ADD CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES question(id);
@@ -140,3 +156,6 @@ SELECT pg_catalog.setval('tag_id_seq', 3, true);
 INSERT INTO question_tag VALUES (0, 1);
 INSERT INTO question_tag VALUES (1, 3);
 INSERT INTO question_tag VALUES (2, 3);
+
+INSERT INTO users VALUES (0, '2020-01-28 00:00:00', 'admin', '$2b$12$jXWgU/asaN7kwaSdoVWuge1pWkg/Je4gSViTUMKipZBffr4To0XmS', 9999999);
+INSERT INTO users VALUES (1, '2020-01-28 00:00:00', 'random_user', '$2b$12$g8P9.q0fgBEYvLTXYd8eOOEvccN/K/49081bBw8YvJNfMLWh5CENW', 0);

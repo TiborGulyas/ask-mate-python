@@ -78,7 +78,7 @@ DROP SEQUENCE IF EXISTS public.users_id_seq;
 CREATE TABLE users (
     id serial NOT NULL,
     submission_time timestamp without time zone,
-    user_name text,
+    user_name text UNIQUE,
     user_password text,
     reputation integer DEFAULT 0
 );

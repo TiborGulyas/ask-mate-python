@@ -5,7 +5,7 @@ import connection
 def get_all_questions(cursor, order={'order_by': 'id', 'order_direction': 'asc'}):
     cursor.execute("""
     SELECT * FROM question
-    ORDER BY """+f"""{order['order_by']} {order['order_direction']}""")
+    ORDER BY """ + f"""{order['order_by']} {order['order_direction']}""")
     questions = cursor.fetchall()
     return questions
 
@@ -28,7 +28,8 @@ def insert_new_question(cursor, title, message, submission_time, view_number, vo
     (title, message, submission_time, view_number, vote_number, image)
     VALUES (%(title)s, %(message)s, %(submission_time)s, %(view_number)s, %(vote_number)s, %(image)s)
     """,
-                   {'title': title, 'message': message, 'submission_time': submission_time, 'view_number': view_number, 'vote_number': vote_number, 'image': image})
+                   {'title': title, 'message': message, 'submission_time': submission_time, 'view_number': view_number,
+                    'vote_number': vote_number, 'image': image})
     cursor.execute("""
     SELECT id FROM question
     WHERE submission_time=%(submission_time)s;""",
@@ -106,7 +107,8 @@ def insert_new_answer(cursor, message, submission_time, vote_number, question_id
     (message, submission_time, vote_number, question_id, image)
     VALUES (%(message)s, %(submission_time)s, %(vote_number)s, %(question_id)s, %(image)s);
     """,
-                   {'message': message, 'submission_time': submission_time, 'vote_number': vote_number, 'question_id': question_id, 'image': image})
+                   {'message': message, 'submission_time': submission_time, 'vote_number': vote_number,
+                    'question_id': question_id, 'image': image})
     cursor.execute("""
     SELECT id FROM answer
     WHERE submission_time = %(submission_time)s;""",
@@ -169,6 +171,7 @@ def insert_image_question(cursor, id, image):
     WHERE id = %(id)s;
     ''',
                    {'id': id, 'image': image})
+
 
 @connection.connection_handler
 def get_tags_by_id(cursor, id):
@@ -245,10 +248,11 @@ def delete_tag(cursor, question_id, tag_id):
 def insert_new_comment(cursor, id_type, id, message, submission_time, edited_count):
     cursor.execute('''
     INSERT INTO comment
-    ( '''+f'{id_type}'+''', message, submission_time, edited_count)
+    ( ''' + f'{id_type}' + ''', message, submission_time, edited_count)
     VALUES (%(id)s, %(message)s, %(submission_time)s, %(edited_count)s);
     ''',
-    {'id_type': id_type, 'id': id, 'message': message, 'submission_time': submission_time, 'edited_count': edited_count})
+                   {'id_type': id_type, 'id': id, 'message': message, 'submission_time': submission_time,
+                    'edited_count': edited_count})
 
 
 @connection.connection_handler
@@ -278,7 +282,7 @@ def get_question_by_search(cursor, detail):
     SELECT * FROM question
     WHERE title LIKE %(detail)s or message LIKE %(detail)s;
     """,
-                   {'detail': '%%'+detail+'%%'})
+                   {'detail': '%%' + detail + '%%'})
     found_questions = cursor.fetchall()
     return found_questions
 
@@ -289,7 +293,7 @@ def get_question_ids_by_search_from_answers(cursor, detail):
     SELECT * FROM answer
     WHERE message LIKE %(detail)s;
     """,
-    {'detail': '%%'+detail+'%%'})
+                   {'detail': '%%' + detail + '%%'})
     found_question_ids = cursor.fetchall()
     return found_question_ids
 
@@ -301,7 +305,8 @@ def update_comment(cursor, comment_to_update):
     SET message = %(message)s, submission_time = %(submission_time)s
     WHERE id = %(comment_to_update)s;
     """,
-                   {'message': comment_to_update['message'], 'submission_time': comment_to_update['submission_time'], 'comment_to_update': int(comment_to_update['id'])})
+                   {'message': comment_to_update['message'], 'submission_time': comment_to_update['submission_time'],
+                    'comment_to_update': int(comment_to_update['id'])})
 
 
 @connection.connection_handler
@@ -340,6 +345,15 @@ def delete_comment_by_answer_id(cursor, answer_id):
     DELETE FROM comment 
     WHERE answer_id=%(answer_id)s;
     """,
-                    {'answer_id': answer_id})
+                   {'answer_id': answer_id})
 
 
+@connection.connection_handler
+def register_user(cursor, user_name, user_password, time_of_registration):
+    cursor.execute("""
+    INSERT INTO users
+    (user_name, user_password, time_of_registration)
+    VALUES (%(user_name)s, %(user_password)s, %(time_of_registration)s);
+    """,
+                   {'user_name': user_name, 'user_password': user_password,
+                    'time_of_registration': time_of_registration})

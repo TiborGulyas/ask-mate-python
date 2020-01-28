@@ -1,6 +1,7 @@
 import datetime
 from time import time
 import data_manager
+import bcrypt
 
 ALLOWED_extensions = {'png', 'jpg', 'jpeg', 'gif'}
 
@@ -58,3 +59,9 @@ def update_question(question_id, message, title, filename):
             question_dictionary_list[number]['submission_time'] = generate_time()
             question_dictionary_list[number]['image'] = "uploaded-image/" + filename
     data_manager.write_data('question', question_dictionary_list)
+
+
+def hash_password(plain_text_password):
+    # By using bcrypt, the salt is saved into the hash itself
+    hashed_bytes = bcrypt.hashpw(plain_text_password.encode('utf-8'), bcrypt.gensalt())
+    return hashed_bytes.decode('utf-8')

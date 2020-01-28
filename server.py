@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, send_from_directory
+from flask import Flask, render_template, request, redirect, send_from_directory, session, escape
 import data_manager
 import os
 import util
@@ -413,6 +413,39 @@ def delete_comment(comment_id):
     question_id = request.args.get('question_id')
     data_manager.delete_comment(comment_id)
     return redirect(f'/question/{question_id}')
+
+
+# Set the secret key to some random bytes. Keep this really secret!
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+
+
+@app.route('/show-user', methods=['GET', 'POST'])
+def show_user():
+    if 'username' in session:
+        return 'Logged in as %s' % escape(session['username'])
+    return 'You are not logged in'
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        hashed_password = util.hash_password(request.form['password'])
+        data_manager.register_user(request.form['username'], hashed_password, util.generate_time())
+        return redirect('/')
+    return '''
+        <form method="post">
+            <p><input type=text name=username>
+            <p><input type=password name=password>
+            <p><input type=submit value=Login>
+        </form>
+    '''
+
+
+@app.route('/logout')
+def logout():
+    # remove the username from the session if it's there
+    session.pop('username', None)
+    return redirect('/')
 
 
 if __name__ == '__main__':

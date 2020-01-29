@@ -349,11 +349,21 @@ def delete_comment_by_answer_id(cursor, answer_id):
 
 
 @connection.connection_handler
-def register_user(cursor, user_name, user_password, time_of_registration):
+def register_user(cursor, user_name, user_password, submission_time):
     cursor.execute("""
     INSERT INTO users
-    (user_name, user_password, time_of_registration)
-    VALUES (%(user_name)s, %(user_password)s, %(time_of_registration)s);
+    (user_name, user_password, submission_time)
+    VALUES (%(user_name)s, %(user_password)s, %(submission_time)s);
     """,
                    {'user_name': user_name, 'user_password': user_password,
-                    'time_of_registration': time_of_registration})
+                    'submission_time': submission_time})
+
+
+@connection.connection_handler
+def get_user_password(cursor, user_name):
+    cursor.execute("""
+    SELECT user_password FROM users
+    WHERE user_name=%(user_name)s
+    """, {'user_name': user_name})
+    user_password = cursor.fetchall()[0]
+    return user_password['user_password']

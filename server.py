@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, send_from_directory
 import data_manager
 import os
 import util
+import uuid
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -9,6 +10,7 @@ DATA_HEADER_question = ['id', 'submission_time', 'view_number', 'vote_number', '
 DATA_HEADER_answer = ['id', 'submission_time', 'vote_number', 'question_id', 'message', 'image']
 UPLOAD_folder = 'uploaded_image'
 app.config['UPLOAD_FOLDER'] = UPLOAD_folder
+actual_sessions = {}
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -357,9 +359,13 @@ def search():
 
 def fancy_search(questions, detail):
     for row in questions:
-        row['message'] = str(row['message']).replace('<', '&lt;').replace('>', '&gt;').replace(f"{detail.replace('<', '&lt;').replace('>', '&gt;')}", f"<strong>{detail.replace('<', '&lt;').replace('>', '&gt;')}</strong>")
+        row['message'] = str(row['message']).replace('<', '&lt;').replace('>', '&gt;').replace(
+            f"{detail.replace('<', '&lt;').replace('>', '&gt;')}",
+            f"<strong>{detail.replace('<', '&lt;').replace('>', '&gt;')}</strong>")
         try:
-            row['title'] = str(row['title']).replace('<', '&lt;').replace('>', '&gt;').replace(f"{detail.replace('<', '&lt;').replace('>', '&gt;')}", f"<strong>{detail.replace('<', '&lt;').replace('>', '&gt;')}</strong>")
+            row['title'] = str(row['title']).replace('<', '&lt;').replace('>', '&gt;').replace(
+                f"{detail.replace('<', '&lt;').replace('>', '&gt;')}",
+                f"<strong>{detail.replace('<', '&lt;').replace('>', '&gt;')}</strong>")
         except KeyError:
             pass
     return questions
@@ -421,13 +427,16 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 @app.route('/show-user', methods=['GET', 'POST'])
 def show_user():
-    if 'username' in session:
-        return 'Logged in as %s' % escape(session['username'])
+    s = session.get('session_id')
+    print(s)
+    if s in session:
+        print(actual_sessions)
+        return 'Logged in as %s' % escape(actual_sessions['session_id']['user_name'])
     return 'You are not logged in'
 
 
 @app.route('/register', methods=['GET', 'POST'])
-def login():
+def register():
     if request.method == 'POST':
         hashed_password = util.hash_password(request.form['password'])
         data_manager.register_user(request.form['username'], hashed_password, util.generate_time())
@@ -439,6 +448,27 @@ def login():
             <p><input type=submit value=Login>
         </form>
     '''
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        plain_text_password = request.form['password']
+        user_name = request.form['username']
+        user_hashed_password = data_manager.get_user_password(user_name)
+        if util.validate_password(plain_text_password, user_hashed_password):
+            session['session_id'] = uuid.uuid4()
+            global actual_sessions
+            actual_sessions[session['session_id']] = {'user_name': user_name}
+            print(actual_sessions)
+        return redirect('/show-user')
+    return '''
+            <form method="post">
+                <p><input type=text name=username>
+                <p><input type=password name=password>
+                <p><input type=submit value=Login>
+            </form>
+        '''
 
 
 @app.route('/logout')

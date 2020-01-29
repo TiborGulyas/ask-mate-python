@@ -427,11 +427,9 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 @app.route('/show-user', methods=['GET', 'POST'])
 def show_user():
-    s = session.get('session_id')
-    print(s)
-    if s in session:
-        print(actual_sessions)
-        return 'Logged in as %s' % escape(actual_sessions['session_id']['user_name'])
+    if 'username' in session:
+        print(session)
+        return 'Logged in as %s' % escape(session['username'])
     return 'You are not logged in'
 
 
@@ -457,10 +455,7 @@ def login():
         user_name = request.form['username']
         user_hashed_password = data_manager.get_user_password(user_name)
         if util.validate_password(plain_text_password, user_hashed_password):
-            session['session_id'] = uuid.uuid4()
-            global actual_sessions
-            actual_sessions[session['session_id']] = {'user_name': user_name}
-            print(actual_sessions)
+            session['username'] = user_name
         return redirect('/show-user')
     return '''
             <form method="post">

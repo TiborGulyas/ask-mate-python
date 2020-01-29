@@ -448,6 +448,15 @@ def logout():
     return redirect('/')
 
 
+@app.route('/user/<user_id>')
+def get_user_profile():
+    if 'username' in session:
+        user_id = data_manager.get_user_id_by_user_name(session['username'])
+        questions = data_manager.get_questions_of_user(user_id)
+        return render_template('user.html', username=session['username'], questions=questions)
+    return redirect('/')
+
+
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',

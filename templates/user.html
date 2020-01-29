@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ username }}'s profile</title>
+</head>
+<body>
+<h1>{{ username }}'s profile</h1>
+{% if questions %}
+    <table>
+        {% for question in questions %}
+            <tr>
+                {% for item in question %}
+                    <td>{{ item }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}
+{% if answers %}
+    <table>
+        {% for answer in answers %}
+            <tr>
+                {% for item in answer %}
+                    <td>{{ item }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}
+{% if comments %}
+    <table>
+        {% for comment in comments %}
+            <tr>
+                {% for item in comment %}
+                    <td>{{ item }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}
+</body>
+</html>

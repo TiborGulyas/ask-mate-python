@@ -136,19 +136,19 @@ INSERT INTO question VALUES (2, '2017-05-01 10:41:00', 1364, 57, 'Drawing canvas
 ', 'no', 1);
 SELECT pg_catalog.setval('question_id_seq', 2, true);
 
-INSERT INTO answer VALUES (1, '2017-04-28 16:49:00', 4, 1, 'You need to use brackets: my_list = []', 'no', 1, 'no');
-INSERT INTO answer VALUES (2, '2017-04-25 14:42:00', 35, 1, 'Look it up in the Python docs', 'images/image2.jpg', 0, 'yes');
+INSERT INTO answer VALUES (0, '2017-04-28 16:49:00', 4, 1, 'You need to use brackets: my_list = []', 'no', 1, 'no');
+INSERT INTO answer VALUES (1, '2017-04-25 14:42:00', 35, 1, 'Look it up in the Python docs', 'images/image2.jpg', 0, 'yes');
 SELECT pg_catalog.setval('answer_id_seq', 2, true);
 
-INSERT INTO comment VALUES (1, 0, NULL, 'Please clarify the question as it is too vague!', '2017-05-01 05:49:00', 0, 1);
-INSERT INTO comment VALUES (2, NULL, 1, 'I think you could use my_list = list() as well.', '2017-05-02 16:55:00', 0, 0);
+INSERT INTO comment VALUES (0, 0, NULL, 'Please clarify the question as it is too vague!', '2017-05-01 05:49:00', 0, 1);
+INSERT INTO comment VALUES (1, NULL, 1, 'I think you could use my_list = list() as well.', '2017-05-02 16:55:00', 0, 0);
 SELECT pg_catalog.setval('comment_id_seq', 2, true);
 
-INSERT INTO tag VALUES (1, 'python');
-INSERT INTO tag VALUES (2, 'sql');
-INSERT INTO tag VALUES (3, 'css');
+INSERT INTO tag VALUES (0, 'python');
+INSERT INTO tag VALUES (1, 'sql');
+INSERT INTO tag VALUES (2, 'css');
 SELECT pg_catalog.setval('tag_id_seq', 3, true);
 
 INSERT INTO question_tag VALUES (0, 1);
-INSERT INTO question_tag VALUES (1, 3);
+INSERT INTO question_tag VALUES (1, 2);
 SELECT pg_catalog.setval('tag_id_seq', 1, true);

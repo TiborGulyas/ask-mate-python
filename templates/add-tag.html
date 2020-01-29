@@ -9,6 +9,11 @@
     <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
 </head>
 <body>
+{% if user == 'not logged in' %}
+    <h3 id="user">{{ user }}</h3>
+{% else %}
+    <h3 id="user">Logged in as: {{ user }}</h3>
+{% endif %}
 <h1>Question Title: {{ question_for_display['title'] }}</h1>
 <table class="new_input_data">
     <tr>

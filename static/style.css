@@ -109,3 +109,8 @@ thead{
 #nodecoration{
     text-decoration: none;
 }
+
+#user{
+    text-decoration: none;
+    text-align: right;
+}

@@ -15,15 +15,18 @@ actual_sessions = {}
 
 @app.route('/', methods=['GET', 'POST'])
 def first_five_question_list():
+    user = util.return_user()
     if request.args:
         args = dict(request.args)
         if 'order_by' in args.keys():
             question_dictionary = data_manager.get_first_five_questions()
+            print(user)
             return render_template(
                 'list.html',
                 question_dictionary_list=question_dictionary,
                 direction=args['order_direction'],
-                first_five='first five')
+                first_five='first five',
+                user=user)
 
     elif request.method == 'POST':
         detail = request.form.get('search')
@@ -31,14 +34,17 @@ def first_five_question_list():
 
     elif request.method == 'GET':
         question_dictionary = data_manager.get_first_five_questions()
+        print(user)
         return render_template(
             'list.html',
             question_dictionary_list=question_dictionary,
-            first_five='first five')
+            first_five='first five',
+            user=user)
 
 
 @app.route('/list', methods=['GET', 'POST'])
 def question_list():
+    user = util.return_user()
     if request.args:
         args = dict(request.args)
         if 'order_by' in args.keys():
@@ -46,7 +52,8 @@ def question_list():
             return render_template(
                 'list.html',
                 question_dictionary_list=question_dictionary,
-                direction=args['order_direction'])
+                direction=args['order_direction'],
+                user=user)
 
     elif request.method == 'POST':
         detail = request.form.get('search')
@@ -56,13 +63,15 @@ def question_list():
         question_dictionary = data_manager.get_all_questions()
         return render_template(
             'list.html',
-            question_dictionary_list=question_dictionary)
+            question_dictionary_list=question_dictionary,
+            user=user)
 
 
 @app.route('/question', methods=['GET', 'POST'])
 def add_question():
+    user = util.return_user()
     if request.method == 'GET':
-        return render_template('new-question.html')
+        return render_template('new-question.html', user=user)
     elif request.method == "POST":
         user_id = data_manager.get_user_id_by_user_name(session['username'])
         new_question = {'title': request.form.get('title'), 'message': request.form.get('message'),
@@ -84,6 +93,7 @@ def add_question():
 
 @app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
 def new_tag(question_id):
+    user = util.return_user()
     if request.method == 'GET' and question_id.isdigit():
         question_for_display = data_manager.get_question_by_id(question_id)
         tags_already_have = data_manager.get_tags_by_id(question_id)
@@ -94,7 +104,8 @@ def new_tag(question_id):
         return render_template('add-tag.html', question_id=question_id,
                                question_for_display=question_for_display, tags_for_choose=all_tags,
                                number_of_tags=number_of_tags,
-                               tags_for_display=tags_already_have)
+                               tags_for_display=tags_already_have,
+                               user=user)
 
     elif request.method == 'POST':
         if request.form.get('submit_new_tag') != "":
@@ -130,6 +141,7 @@ def new_tag(question_id):
 
 @app.route('/question/<question_id>', methods=['GET', 'POST'])
 def view_question(question_id):
+    user = util.return_user()
     try:
         vote_up = int(request.args.get('vote_up'))
         question_for_display = data_manager.get_question_by_id(question_id)
@@ -156,7 +168,8 @@ def view_question(question_id):
             question_for_display=question_for_display, answer_for_display=answer_for_display,
             tags_for_display=tags_for_display, number_of_tags=number_of_tags,
             question_comment_for_display=question_comment_for_display,
-            answer_comment_for_display=answer_comment_for_display, answer_with_comment=answer_with_comment)
+            answer_comment_for_display=answer_comment_for_display, answer_with_comment=answer_with_comment,
+            user=user)
 
 
 @app.route('/question/<question_id>/tag/<tag_id>/delete', methods=['GET', 'POST'])
@@ -168,8 +181,9 @@ def delete_tag(question_id, tag_id):
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
 def edit_question(question_id):
+    user = util.return_user()
     if request.method == 'GET':
-        return render_template('new-question.html', output_dict=data_manager.get_question_by_id(question_id))
+        return render_template('new-question.html', output_dict=data_manager.get_question_by_id(question_id), user=user)
 
     elif request.method == 'POST':
         image = 'not found'
@@ -218,12 +232,14 @@ def question_vote(question_id, vote):
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
 def add_answer(question_id):
+    user = util.return_user()
     question_for_display = data_manager.get_question_by_id(question_id)
     if request.method == 'GET':
         return render_template(
             'new-answer.html',
             question_for_display=question_for_display,
-            question_id=question_id)
+            question_id=question_id,
+            user=user)
     elif request.method == "POST":
         user_id = data_manager.get_user_id_by_user_name(session['username'])
         new_answer = {'message': request.form.get('message'),
@@ -246,17 +262,20 @@ def add_answer(question_id):
 
 @app.route('/answer/<answer_id>', methods=['GET', 'POST'])
 def show_answer(answer_id):
+    user = util.return_user()
     answer_for_display = data_manager.get_answer_by_id(answer_id)
-    return render_template('answer.html', answer_for_display=answer_for_display[0])
+    return render_template('answer.html', answer_for_display=answer_for_display[0], user=user)
 
 
 @app.route('/answer/<answer_id>/edit', methods=['GET', 'POST'])
 def edit_answer(answer_id):
+    user = util.return_user()
     if request.method == 'GET':
         answer_for_display = data_manager.get_answer_by_id(answer_id)
         question_for_display = data_manager.get_question_by_id(answer_for_display[0]['question_id'])
         return render_template('new-answer.html', output_dict=answer_for_display[0],
-                               question_for_display=question_for_display)
+                               question_for_display=question_for_display,
+                               user=user)
     elif request.method == 'POST':
         image = 'not found'
         try:
@@ -298,11 +317,13 @@ def uploaded_file(filename):
 
 @app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
 def add_question_comment(question_id):
+    user = util.return_user()
     question_for_display = data_manager.get_question_by_id(question_id)
     if request.method == 'GET':
         return render_template(
             'new-comment.html',
-            question_for_display=question_for_display)
+            question_for_display=question_for_display,
+            user=user)
 
     elif request.method == 'POST':
         user_id = data_manager.get_user_id_by_user_name(session['username'])
@@ -319,10 +340,12 @@ def add_question_comment(question_id):
 @app.route('/answer/<answer_id>/new-comment', methods=['GET', 'POST'])
 def add_answer_comment(answer_id):
     answer_for_display = data_manager.get_answer_by_id(answer_id)
+    user = util.return_user()
     if request.method == 'GET':
         return render_template(
             'new-comment.html',
-            answer_for_display=answer_for_display[0])
+            answer_for_display=answer_for_display[0],
+            user=user)
 
     elif request.method == 'POST':
         user_id = data_manager.get_user_id_by_user_name(session['username'])
@@ -338,6 +361,7 @@ def add_answer_comment(answer_id):
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
+    user = util.return_user()
     if request.method == 'POST':
         detail = request.form.get('search')
         return redirect(f"/search?q={detail}")
@@ -353,10 +377,10 @@ def search():
     questions = fancy_search(questions, detail)
     answers = fancy_search(answers, detail)
     if len(questions) < 1:
-        return redirect('/')
+        return redirect('/', user=user)
     return render_template(
         'list.html', question_dictionary_list=questions, answer_dictionary_list=answers, question_ids=question_ids,
-        search=True)
+        search=True, user=user)
 
 
 def fancy_search(questions, detail):
@@ -375,6 +399,7 @@ def fancy_search(questions, detail):
 
 @app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])
 def edit_comment(comment_id):
+    user = util.return_user()
     if request.method == 'GET':
         comment_type = ""
         all_comments = data_manager.get_all_comments()
@@ -393,14 +418,16 @@ def edit_comment(comment_id):
             return render_template(
                 'new-comment.html',
                 answer_for_display=answer_for_display[0], comment_type=comment_type,
-                comment_for_display=comment_for_display)
+                comment_for_display=comment_for_display,
+                user=user)
 
         if request.method == 'GET' and comment_type == 'question':
             question_for_display = dict(data_manager.get_question_by_id(question_id))
             return render_template(
                 'new-comment.html',
                 question_for_display=question_for_display, comment_type=comment_type,
-                comment_for_display=comment_for_display)
+                comment_for_display=comment_for_display,
+                user=user)
 
     elif request.method == 'POST':
         update_comment = {'id': comment_id,
@@ -435,7 +462,6 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 @app.route('/show-user', methods=['GET', 'POST'])
 def show_user():
     if 'username' in session:
-        print(session)
         return 'Logged in as %s' % escape(session['username'])
     return 'You are not logged in'
 
@@ -486,7 +512,8 @@ def get_user_profile(user_id):
     questions = data_manager.get_questions_of_user(int(user_id))
     answers = data_manager.get_answers_of_user(int(user_id))
     comments = data_manager.get_comments_of_user(int(user_id))
-    return render_template('user.html', username='admin', questions=questions, answers=answers, comments=comments)
+    user = util.return_user()
+    return render_template('user.html', username='admin', questions=questions, answers=answers, comments=comments, user=user)
     # return redirect('/')
 
 

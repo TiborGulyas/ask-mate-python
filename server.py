@@ -341,7 +341,6 @@ def search():
     detail = dict(request.args)['q']
     questions = data_manager.get_question_by_search(detail)
     answers = data_manager.get_question_ids_by_search_from_answers(detail)
-    print(f'ezt_nezzuk: {answers}')
     question_ids = set()
     for answer in answers:
         question_ids.add(answer['question_id'])
@@ -471,6 +470,16 @@ def logout():
     # remove the username from the session if it's there
     session.pop('username', None)
     return redirect('/')
+
+
+@app.route('/user/<user_id>')
+def get_user_profile(user_id):
+    # if 'username' in session:
+    questions = data_manager.get_questions_of_user(int(user_id))
+    answers = data_manager.get_answers_of_user(int(user_id))
+    comments = data_manager.get_comments_of_user(int(user_id))
+    return render_template('user.html', username='admin', questions=questions, answers=answers, comments=comments)
+    # return redirect('/')
 
 
 if __name__ == '__main__':

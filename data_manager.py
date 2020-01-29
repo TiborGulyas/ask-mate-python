@@ -367,3 +367,22 @@ def get_user_password(cursor, user_name):
     """, {'user_name': user_name})
     user_password = cursor.fetchall()[0]
     return user_password['user_password']
+
+@connection.connection_handler
+def get_user_id_by_user_name(cursor, user_name):
+    cursor.execute("""
+    SELECT id FROM users
+    WHERE user_name=%(user_name)s
+    """, {'user_name': user_name})
+    user_id = cursor.fetchall()
+    return user_id[0]['id']
+
+
+@connection.connection_handler
+def get_questions_of_user(cursor, user_id):
+    cursor.execute("""
+        SELECT * FROM question
+        WHERE id=%(user_id)s
+        """, {'user_id': user_id})
+    questions = cursor.fetchall()
+    return questions

@@ -434,9 +434,20 @@ def edit_comment(comment_id):
 
 @app.route('/comments/<comment_id>/delete', methods=['GET'])
 def delete_comment(comment_id):
-    question_id = request.args.get('question_id')
-    data_manager.delete_comment(comment_id)
-    return redirect(f'/question/{question_id}')
+    actual_user_id = 'a'
+    if 'username' in session:
+        actual_user_id = data_manager.get_user_id_by_user_name(session['username'])
+    else:
+        return 'Please log in!'
+
+    comment_user_id = data_manager.get_user_by_comment_id(comment_id)
+
+    if actual_user_id == comment_user_id:
+        question_id = request.args.get('question_id')
+        data_manager.delete_comment(comment_id)
+        return redirect(f'/question/{question_id}')
+    else:
+        return 'That is not your comment!'
 
 @app.route('/answer/<answer_id>/accept',methods=['GET'])
 def accept_answer(answer_id):

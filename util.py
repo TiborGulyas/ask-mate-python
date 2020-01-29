@@ -1,5 +1,5 @@
 import datetime
-from time import time
+from flask import session
 import data_manager
 import bcrypt
 
@@ -70,3 +70,9 @@ def hash_password(plain_text_password):
 def validate_password(plain_text_password, hashed_password):
     hashed_bytes_password = hashed_password.encode('utf-8')
     return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_bytes_password)
+
+def return_user():
+    try:
+        return session['username']
+    except KeyError:
+        return 'not logged in'

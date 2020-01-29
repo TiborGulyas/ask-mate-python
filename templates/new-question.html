@@ -9,6 +9,11 @@
     <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
 </head>
 <body>
+{% if user == 'not logged in' %}
+    <h3 id="user">{{ user }}</h3>
+{% else %}
+    <h3 id="user">Logged in as: {{ user }}</h3>
+{% endif %}
 {% if output_dict %}
     <link rel="stylesheet" type="text/css" href="../../static/style.css">
     <h1 class="edit_button">Edit question</h1>

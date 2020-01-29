@@ -46,6 +46,8 @@
                 {% endif %}
             {% elif header_item != 'question_id' %}
                 <td>{{ answer_for_display[header_item] }}</td>
+            {% elif header_item != 'accepted' %}
+                <td><a href="/answer/{{ answer_for_display['id'] }}/accept" class="list-id">{{ answer_for_display[header_item] }}</td>
             {% endif %}
         {% endfor %}
     </tr>

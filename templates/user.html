@@ -8,35 +8,66 @@
 <h1>{{ username }}'s profile</h1>
 {% if questions %}
     <table>
+        <thead>
+        <tr>
+            {% for question in questions[0].keys() %}
+                <td>{{ question }}</td>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
         {% for question in questions %}
             <tr>
                 {% for item in question %}
-                    <td>{{ item }}</td>
+                    {% if item == 'title' %}
+                        <td><a href="../question/{{ question['id'] }}">{{ question[item] }}</a></td>
+                    {% else %}
+                    <td>{{ question[item] }}</td>
+                    {% endif %}
                 {% endfor %}
             </tr>
         {% endfor %}
+        </tbody>
     </table>
 {% endif %}
 {% if answers %}
     <table>
+    <thead>
+        <tr>
+            {% for answer in answers[0].keys() %}
+                <td>{{ answer }}</td>
+            {% endfor %}
+        </tr>
+        </thead>
+    <tbody>
         {% for answer in answers %}
             <tr>
                 {% for item in answer %}
-                    <td>{{ item }}</td>
+                    <td>{{ answer[item] }}</td>
                 {% endfor %}
             </tr>
         {% endfor %}
+    </tbody>
     </table>
 {% endif %}
 {% if comments %}
     <table>
+    <thead>
+        <tr>
+            {% for comment in comments[0].keys() %}
+                <td>{{ comment }}</td>
+            {% endfor %}
+        </tr>
+        </thead>
+    <tbody>
         {% for comment in comments %}
             <tr>
                 {% for item in comment %}
-                    <td>{{ item }}</td>
+                    <td>{{ comment[item] }}</td>
                 {% endfor %}
             </tr>
         {% endfor %}
+    </tbody>
     </table>
 {% endif %}
 </body>

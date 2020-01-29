@@ -394,3 +394,13 @@ def get_questions_of_user(cursor, user_id):
         """, {'user_id': user_id})
     questions = cursor.fetchall()
     return questions
+
+@connection.connection_handler
+def get_user_by_comment_id(cursor, comment_id):
+    cursor.execute("""
+        SELECT user_id FROM comment
+        WHERE id=%(comment_id)s
+        """, {'comment_id': comment_id})
+    user_id = cursor.fetchall()[0]
+    return user_id['user_id']
+

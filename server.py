@@ -299,12 +299,14 @@ def uploaded_file(filename):
 @app.route('/question/<question_id>/new-comment', methods=['GET', 'POST'])
 def add_question_comment(question_id):
     question_for_display = data_manager.get_question_by_id(question_id)
-    if request.method == 'GET':
+    if request.method == 'GET' and 'username' in session:
         return render_template(
             'new-comment.html',
             question_for_display=question_for_display)
+    elif request.method == 'GET':
+        return 'Please log in!'
 
-    elif request.method == 'POST':
+    elif request.method == 'POST' and 'username' in session:
         user_id = data_manager.get_user_id_by_user_name(session['username'])
         new_comment = {'id_type': 'question_id',
                        'question_id': int(question_id),
@@ -319,12 +321,15 @@ def add_question_comment(question_id):
 @app.route('/answer/<answer_id>/new-comment', methods=['GET', 'POST'])
 def add_answer_comment(answer_id):
     answer_for_display = data_manager.get_answer_by_id(answer_id)
-    if request.method == 'GET':
+    if request.method == 'GET' and 'username' in session:
         return render_template(
             'new-comment.html',
             answer_for_display=answer_for_display[0])
 
-    elif request.method == 'POST':
+    elif request.method == 'GET':
+        return 'Please log in!'
+
+    elif request.method == 'POST' and 'username' in session:
         user_id = data_manager.get_user_id_by_user_name(session['username'])
         new_comment = {'id_type': 'answer_id',
                        'answer_id': int(answer_id),
@@ -375,7 +380,15 @@ def fancy_search(questions, detail):
 
 @app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])
 def edit_comment(comment_id):
-    if request.method == 'GET':
+    actual_user_id = 'a'
+    if 'username' in session:
+        actual_user_id = data_manager.get_user_id_by_user_name(session['username'])
+    else:
+        return 'Please log in!'
+
+    comment_user_id = data_manager.get_user_by_comment_id(comment_id)
+
+    if request.method == 'GET' and actual_user_id == comment_user_id:
         comment_type = ""
         all_comments = data_manager.get_all_comments()
         for comment in all_comments:
@@ -402,7 +415,10 @@ def edit_comment(comment_id):
                 question_for_display=question_for_display, comment_type=comment_type,
                 comment_for_display=comment_for_display)
 
-    elif request.method == 'POST':
+    elif request.method == 'GET':
+        return 'That is not your comment!'
+
+    elif request.method == 'POST' and 'username' in session and actual_user_id == comment_user_id:
         update_comment = {'id': comment_id,
                           'message': request.form.get('comment'),
                           'submission_time': util.generate_time()}
@@ -435,7 +451,6 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 @app.route('/show-user', methods=['GET', 'POST'])
 def show_user():
     if 'username' in session:
-        print(session)
         return 'Logged in as %s' % escape(session['username'])
     return 'You are not logged in'
 

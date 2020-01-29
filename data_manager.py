@@ -22,14 +22,14 @@ def get_first_five_questions(cursor):
 
 
 @connection.connection_handler
-def insert_new_question(cursor, title, message, submission_time, view_number, vote_number, image):
+def insert_new_question(cursor, title, message, submission_time, view_number, vote_number, image, user_id):
     cursor.execute("""
     INSERT INTO question
-    (title, message, submission_time, view_number, vote_number, image)
-    VALUES (%(title)s, %(message)s, %(submission_time)s, %(view_number)s, %(vote_number)s, %(image)s)
+    (title, message, submission_time, view_number, vote_number, image, user_id)
+    VALUES (%(title)s, %(message)s, %(submission_time)s, %(view_number)s, %(vote_number)s, %(image)s, %(user_id)s)
     """,
                    {'title': title, 'message': message, 'submission_time': submission_time, 'view_number': view_number,
-                    'vote_number': vote_number, 'image': image})
+                    'vote_number': vote_number, 'image': image, 'user_id': user_id})
     cursor.execute("""
     SELECT id FROM question
     WHERE submission_time=%(submission_time)s;""",
@@ -101,14 +101,14 @@ def get_answer_by_question_id(cursor, question_id):
 
 
 @connection.connection_handler
-def insert_new_answer(cursor, message, submission_time, vote_number, question_id, image):
+def insert_new_answer(cursor, message, submission_time, vote_number, question_id, image, user_id):
     cursor.execute("""
     INSERT INTO answer
-    (message, submission_time, vote_number, question_id, image)
-    VALUES (%(message)s, %(submission_time)s, %(vote_number)s, %(question_id)s, %(image)s);
+    (message, submission_time, vote_number, question_id, image, user_id)
+    VALUES (%(message)s, %(submission_time)s, %(vote_number)s, %(question_id)s, %(image)s, %(user_id)s)
     """,
                    {'message': message, 'submission_time': submission_time, 'vote_number': vote_number,
-                    'question_id': question_id, 'image': image})
+                    'question_id': question_id, 'image': image, 'user_id': user_id})
     cursor.execute("""
     SELECT id FROM answer
     WHERE submission_time = %(submission_time)s;""",
@@ -245,14 +245,14 @@ def delete_tag(cursor, question_id, tag_id):
 
 
 @connection.connection_handler
-def insert_new_comment(cursor, id_type, id, message, submission_time, edited_count):
+def insert_new_comment(cursor, id_type, id, message, submission_time, edited_count, user_id):
     cursor.execute('''
     INSERT INTO comment
-    ( ''' + f'{id_type}' + ''', message, submission_time, edited_count)
-    VALUES (%(id)s, %(message)s, %(submission_time)s, %(edited_count)s);
+    ( ''' + f'{id_type}' + ''', message, submission_time, edited_count,user_id)
+    VALUES (%(id)s, %(message)s, %(submission_time)s, %(edited_count)s, %(user_id)s);
     ''',
                    {'id_type': id_type, 'id': id, 'message': message, 'submission_time': submission_time,
-                    'edited_count': edited_count})
+                    'edited_count': edited_count, 'user_id': user_id})
 
 
 @connection.connection_handler
@@ -349,11 +349,21 @@ def delete_comment_by_answer_id(cursor, answer_id):
 
 
 @connection.connection_handler
-def register_user(cursor, user_name, user_password, time_of_registration):
+def register_user(cursor, user_name, user_password, submission_time):
     cursor.execute("""
     INSERT INTO users
-    (user_name, user_password, time_of_registration)
-    VALUES (%(user_name)s, %(user_password)s, %(time_of_registration)s);
+    (user_name, user_password, submission_time )
+    VALUES (%(user_name)s, %(user_password)s, %(submission_time)s);
     """,
                    {'user_name': user_name, 'user_password': user_password,
-                    'time_of_registration': time_of_registration})
+                    'submission_time': submission_time})
+
+@connection.connection_handler
+def get_user_id_by_name(cursor, user_name):
+    cursor.execute("""
+    SELECT id FROM users
+    WHERE user_name = %(user_name)s;
+    """,
+                   {'user_name': user_name})
+    id = cursor.fetchall()[0]
+    return id['id']

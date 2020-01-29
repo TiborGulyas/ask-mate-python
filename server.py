@@ -61,11 +61,11 @@ def question_list():
 def add_question():
     if request.method == 'GET':
         return render_template('new-question.html')
-
     elif request.method == "POST":
+        user_id = data_manager.get_user_id_by_name(session['username'])
         new_question = {'title': request.form.get('title'), 'message': request.form.get('message'),
                         'submission_time': util.generate_time(), 'view_number': '0', 'vote_number': '0',
-                        'image': 'not found'}
+                        'image': 'not found', 'user_id': user_id}
         new_question['id'] = data_manager.insert_new_question(*new_question.values())
         try:
             file = request.files['file']
@@ -223,9 +223,10 @@ def add_answer(question_id):
             question_for_display=question_for_display,
             question_id=question_id)
     elif request.method == "POST":
+        user_id = data_manager.get_user_id_by_name(session['username'])
         new_answer = {'message': request.form.get('message'),
                       'submission_time': util.generate_time(), 'vote_number': '0', 'question_id': int(question_id),
-                      'image': 'not found'}
+                      'image': 'not found', 'user_id': user_id}
         new_answer_id = data_manager.insert_new_answer(*new_answer.values())
         try:
             file = request.files['file']
@@ -302,11 +303,12 @@ def add_question_comment(question_id):
             question_for_display=question_for_display)
 
     elif request.method == 'POST':
+        user_id = data_manager.get_user_id_by_name(session['username'])
         new_comment = {'id_type': 'question_id',
                        'question_id': int(question_id),
                        'message': request.form.get('comment'),
                        'submission_time': util.generate_time(),
-                       'edited_count': '0'}
+                       'edited_count': '0','user_id': user_id}
 
         data_manager.insert_new_comment(*new_comment.values())
         return redirect(f'/question/{question_id}')
@@ -321,11 +323,12 @@ def add_answer_comment(answer_id):
             answer_for_display=answer_for_display[0])
 
     elif request.method == 'POST':
+        user_id = data_manager.get_user_id_by_name(session['username'])
         new_comment = {'id_type': 'answer_id',
                        'answer_id': int(answer_id),
                        'message': request.form.get('comment'),
                        'submission_time': util.generate_time(),
-                       'edited_count': '0'}
+                       'edited_count': '0', 'user_id': user_id}
 
         data_manager.insert_new_comment(*new_comment.values())
         return redirect(f'/question/{answer_for_display[0]["question_id"]}')

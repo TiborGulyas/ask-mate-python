@@ -151,6 +151,7 @@ def view_question(question_id):
         number_of_tags = len(tags_for_display)
         if len(answer_for_display) == 0:
             answer_for_display = False
+
         return render_template(
             'question.html', question_id=question_id,
             question_for_display=question_for_display, answer_for_display=answer_for_display,
@@ -220,10 +221,13 @@ def question_vote(question_id, vote):
 def add_answer(question_id):
     question_for_display = data_manager.get_question_by_id(question_id)
     if request.method == 'GET':
-        return render_template(
-            'new-answer.html',
-            question_for_display=question_for_display,
-            question_id=question_id)
+        if 'username' in session:
+            return render_template(
+                'new-answer.html',
+                question_for_display=question_for_display,
+                question_id=question_id)
+        return render_template('access-error.html', data_type="question", id=question_id)
+
     elif request.method == "POST":
         user_id = data_manager.get_user_id_by_user_name(session['username'])
         new_answer = {'message': request.form.get('message'),
@@ -254,9 +258,15 @@ def show_answer(answer_id):
 def edit_answer(answer_id):
     if request.method == 'GET':
         answer_for_display = data_manager.get_answer_by_id(answer_id)
-        question_for_display = data_manager.get_question_by_id(answer_for_display[0]['question_id'])
-        return render_template('new-answer.html', output_dict=answer_for_display[0],
-                               question_for_display=question_for_display)
+        if 'username' in session:
+            user = data_manager.get_user_id_by_user_name(session['username'])
+            owner = answer_for_display[0]['user_id']
+            if user == owner:
+                question_for_display = data_manager.get_question_by_id(answer_for_display[0]['question_id'])
+                return render_template('new-answer.html', output_dict=answer_for_display[0],
+                                       question_for_display=question_for_display)
+        return render_template('access-error.html', data_type="answer", id=answer_id)
+
     elif request.method == 'POST':
         image = 'not found'
         try:
@@ -275,19 +285,26 @@ def edit_answer(answer_id):
 
 @app.route('/answer/<answer_id>/delete', methods=['GET', 'POST'])
 def delete_answer(answer_id):
-    question_id = data_manager.get_answer_by_id(answer_id)[0]['question_id']
-    data_manager.delete_comment_by_answer_id(answer_id)
-    data_manager.delete_answer(answer_id)
-    return redirect(f'/question/{question_id}')
+    if 'username' in session:
+        user = data_manager.get_user_id_by_user_name(session['username'])
+        owner = data_manager.get_answer_by_id(answer_id)[0]['user_id']
+        if user == owner:
+            question_id = data_manager.get_answer_by_id(answer_id)[0]['question_id']
+            data_manager.delete_comment_by_answer_id(answer_id)
+            data_manager.delete_answer(answer_id)
+            return redirect(f'/question/{question_id}')
+    return render_template('access-error.html', data_type="answer", id=answer_id)
 
 
 @app.route('/answer/<answer_id>/<vote>', methods=['GET', 'POST'])
 def answer_vote(answer_id, vote):
-    if vote == "vote_up":
-        question_id = data_manager.vote_answer(answer_id, 1)
-    else:
-        question_id = data_manager.vote_answer(answer_id, -1)
-    return redirect(f'/question/{question_id}')
+    if 'username' in session:
+        if vote == "vote_up":
+            question_id = data_manager.vote_answer(answer_id, 1)
+        else:
+            question_id = data_manager.vote_answer(answer_id, -1)
+        return redirect(f'/question/{question_id}')
+    return render_template('access-error.html', data_type="answer", id=answer_id)
 
 
 @app.route('/uploaded-image/<filename>')

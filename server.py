@@ -419,6 +419,11 @@ def delete_comment(comment_id):
     data_manager.delete_comment(comment_id)
     return redirect(f'/question/{question_id}')
 
+@app.route('/answer/<answer_id>/accept',methods=['GET'])
+def accept_answer(answer_id):
+    data_manager.accept_answer(answer_id)
+    return redirect(f'/answer/{answer_id}')
+
 
 # Set the secret key to some random bytes. Keep this really secret!
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'

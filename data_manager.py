@@ -358,6 +358,14 @@ def register_user(cursor, user_name, user_password, submission_time):
                    {'user_name': user_name, 'user_password': user_password,
                     'submission_time': submission_time})
 
+@connection.connection_handler
+def accept_answer(cursor, id):
+    cursor.execute("""
+    UPDATE answer
+    SET accepted = 'yes'
+    WHERE id=%(id)s;
+    """,
+                   {'id': id})
 
 @connection.connection_handler
 def get_user_password(cursor, user_name):

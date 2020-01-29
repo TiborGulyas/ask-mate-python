@@ -64,7 +64,7 @@ def add_question():
     if request.method == 'GET':
         return render_template('new-question.html')
     elif request.method == "POST":
-        user_id = data_manager.get_user_id_by_name(session['username'])
+        user_id = data_manager.get_user_id_by_user_name(session['username'])
         new_question = {'title': request.form.get('title'), 'message': request.form.get('message'),
                         'submission_time': util.generate_time(), 'view_number': '0', 'vote_number': '0',
                         'image': 'not found', 'user_id': user_id}
@@ -167,7 +167,7 @@ def delete_tag(question_id, tag_id):
 
 
 @app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
-def edit_question2(question_id):
+def edit_question(question_id):
     if request.method == 'GET':
         return render_template('new-question.html', output_dict=data_manager.get_question_by_id(question_id))
 
@@ -225,7 +225,7 @@ def add_answer(question_id):
             question_for_display=question_for_display,
             question_id=question_id)
     elif request.method == "POST":
-        user_id = data_manager.get_user_id_by_name(session['username'])
+        user_id = data_manager.get_user_id_by_user_name(session['username'])
         new_answer = {'message': request.form.get('message'),
                       'submission_time': util.generate_time(), 'vote_number': '0', 'question_id': int(question_id),
                       'image': 'not found', 'user_id': user_id}
@@ -305,7 +305,7 @@ def add_question_comment(question_id):
             question_for_display=question_for_display)
 
     elif request.method == 'POST':
-        user_id = data_manager.get_user_id_by_name(session['username'])
+        user_id = data_manager.get_user_id_by_user_name(session['username'])
         new_comment = {'id_type': 'question_id',
                        'question_id': int(question_id),
                        'message': request.form.get('comment'),
@@ -325,7 +325,7 @@ def add_answer_comment(answer_id):
             answer_for_display=answer_for_display[0])
 
     elif request.method == 'POST':
-        user_id = data_manager.get_user_id_by_name(session['username'])
+        user_id = data_manager.get_user_id_by_user_name(session['username'])
         new_comment = {'id_type': 'answer_id',
                        'answer_id': int(answer_id),
                        'message': request.form.get('comment'),

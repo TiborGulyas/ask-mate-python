@@ -16,17 +16,18 @@ actual_sessions = {}
 @app.route('/', methods=['GET', 'POST'])
 def first_five_question_list():
     user = util.return_user()
+    user_id = data_manager.get_user_id_by_user_name(user)
+    vote_history = data_manager.get_vote_history('question', user_id)
     if request.args:
         args = dict(request.args)
         if 'order_by' in args.keys():
             question_dictionary = data_manager.get_first_five_questions()
-            print(user)
             return render_template(
                 'list.html',
                 question_dictionary_list=question_dictionary,
                 direction=args['order_direction'],
                 first_five='first five',
-                user=user)
+                user=user, user_id=user_id, vote_history=vote_history)
 
     elif request.method == 'POST':
         detail = request.form.get('search')
@@ -34,17 +35,18 @@ def first_five_question_list():
 
     elif request.method == 'GET':
         question_dictionary = data_manager.get_first_five_questions()
-        print(user)
         return render_template(
             'list.html',
             question_dictionary_list=question_dictionary,
             first_five='first five',
-            user=user)
+            user=user, user_id=user_id, vote_history=vote_history)
 
 
 @app.route('/list', methods=['GET', 'POST'])
 def question_list():
     user = util.return_user()
+    user_id = data_manager.get_user_id_by_user_name(user)
+    vote_history = data_manager.get_vote_history('question', user_id)
     if request.args:
         args = dict(request.args)
         if 'order_by' in args.keys():
@@ -53,7 +55,7 @@ def question_list():
                 'list.html',
                 question_dictionary_list=question_dictionary,
                 direction=args['order_direction'],
-                user=user)
+                user=user, user_id=user_id, vote_history=vote_history)
 
     elif request.method == 'POST':
         detail = request.form.get('search')
@@ -64,7 +66,7 @@ def question_list():
         return render_template(
             'list.html',
             question_dictionary_list=question_dictionary,
-            user=user)
+            user=user, user_id=user_id, vote_history=vote_history)
 
 
 @app.route('/question', methods=['GET', 'POST'])
@@ -75,7 +77,7 @@ def add_question():
     elif request.method == "POST":
         user_id = data_manager.get_user_id_by_user_name(session['username'])
         new_question = {'title': request.form.get('title'), 'message': request.form.get('message'),
-                        'submission_time': util.generate_time(), 'view_number': '0', 'vote_number': '0',
+                        'submission_time': util.generate_time(), 'view_number': '-1', 'vote_number': '0',
                         'image': 'not found', 'user_id': user_id}
         new_question['id'] = data_manager.insert_new_question(*new_question.values())
         try:
@@ -142,10 +144,8 @@ def new_tag(question_id):
 @app.route('/question/<question_id>', methods=['GET', 'POST'])
 def view_question(question_id):
     user = util.return_user()
+    user_id = data_manager.get_user_id_by_user_name(user)
     try:
-        vote_up = int(request.args.get('vote_up'))
-        question_for_display = data_manager.get_question_by_id(question_id)
-        question_for_display['vote_number'] += 1
         data_manager.view_question(question_id)
     except TypeError:
         pass
@@ -169,7 +169,7 @@ def view_question(question_id):
             tags_for_display=tags_for_display, number_of_tags=number_of_tags,
             question_comment_for_display=question_comment_for_display,
             answer_comment_for_display=answer_comment_for_display, answer_with_comment=answer_with_comment,
-            user=user)
+            user=user, user_id=user_id)
 
 
 @app.route('/question/<question_id>/tag/<tag_id>/delete', methods=['GET', 'POST'])
@@ -210,7 +210,6 @@ def delete_question(question_id):
     data_manager.delete_comment_by_question_id(question_id)
     answer_id_set = set()
     answer_list = data_manager.get_answer_by_question_id(question_id)
-    print(answer_id_set)
     for answer in answer_list:
         answer_id_set.add(answer['id'])
     if len(answer_id_set) > 0:
@@ -223,10 +222,12 @@ def delete_question(question_id):
 
 @app.route('/question/<question_id>/<vote>', methods=['GET', 'POST'])
 def question_vote(question_id, vote):
+    user_id = data_manager.get_user_id_by_user_name(util.return_user())
     if vote == "vote_up":
         data_manager.vote_question(question_id, 1)
     else:
         data_manager.vote_question(question_id, -1)
+    data_manager.update_vote_history('question', question_id, user_id)
     return redirect('/')
 
 
@@ -487,8 +488,9 @@ def login():
         plain_text_password = request.form['password']
         user_name = request.form['username']
         user_hashed_password = data_manager.get_user_password(user_name)
-        if util.validate_password(plain_text_password, user_hashed_password):
-            session['username'] = user_name
+        if user_hashed_password is not None:
+            if util.validate_password(plain_text_password, user_hashed_password):
+                session['username'] = user_name
         return redirect('/show-user')
     return '''
             <form method="post">

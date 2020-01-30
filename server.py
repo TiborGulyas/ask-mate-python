@@ -286,8 +286,22 @@ def add_answer(question_id):
 @app.route('/answer/<answer_id>', methods=['GET', 'POST'])
 def show_answer(answer_id):
     user = util.return_user()
+    question_id = data_manager.get_question_id_by_answer_id(answer_id)
+    user_id = data_manager.get_user_id_by_question_id(question_id)
+    actual_user_id = 'a'
+
+    if 'username' in session:
+        actual_user_id = data_manager.get_user_id_by_user_name(session['username'])
+
+    show_answer_accept = False
+
+    if actual_user_id == user_id:
+        show_answer_accept = True
+
     answer_for_display = data_manager.get_answer_by_id(answer_id)
-    return render_template('answer.html', answer_for_display=answer_for_display[0], user=user)
+    return render_template('answer.html', answer_for_display=answer_for_display[0], user=user,
+                           show_answer_accept=show_answer_accept)
+
 
 
 @app.route('/answer/<answer_id>/edit', methods=['GET', 'POST'])

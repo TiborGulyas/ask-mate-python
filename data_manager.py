@@ -420,3 +420,12 @@ def update_vote_history(cursor, input_type, type_id, user_id):
         (type, type_id, user_id)
         VALUES (%(type)s, %(type_id)s, %(user_id)s);
         """, {'type': input_type, 'type_id': type_id, 'user_id': user_id})
+
+@connection.connection_handler
+def get_user_id_by_question_id(cursor, question_id):
+    cursor.execute("""
+    SELECT user_id FROM question
+    WHERE id=%(question_id)s
+    """, {'question_id': question_id})
+    user_id = cursor.fetchall()
+    return int(user_id[0]['user_id'])

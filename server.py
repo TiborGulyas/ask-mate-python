@@ -73,7 +73,9 @@ def question_list():
 def add_question():
     user = util.return_user()
     if request.method == 'GET':
-        return render_template('new-question.html', user=user)
+        if 'username' in session:
+            return render_template('new-question.html', user=user)
+        return render_template('access-error.html', data_type='add_new_question')
     elif request.method == "POST":
         user_id = data_manager.get_user_id_by_user_name(session['username'])
         new_question = {'title': request.form.get('title'), 'message': request.form.get('message'),
@@ -97,17 +99,19 @@ def add_question():
 def new_tag(question_id):
     user = util.return_user()
     if request.method == 'GET' and question_id.isdigit():
-        question_for_display = data_manager.get_question_by_id(question_id)
-        tags_already_have = data_manager.get_tags_by_id(question_id)
-        all_tags = data_manager.get_all_tags()
-        tags_for_choose = [tag for tag in tags_already_have + all_tags if
-                           tag not in tags_already_have or tag not in all_tags]
-        number_of_tags = len(all_tags)
-        return render_template('add-tag.html', question_id=question_id,
-                               question_for_display=question_for_display, tags_for_choose=all_tags,
-                               number_of_tags=number_of_tags,
-                               tags_for_display=tags_already_have,
-                               user=user)
+        if 'username' in session:
+            question_for_display = data_manager.get_question_by_id(question_id)
+            tags_already_have = data_manager.get_tags_by_id(question_id)
+            all_tags = data_manager.get_all_tags()
+            tags_for_choose = [tag for tag in tags_already_have + all_tags if
+                               tag not in tags_already_have or tag not in all_tags]
+            number_of_tags = len(all_tags)
+            return render_template('add-tag.html', question_id=question_id,
+                                   question_for_display=question_for_display, tags_for_choose=all_tags,
+                                   number_of_tags=number_of_tags,
+                                   tags_for_display=tags_already_have,
+                                   user=user)
+        return render_template('access-error.html', data_type='add_new_tag', question_id=question_id)
 
     elif request.method == 'POST':
         if request.form.get('submit_new_tag') != "":
@@ -180,12 +184,17 @@ def delete_tag(question_id, tag_id):
         return redirect(f'/question/{question_id}')
 
 
-@app.route('/question/<question_id>/edit', methods=['GET', 'POST'])
+@app.route('/question/<int:question_id>/edit', methods=['GET', 'POST'])
 def edit_question(question_id):
     user = util.return_user()
+    logged_in_user_id = data_manager.get_user_id_by_user_name(user)
+    question_user_id = data_manager.get_user_id_by_question_id(question_id)
     if request.method == 'GET':
-        return render_template('new-question.html', output_dict=data_manager.get_question_by_id(question_id), user=user)
-
+        if user == 'admin':
+            return render_template('new-question.html', output_dict=data_manager.get_question_by_id(question_id), user=user)
+        elif 'username' in session and logged_in_user_id == question_user_id:
+            return render_template('new-question.html', output_dict=data_manager.get_question_by_id(question_id), user=user)
+        return render_template('access-error.html', data_type='edit_question', question_id=question_id)
     elif request.method == 'POST':
         image = 'not found'
         try:
@@ -202,23 +211,28 @@ def edit_question(question_id):
         return redirect('/')
 
 
-@app.route('/question/<question_id>/delete', methods=['GET', 'POST'])
+@app.route('/question/<int:question_id>/delete', methods=['GET', 'POST'])
 def delete_question(question_id):
     tag_id = data_manager.get_tag_id(question_id)
-    if tag_id != []:
-        for individual_tag in tag_id:
-            delete_tag(question_id, individual_tag['tag_id'])
-    data_manager.delete_comment_by_question_id(question_id)
-    answer_id_set = set()
-    answer_list = data_manager.get_answer_by_question_id(question_id)
-    for answer in answer_list:
-        answer_id_set.add(answer['id'])
-    if len(answer_id_set) > 0:
-        for answer_id in answer_id_set:
-            data_manager.delete_comment_by_answer_id(answer_id)
-            data_manager.delete_answer(answer_id)
-    data_manager.delete_question(question_id)
-    return redirect('/')
+    user = util.return_user()
+    logged_in_user_id = data_manager.get_user_id_by_user_name(user)
+    question_user_id = data_manager.get_user_id_by_question_id(question_id)
+    if user == 'admin'or logged_in_user_id == question_user_id:
+        if tag_id != []:
+            for individual_tag in tag_id:
+                delete_tag(question_id, individual_tag['tag_id'])
+        data_manager.delete_comment_by_question_id(question_id)
+        answer_id_set = set()
+        answer_list = data_manager.get_answer_by_question_id(question_id)
+        for answer in answer_list:
+            answer_id_set.add(answer['id'])
+        if len(answer_id_set) > 0:
+            for answer_id in answer_id_set:
+                data_manager.delete_comment_by_answer_id(answer_id)
+                data_manager.delete_answer(answer_id)
+        data_manager.delete_question(question_id)
+        return redirect('/')
+    return render_template('access-error.html', data_type='delete_question', question_id=question_id)
 
 
 @app.route('/question/<question_id>/<vote>', methods=['GET', 'POST'])
@@ -341,11 +355,12 @@ def add_question_comment(question_id):
     user = util.return_user()
     question_for_display = data_manager.get_question_by_id(question_id)
     if request.method == 'GET':
-        return render_template(
-            'new-comment.html',
-            question_for_display=question_for_display,
-            user=user)
-
+        if 'username' in session:
+            return render_template(
+                'new-comment.html',
+                question_for_display=question_for_display,
+                user=user)
+        return render_template('access-error.html', data_type="add_new_comment_to_question", question_id=question_id)
     elif request.method == 'POST':
         user_id = data_manager.get_user_id_by_user_name(session['username'])
         new_comment = {'id_type': 'question_id',

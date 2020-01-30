@@ -7,7 +7,13 @@
 <body>
 <script type="text/javascript">
 alert("FORBIDDEN: You don't have permission to perform this action!");
-window.location.href = "/{{data_type}}/{{ id }}";
+{% if data_type == 'add_new_question' %}
+    window.location.href = "/";
+{% elif data_type == 'add_new_tag' or data_type == 'add_new_comment_to_question' or data_type == 'edit_question' or data_type == 'delete_question' %}
+    window.location.href = "/question/{{ question_id }}";
+{% else %}
+    window.location.href = "/{{data_type}}/{{ id }}";
+{% endif %}
 </script>
 </body>
 </html>

@@ -17,15 +17,9 @@
 <h1>Question Title: {{ question_for_display['title'] }}</h1>
 <table class="menu">
     <tr>
-        {% if user != 'not logged in' %}
-            <td><a href='/question/{{ question_for_display['id'] }}/new-tag' class="round-button">Add new tag</a></td>
-            <td><a href='/question/{{ question_for_display['id'] }}/new-comment' class="round-button">Add new comment to question</a></td>
-            <td><a href='/question/{{ question_for_display['id'] }}/new-answer' class="round-button">Add new answer</a></td>
-        {% else %}
-            <td><p class="round-button">Add new tag</p></td>
-            <td><p class="round-button">Add new comment to question</p></td>
-            <td><p class="round-button">Add new answer</p></td>
-        {% endif %}
+        <td><a href='/question/{{ question_for_display['id'] }}/new-tag' class="round-button">Add new tag</a></td>
+        <td><a href='/question/{{ question_for_display['id'] }}/new-comment' class="round-button">Add new comment to question</a></td>
+        <td><a href='/question/{{ question_for_display['id'] }}/new-answer' class="round-button">Add new answer</a></td>
     </tr>
 </table>
 <table>
@@ -185,16 +179,8 @@
 <table class="menu">
     <tr>
         <td><a href='/' class="round-button">Go back to question list</a></td>
-        {% if user == 'admin' %}
-            <td><a href='/question/{{ question_for_display['id'] }}/edit' class="round-button">Edit displayed question</a></td>
-            <td><a href="/question/{{ question_for_display['id'] }}/delete" class="round-button">Delete displayed question</a></td>
-        {% elif user != 'not logged in' and user_id == question_for_display['user_id'] %}
-            <td><a href='/question/{{ question_for_display['id'] }}/edit' class="round-button">Edit displayed question</a></td>
-            <td><a href="/question/{{ question_for_display['id'] }}/delete" class="round-button">Delete displayed question</a></td>
-        {% else %}
-            <td><p class="round-button">Edit displayed question</p></td>
-            <td><p class="round-button">Delete displayed question</p></td>
-        {% endif %}
+        <td><a href='/question/{{ question_for_display['id'] }}/edit' class="round-button">Edit displayed question</a></td>
+        <td><a href="/question/{{ question_for_display['id'] }}/delete" class="round-button">Delete displayed question</a></td>
     </tr>
 </table>
 </body>

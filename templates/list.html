@@ -17,11 +17,7 @@
 <a href="/" id="nodecoration"><h1>Questions</h1></a>
 <table class="menu">
     <tr>
-        {% if user != 'not logged in' %}
-            <td><a href="/question" class = "round-button">Add new question</a></td>
-        {% else %}
-            <td><p class = "round-button">Add new question</p></td>
-        {% endif %}
+        <td><a href="/question" class = "round-button">Add new question</a></td>
         <td>{% include 'search.html' %}</td>
         <td>
             {% if first_five == 'first five' %}

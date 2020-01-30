@@ -159,6 +159,7 @@ def view_question(question_id):
         question_comment_for_display = data_manager.get_comment_by_question_id(question_id)
         answer_comment_for_display = data_manager.get_all_comments()
         answer_with_comment = set()
+        vote_history = data_manager.get_vote_history('answer', user_id)
         for answer in answer_for_display:
             for comment in answer_comment_for_display:
                 if answer['id'] == comment['answer_id']:
@@ -174,7 +175,7 @@ def view_question(question_id):
             tags_for_display=tags_for_display, number_of_tags=number_of_tags,
             question_comment_for_display=question_comment_for_display,
             answer_comment_for_display=answer_comment_for_display, answer_with_comment=answer_with_comment,
-            user=user, user_id=user_id)
+            user=user, user_id=user_id, vote_history=vote_history)
 
 
 @app.route('/question/<question_id>/tag/<tag_id>/delete', methods=['GET', 'POST'])
@@ -336,12 +337,15 @@ def delete_answer(answer_id):
 
 @app.route('/answer/<answer_id>/<vote>', methods=['GET', 'POST'])
 def answer_vote(answer_id, vote):
+
     if 'username' in session:
+        user_id = data_manager.get_user_id_by_user_name(util.return_user())
         if vote == "vote_up":
             question_id = data_manager.vote_answer(answer_id, 10)
         else:
             question_id = data_manager.vote_answer(answer_id, -2)
         data_manager.set_reputation(data_manager.get_user_id_by_answer_id(answer_id))
+        data_manager.update_vote_history('answer', answer_id, user_id)
         return redirect(f'/question/{question_id}')
     return render_template('access-error.html', data_type="answer", id=answer_id)
 
@@ -587,7 +591,7 @@ def get_user_profile(user_id):
 @app.route('/tags')
 def get_all_tags():
     tags = data_manager.get_all_tags()
-    return render_template('list-tags.html', tags=tags)
+    return render_template('list-tags.html', tags=tags, user=util.return_user())
 
 
 if __name__ == '__main__':

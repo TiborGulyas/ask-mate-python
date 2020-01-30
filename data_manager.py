@@ -399,7 +399,7 @@ def get_user_id_by_user_name(cursor, user_name):
 def get_questions_of_user(cursor, user_id):
     cursor.execute("""
         SELECT * FROM question
-        WHERE id=%(user_id)s;
+        WHERE user_id=%(user_id)s;
         """, {'user_id': user_id})
     questions = cursor.fetchall()
     return questions
@@ -409,7 +409,7 @@ def get_questions_of_user(cursor, user_id):
 def get_answers_of_user(cursor, user_id):
     cursor.execute("""
         SELECT * FROM answer
-        WHERE id=%(user_id)s;
+        WHERE user_id=%(user_id)s;
         """, {'user_id': user_id})
     answers = cursor.fetchall()
     return answers
@@ -419,7 +419,7 @@ def get_answers_of_user(cursor, user_id):
 def get_comments_of_user(cursor, user_id):
     cursor.execute("""
         SELECT * FROM comment
-        WHERE id=%(user_id)s;
+        WHERE user_id=%(user_id)s;
         """, {'user_id': user_id})
     comments = cursor.fetchall()
     return comments
@@ -472,7 +472,7 @@ def get_all_tags(cursor):
 def get_user_by_comment_id(cursor, comment_id):
     cursor.execute("""        
         SELECT user_id FROM comment
-        SELECT question_id FROM comment
+        WHERE id = %(comment_id)s
         """, {'comment_id': comment_id})
     user_id = cursor.fetchall()[0]
     return user_id['user_id']

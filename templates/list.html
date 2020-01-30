@@ -61,7 +61,7 @@
 
     {% for header_item in row.keys() %}
         {% if  header_item == 'id' %}
-            <td align="center"><a href="/question/{{ row[header_item] }}?vote_up=1" class = "list-id">{{ row[header_item] }}</a></td>
+            <td align="center"><a href="/question/{{ row[header_item] }}" class = "list-id">{{ row[header_item] }}</a></td>
         {% elif header_item == 'image' %}
             {% if row['image'][-4:] == '.png' or row['image'][-4:] == '.jpg' or row['image'][-4:] == '.gif' or row['image'][-5:] == 'jpeg' %}
                 <td><a href="{{ row[header_item] }}"><img src="{{ row[header_item] }}" height="150px"
@@ -84,11 +84,20 @@
             {% endif %}
         {% endif %}
     {% endfor %}
-    <td><a href="/question/{{ row['id'] }}/vote_up"><img
-            src="{{ url_for('static', filename='img/up.png') }}"
-            height="20px" width="20px"></a></td>
-    <td><a href="/question/{{ row['id'] }}/vote_down"><img
+    {% if user != 'not logged in' and user_id != row['user_id'] and row['id'] not in vote_history %}
+        <td><a href="/question/{{ row['id'] }}/vote_up"><img
+                src="{{ url_for('static', filename='img/up.png') }}"
+                height="20px" width="20px"></a></td>
+    {% else %}
+        <td><img src="{{ url_for('static', filename='img/up.png') }}"
+                height="20px" width="20px"></td>
+    {% endif %}
+    {% if user != 'not logged in' and user_id != row['user_id'] and row['id'] not in vote_history %}
+        <td><a href="/question/{{ row['id'] }}/vote_down"><img
             src="{{ url_for('static', filename='img/down.png') }}" height="20px" width="20px"></a></td>
+    {% else %}
+        <td><img src="{{ url_for('static', filename='img/down.png') }}" height="20px" width="20px"></td>
+    {% endif %}
     </div>
 </tr>
 {% if answer_dictionary_list %}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <link rel="stylesheet" type="text/css" href="../static/buttons.css">
+    <link href="https://fonts.googleapis.com/css?family=Merienda+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>Questions</h1>
+    <div id = 'reg_log'>
+    <table class="new_input_data" >
+        {% if meth == 'register' %}
+        <form action="/register" method="post" enctype=multipart/form-data>
+            <tr>
+                <td><p>
+                    <label for="title" class="title">Username</label><br>
+                    <input type="username" name="username" required minlength="3" class="title_input">
+                </p></td>
+            </tr>
+            <tr>
+                <td><p>
+                    <label for="question" class="question">Password:</label><br>
+                    <p><input type=password name=password class="question_input">
+                </p>
+            </tr>
+            </td>
+            <tr>
+                <td>
+                     <p><button type="submit" class="button">Register</button></p>
+            </tr>
+            </td>
+        </form>
+    {% elif meth == 'login' %}
+        <form action="/login" method="post" enctype=multipart/form-data>
+            <tr>
+                <td><p>
+                    <label for="title" class="title">Username</label><br>
+                    <input type="username" name="username" required minlength="3" class="title_input">
+                </p></td>
+            </tr>
+            <tr>
+                <td><p>
+                    <label for="question" class="question">Password:</label><br>
+                    <p><input type=password name=password class="question_input">
+                </p>
+            </tr>
+            </td>
+            <tr>
+                <td>
+                     <p><button type="submit" class="button">Login</button></p>
+
+            </tr>
+            </td>
+        </form>
+    {% endif %}
+    </table>
+        </div>
+    <table class="menu">
+    <tr>
+        <td><a href="/list" class="round-button">Go back to main page</a></td>
+        <td>{% include 'search.html' %}</td>
+    </tr>
+</table>
+</body>
+</html>

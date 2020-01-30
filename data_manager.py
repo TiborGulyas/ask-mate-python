@@ -453,8 +453,9 @@ def set_reputation(cursor, user_id):
     cursor.execute("""
     UPDATE users
     SET reputation = (
-    (SELECT SUM(vote_number) FROM question JOIN users ON user_id = users.id WHERE user_id = users.id) +
-    (SELECT SUM(vote_number) FROM answer JOIN users ON user_id = users.id WHERE user_id = users.id))
+    (SELECT SUM(vote_number) FROM question JOIN users ON user_id = %(user_id)s WHERE user_id = users.id) +
+    (SELECT SUM(vote_number) FROM answer JOIN users ON user_id = %(user_id)s WHERE user_id = users.id) +
+    ((SELECT SUM(CASE WHEN accepted='yes' AND user_id = %(user_id)s THEN 15 ELSE 0 END) FROM answer JOIN users ON user_id = users.id )))
     WHERE id = %(user_id)s;
     """, {'user_id': user_id})
 

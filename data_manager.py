@@ -92,7 +92,7 @@ def view_question(cursor, id):
 def get_answer_by_question_id(cursor, question_id):
     cursor.execute("""
     SELECT * FROM answer
-    WHERE question_id= %(question_id)s
+    WHERE question_id= %(question_id)s AND accepted= 'yes'
     ORDER BY submission_time DESC;
     """,
                    {'question_id': question_id})

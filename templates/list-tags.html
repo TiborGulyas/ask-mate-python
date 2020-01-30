@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List tags</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        {% for header in tags[0] %}
+            <td>{{ header }}</td>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for tag in tags %}
+        <tr>
+            {% for element in tag %}
+                <td>{{ tag[element] }}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>

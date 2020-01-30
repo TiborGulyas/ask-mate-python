@@ -147,6 +147,17 @@ def new_tag(question_id):
 
 @app.route('/question/<question_id>', methods=['GET', 'POST'])
 def view_question(question_id):
+    user_id = data_manager.get_user_id_by_question_id(question_id)
+    actual_user_id = 'a'
+
+    if 'username' in session:
+        actual_user_id = data_manager.get_user_id_by_user_name(session['username'])
+
+    show_answer_accept = False
+
+    if actual_user_id == user_id:
+        show_answer_accept = True
+
     user = util.return_user()
     user_id = data_manager.get_user_id_by_user_name(user)
     try:

@@ -147,6 +147,8 @@ def new_tag(question_id):
 
 @app.route('/question/<question_id>', methods=['GET', 'POST'])
 def view_question(question_id):
+
+
     user_id = data_manager.get_user_id_by_question_id(question_id)
     actual_user_id = 'a'
 
@@ -164,9 +166,33 @@ def view_question(question_id):
         data_manager.view_question(question_id)
     except TypeError:
         pass
-    if request.method == 'GET' and question_id.isdigit():
+    if request.method == 'GET' and question_id.isdigit() and show_answer_accept == False:
         question_for_display = data_manager.get_question_by_id(question_id)
         answer_for_display = data_manager.get_answer_by_question_id(question_id)
+        question_comment_for_display = data_manager.get_comment_by_question_id(question_id)
+        answer_comment_for_display = data_manager.get_all_comments()
+        answer_with_comment = set()
+        vote_history = data_manager.get_vote_history('answer', user_id)
+        for answer in answer_for_display:
+            for comment in answer_comment_for_display:
+                if answer['id'] == comment['answer_id']:
+                    answer_with_comment.add(answer['id'])
+        tags_for_display = data_manager.get_tags_by_id(question_id)
+        number_of_tags = len(tags_for_display)
+        if len(answer_for_display) == 0:
+            answer_for_display = False
+
+        return render_template(
+            'question.html', question_id=question_id,
+            question_for_display=question_for_display, answer_for_display=answer_for_display,
+            tags_for_display=tags_for_display, number_of_tags=number_of_tags,
+            question_comment_for_display=question_comment_for_display,
+            answer_comment_for_display=answer_comment_for_display, answer_with_comment=answer_with_comment,
+            user=user, user_id=user_id, vote_history=vote_history)
+
+    elif request.method == 'GET' and question_id.isdigit() and show_answer_accept == True:
+        question_for_display = data_manager.get_question_by_id(question_id)
+        answer_for_display = data_manager.get_answer_by_question_id_for_accept(question_id)
         question_comment_for_display = data_manager.get_comment_by_question_id(question_id)
         answer_comment_for_display = data_manager.get_all_comments()
         answer_with_comment = set()

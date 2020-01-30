@@ -645,6 +645,7 @@ def get_all_tags():
 
 @app.route('/list_users')
 def list_users():
+    user = util.return_user()
     user_data = []
     interim_data = data_manager.get_user_data()
     for dictionary in interim_data:
@@ -656,7 +657,7 @@ def list_users():
         dictionary['number_of_answers'] = len(data_manager.get_answers_of_user(dictionary['id']))
         dictionary['number_of_comments'] = len(data_manager.get_comments_of_user(dictionary['id']))
     print(user_data)
-    return render_template('list-tags.html', tags=tags, user=util.return_user())
+    return render_template('list_users.html', user=user, user_data=sorted(user_data, key = lambda x: x['id']))
 
 
 if __name__ == '__main__':

@@ -1,10 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset='utf-8'>
+    <title>Display Question</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <link rel="stylesheet" type="text/css" href="../static/buttons.css">
+    <link href="https://fonts.googleapis.com/css?family=Merienda+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
 </head>
 <body>
-
-</body>
-</html>
+    <h3 id="user">Logged in as: {{ user }}</h3>
+    <h3 id = 'login'><a href="/logout">Logout</a></h3>
+    <h3 id = 'list-of-users-button'><a href="/">Question list</a></h3>
+<a href="/" id="nodecoration"><h1>User list</h1></a>
+<table>
+    <thead id="list-of-users-head">
+    <tr>
+        {% for header_item in user_data[0] %}
+            <th>{{ header_item }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+        {% for user_row in user_data %}
+            <tr>
+                {% for user_header in user_row %}
+                    {% if user_header == 'id' %}
+                        <td><a href="../user/{{ user_row['id'] }}">{{ user_row['id'] }}</a></td>
+                    {% else %}
+                        <td>{{ user_row[user_header] }}</td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -76,6 +76,12 @@ thead{
     text-transform: capitalize;
 }
 
+#list-of-users-head{
+    font-size: 1em;
+    text-align: center;
+    text-transform: capitalize;
+}
+
 .new_input_data{
     width: 80%;
     margin: 0px 10% 0px 10%;
@@ -114,8 +120,7 @@ thead{
     text-decoration: none;
     text-align: right;
 }
-<<<<<<< HEAD
-=======
+
 
 #list {
     text-decoration: none;
@@ -138,4 +143,4 @@ thead{
     margin: 2% 0%;
 
 }
->>>>>>> 762a9b8587aa91c872c07c435b9ee8d00ce2711c
+

@@ -243,7 +243,7 @@ def question_vote(question_id, vote):
     else:
         data_manager.vote_question(question_id, -1)
     data_manager.update_vote_history('question', question_id, user_id)
-    data_manager.set_reputation()
+    data_manager.set_reputation(data_manager.get_user_id_by_question_id(question_id))
     return redirect('/')
 
 
@@ -337,6 +337,7 @@ def delete_answer(answer_id):
 @app.route('/answer/<answer_id>/<vote>', methods=['GET', 'POST'])
 def answer_vote(answer_id, vote):
     if 'username' in session:
+        data_manager.set_reputation(data_manager.get_user_id_by_answer_id(answer_id))
         if vote == "vote_up":
             question_id = data_manager.vote_answer(answer_id, 1)
         else:

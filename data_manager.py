@@ -449,10 +449,21 @@ def get_all_tags(cursor):
 
 
 @connection.connection_handler
-def set_reputation(cursor):
+def set_reputation(cursor, user_id):
     cursor.execute("""
     UPDATE users
     SET reputation = (
     (SELECT SUM(vote_number) FROM question JOIN users ON user_id = users.id WHERE user_id = users.id) +
-    (SELECT SUM(vote_number) FROM answer JOIN users ON user_id = users.id WHERE user_id = users.id));
-    """)
+    (SELECT SUM(vote_number) FROM answer JOIN users ON user_id = users.id WHERE user_id = users.id))
+    WHERE id = %(user_id)s;
+    """, {'user_id': user_id})
+
+
+@connection.connection_handler
+def get_user_id_by_answer_id(cursor, answer_id):
+    cursor.execute("""
+    SELECT user_id FROM answer
+    WHERE id = %(answer_id)s;""",
+                   {'answer_id': answer_id})
+    user_id = cursor.fetchall()
+    return user_id[0]['user_id']

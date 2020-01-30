@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ username }}'s profile</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <link rel="stylesheet" type="text/css" href="../static/buttons.css">
+    <link href="https://fonts.googleapis.com/css?family=Merienda+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
 </head>
 <body>
 {% if user == 'not logged in' %}
@@ -11,7 +15,16 @@
     <h3 id="user">Logged in as: {{ current_user }}</h3>
 {% endif %}
 <h1>{{ username }}'s profile</h1>
-{{ reputation }}
+<h2>Reputation: {{ reputation }}</h2>
+<table class="menu">
+    <tr>
+        <td><a href="/question" class="round-button">Add new question</a></td>
+        <td>{% include 'search.html' %}</td>
+        <td>
+            <p><a href="/list" class="round-button">To all questions</a></p>
+        </td>
+    </tr>
+</table>
 {% if questions %}
     <table>
         <thead>

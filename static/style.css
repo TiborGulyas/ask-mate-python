@@ -114,3 +114,25 @@ thead{
     text-decoration: none;
     text-align: right;
 }
+
+#list {
+    text-decoration: none;
+    text-align: left;
+}
+
+
+#reg_form {
+    alignment: center;
+    border:solid #818479 2px;
+    border-radius:25px;
+    padding: 1%;
+    margin: 1% 1% 1% 1%;
+    background-color: #D2E4C4;
+    width: 15%;
+    border-collapse: separate;
+}
+
+#reg_log {
+    margin: 2% 0%;
+
+}

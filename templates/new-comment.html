@@ -10,11 +10,15 @@
         <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
     </head>
     <body>
-    {% if user == 'not logged in' %}
-        <h3 id="user">{{ user }}</h3>
-    {% else %}
-        <h3 id="user">Logged in as: {{ user }}</h3>
-    {% endif %}
+  {% if user == 'not logged in' %}
+    <h3 id="user">{{ user }}</h3>
+    <h3 id="login"><a href="/login">Login</a></h3>
+    <h3 id="login"><a href="/register">Register</a></h3>
+{% else %}
+    <h3 id="user">Logged in as: {{ user }}</h3>
+    <h3 id = 'login'><a href="/logout">Logout</a></h3>
+{% endif %}
+<a href="/" id="nodecoration"><h1>Questions</h1></a>
     <h1>Question Title: {{ question_for_display['title'] }}</h1>
     <table>
         <thead>

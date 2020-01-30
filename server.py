@@ -548,13 +548,7 @@ def register():
         hashed_password = util.hash_password(request.form['password'])
         data_manager.register_user(request.form['username'], hashed_password, util.generate_time())
         return redirect('/')
-    return '''
-        <form method="post">
-            <p><input type=text name=username>
-            <p><input type=password name=password>
-            <p><input type=submit value=Login>
-        </form>
-    '''
+    return render_template('register.html', meth='register')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -566,14 +560,8 @@ def login():
         if user_hashed_password is not None:
             if util.validate_password(plain_text_password, user_hashed_password):
                 session['username'] = user_name
-        return redirect('/show-user')
-    return '''
-            <form method="post">
-                <p><input type=text name=username>
-                <p><input type=password name=password>
-                <p><input type=submit value=Login>
-            </form>
-        '''
+        return redirect('/')
+    return render_template('register.html', meth='login')
 
 
 @app.route('/logout')

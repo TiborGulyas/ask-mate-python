@@ -547,13 +547,14 @@ def logout():
 
 @app.route('/user/<user_id>')
 def get_user_profile(user_id):
-    # if 'username' in session:
-    questions = data_manager.get_questions_of_user(int(user_id))
-    answers = data_manager.get_answers_of_user(int(user_id))
-    comments = data_manager.get_comments_of_user(int(user_id))
-    user = util.return_user()
-    return render_template('user.html', username='admin', questions=questions, answers=answers, comments=comments, user=user)
-    # return redirect('/')
+    if 'username' in session:
+        questions = data_manager.get_questions_of_user(int(user_id))
+        answers = data_manager.get_answers_of_user(int(user_id))
+        comments = data_manager.get_comments_of_user(int(user_id))
+        reputation = data_manager.get_reputation_of_user(int(user_id))
+        user = util.return_user()
+        return render_template('user.html', username='admin', questions=questions, answers=answers, comments=comments, user=user, reputation=reputation)
+    return render_template('access-error.html', data_type='add_new_question')
 
 
 @app.route('/tags')

@@ -406,6 +406,26 @@ def get_questions_of_user(cursor, user_id):
 
 
 @connection.connection_handler
+def get_answers_of_user(cursor, user_id):
+    cursor.execute("""
+        SELECT * FROM answer
+        WHERE id=%(user_id)s;
+        """, {'user_id': user_id})
+    answers = cursor.fetchall()
+    return answers
+
+
+@connection.connection_handler
+def get_comments_of_user(cursor, user_id):
+    cursor.execute("""
+        SELECT * FROM comment
+        WHERE id=%(user_id)s;
+        """, {'user_id': user_id})
+    comments = cursor.fetchall()
+    return comments
+
+
+@connection.connection_handler
 def get_vote_history(cursor, input_type, user_id):
     cursor.execute("""
         SELECT type_id FROM vote_tracker
@@ -468,3 +488,13 @@ def get_user_id_by_answer_id(cursor, answer_id):
                    {'answer_id': answer_id})
     user_id = cursor.fetchall()
     return user_id[0]['user_id']
+
+
+@connection.connection_handler
+def get_reputation_of_user(cursor, user_id):
+    cursor.execute("""
+    SELECT reputation FROM users
+    WHERE id = %(user_id)s;""",
+                   {'user_id': user_id})
+    reputation = cursor.fetchall()
+    return reputation[0]['reputation']

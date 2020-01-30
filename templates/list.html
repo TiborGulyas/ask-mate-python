@@ -17,17 +17,15 @@
 <a href="/" id="nodecoration"><h1>Questions</h1></a>
 <table class="menu">
     <tr>
-        <td><a href="/question" class = "round-button">Add new question</a></td>
+        <td><a href="/question" class="round-button">Add new question</a></td>
         <td>{% include 'search.html' %}</td>
         <td>
             {% if first_five == 'first five' %}
-            <p><a href="/list" class = "round-button">To all questions</a></p>
+                <p><a href="/list" class="round-button">To all questions</a></p>
             {% endif %}
         </td>
     </tr>
 </table>
-
-<h1>Nem is</h1>
 
 
 {% if not answer_dictionary_list %}
@@ -36,9 +34,11 @@
     <tr>
         {% for header_item in question_dictionary_list[0].keys() %}
             {% if direction == 'desc' %}
-                <th><a href="/list?order_by={{ header_item }}&order_direction=asc" class = "square-button">{{ header_item }}</a></th>
+                <th><a href="/list?order_by={{ header_item }}&order_direction=asc"
+                       class="square-button">{{ header_item }}</a></th>
             {% else %}
-                <th><a href="/list?order_by={{ header_item }}&order_direction=desc" class="square-button">{{ header_item }}</a></th>
+                <th><a href="/list?order_by={{ header_item }}&order_direction=desc"
+                       class="square-button">{{ header_item }}</a></th>
             {% endif %}
         {% endfor %}
     </tr>
@@ -64,14 +64,16 @@
 
     {% for header_item in row.keys() %}
         {% if  header_item == 'id' %}
-            <td align="center"><a href="/question/{{ row[header_item] }}" class = "list-id">{{ row[header_item] }}</a></td>
+            <td align="center"><a href="/question/{{ row[header_item] }}" class="list-id">{{ row[header_item] }}</a>
+            </td>
         {% elif header_item == 'image' %}
             {% if row['image'][-4:] == '.png' or row['image'][-4:] == '.jpg' or row['image'][-4:] == '.gif' or row['image'][-5:] == 'jpeg' %}
                 <td><a href="{{ row[header_item] }}"><img src="{{ row[header_item] }}" height="150px"
                                                           width="150px"></a>
                 </td>
             {% else %}
-                <td><img src="{{ url_for('static', filename='img/no-image-available.png') }}" height="20px" width="20px"></td>
+                <td><img src="{{ url_for('static', filename='img/no-image-available.png') }}" height="20px"
+                         width="20px"></td>
             {% endif %}
         {% elif header_item== 'message' %}
             {% if search %}
@@ -93,11 +95,11 @@
                 height="20px" width="20px"></a></td>
     {% else %}
         <td><img src="{{ url_for('static', filename='img/up.png') }}"
-                height="20px" width="20px"></td>
+                 height="20px" width="20px"></td>
     {% endif %}
     {% if user != 'not logged in' and user_id != row['user_id'] and row['id'] not in vote_history %}
         <td><a href="/question/{{ row['id'] }}/vote_down"><img
-            src="{{ url_for('static', filename='img/down.png') }}" height="20px" width="20px"></a></td>
+                src="{{ url_for('static', filename='img/down.png') }}" height="20px" width="20px"></a></td>
     {% else %}
         <td><img src="{{ url_for('static', filename='img/down.png') }}" height="20px" width="20px"></td>
     {% endif %}

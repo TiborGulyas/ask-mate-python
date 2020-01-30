@@ -395,6 +395,17 @@ def get_questions_of_user(cursor, user_id):
     questions = cursor.fetchall()
     return questions
 
+
+@connection.connection_handler
+def get_all_tags(cursor):
+    cursor.execute("""
+    SELECT name, COUNT(tag_id) FROM tag
+    JOIN question_tag ON tag.id = question_tag.tag_id
+    GROUP BY name
+    """)
+    tags = cursor.fetchall()
+    return tags
+
 @connection.connection_handler
 def get_user_by_comment_id(cursor, comment_id):
     cursor.execute("""

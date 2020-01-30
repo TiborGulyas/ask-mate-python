@@ -44,7 +44,7 @@ CREATE TABLE answer (
     message text,
     image text,
     user_id integer,
-    accepted text DEFAULT 'no'
+    accepted text DEFAULT 'not yet'
 );
 
 DROP TABLE IF EXISTS public.comment;

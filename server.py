@@ -139,6 +139,17 @@ def new_tag(question_id):
 
 @app.route('/question/<question_id>', methods=['GET', 'POST'])
 def view_question(question_id):
+    user_id = data_manager.get_user_id_by_question_id(question_id)
+    actual_user_id = 'a'
+
+    if 'username' in session:
+        actual_user_id = data_manager.get_user_id_by_user_name(session['username'])
+
+    show_answer_accept = False
+
+    if actual_user_id == user_id:
+        show_answer_accept = True
+
     user = util.return_user()
     try:
         vote_up = int(request.args.get('vote_up'))
@@ -147,9 +158,32 @@ def view_question(question_id):
         data_manager.view_question(question_id)
     except TypeError:
         pass
-    if request.method == 'GET' and question_id.isdigit():
+    if request.method == 'GET' and question_id.isdigit() and show_answer_accept == False:
         question_for_display = data_manager.get_question_by_id(question_id)
         answer_for_display = data_manager.get_answer_by_question_id(question_id)
+        question_comment_for_display = data_manager.get_comment_by_question_id(question_id)
+        answer_comment_for_display = data_manager.get_all_comments()
+        answer_with_comment = set()
+        for answer in answer_for_display:
+            for comment in answer_comment_for_display:
+                if answer['id'] == comment['answer_id']:
+                    answer_with_comment.add(answer['id'])
+        tags_for_display = data_manager.get_tags_by_id(question_id)
+        number_of_tags = len(tags_for_display)
+        if len(answer_for_display) == 0:
+            answer_for_display = False
+
+
+        return render_template(
+            'question.html', question_id=question_id,
+            question_for_display=question_for_display, answer_for_display=answer_for_display,
+            tags_for_display=tags_for_display, number_of_tags=number_of_tags,
+            question_comment_for_display=question_comment_for_display,
+            answer_comment_for_display=answer_comment_for_display, answer_with_comment=answer_with_comment,
+            user=user)
+    elif request.method == 'GET' and question_id.isdigit() and show_answer_accept == True:
+        question_for_display = data_manager.get_question_by_id(question_id)
+        answer_for_display = data_manager.get_answer_by_question_id_for_accept(question_id)
         question_comment_for_display = data_manager.get_comment_by_question_id(question_id)
         answer_comment_for_display = data_manager.get_all_comments()
         answer_with_comment = set()
@@ -266,8 +300,21 @@ def add_answer(question_id):
 @app.route('/answer/<answer_id>', methods=['GET', 'POST'])
 def show_answer(answer_id):
     user = util.return_user()
+    question_id = data_manager.get_question_id_by_answer_id(answer_id)
+    user_id = data_manager.get_user_id_by_question_id(question_id)
+    actual_user_id = 'a'
+
+    if 'username' in session:
+        actual_user_id = data_manager.get_user_id_by_user_name(session['username'])
+
+    show_answer_accept = False
+
+    if actual_user_id == user_id:
+        show_answer_accept = True
+
     answer_for_display = data_manager.get_answer_by_id(answer_id)
-    return render_template('answer.html', answer_for_display=answer_for_display[0], user=user)
+    return render_template('answer.html', answer_for_display=answer_for_display[0], user=user,
+                           show_answer_accept=show_answer_accept)
 
 
 @app.route('/answer/<answer_id>/edit', methods=['GET', 'POST'])
@@ -508,9 +555,17 @@ def delete_comment(comment_id):
 
 @app.route('/answer/<answer_id>/accept',methods=['GET'])
 def accept_answer(answer_id):
-    data_manager.accept_answer(answer_id)
-    return redirect(f'/answer/{answer_id}')
+    question_id = data_manager.get_question_id_by_answer_id(answer_id)
+    user_id = data_manager.get_user_id_by_question_id(question_id)
+    actual_user_id = 'a'
+    if 'username' in session:
+        actual_user_id = data_manager.get_user_id_by_user_name(session['username'])
 
+    if actual_user_id == user_id:
+        data_manager.accept_answer(answer_id)
+        return redirect(f'/answer/{answer_id}')
+    else:
+        return render_template('access-error.html', data_type="answer", id=answer_id)
 
 # Set the secret key to some random bytes. Keep this really secret!
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'

@@ -122,6 +122,7 @@
                         {% endif %}
                     {% elif header_item != 'question_id' %}
                         <td>{{ answer[header_item] }}</td>
+
                     {% endif %}
                 {% endfor %}
                 <td><a href="/answer/{{ answer['id'] }}/vote_up"><img

@@ -401,6 +401,7 @@ def get_questions_of_user(cursor, user_id):
     questions = cursor.fetchall()
     return questions
 
+
 @connection.connection_handler
 def get_vote_history(cursor, input_type, user_id):
     cursor.execute("""
@@ -413,6 +414,7 @@ def get_vote_history(cursor, input_type, user_id):
         vote_history.append(dictionary['type_id'])
     return vote_history
 
+
 @connection.connection_handler
 def update_vote_history(cursor, input_type, type_id, user_id):
     cursor.execute("""
@@ -420,6 +422,7 @@ def update_vote_history(cursor, input_type, type_id, user_id):
         (type, type_id, user_id)
         VALUES (%(type)s, %(type_id)s, %(user_id)s);
         """, {'type': input_type, 'type_id': type_id, 'user_id': user_id})
+
 
 @connection.connection_handler
 def get_user_id_by_question_id(cursor, question_id):
@@ -429,3 +432,14 @@ def get_user_id_by_question_id(cursor, question_id):
     """, {'question_id': question_id})
     user_id = cursor.fetchall()
     return int(user_id[0]['user_id'])
+
+
+@connection.connection_handler
+def get_all_tags(cursor):
+    cursor.execute("""
+    SELECT name, COUNT(tag_id) FROM tag
+    JOIN question_tag ON tag.id = question_tag.tag_id
+    GROUP BY name
+    """)
+    tags = cursor.fetchall()
+    return tags

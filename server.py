@@ -241,7 +241,7 @@ def add_answer(question_id):
             return render_template(
                 'new-answer.html',
                 question_for_display=question_for_display,
-                question_id=question_id
+                question_id=question_id,
                 user=user)
         return render_template('access-error.html', data_type="question", id=question_id)
 

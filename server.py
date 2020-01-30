@@ -239,10 +239,11 @@ def delete_question(question_id):
 def question_vote(question_id, vote):
     user_id = data_manager.get_user_id_by_user_name(util.return_user())
     if vote == "vote_up":
-        data_manager.vote_question(question_id, 1)
+        data_manager.vote_question(question_id, 5)
     else:
-        data_manager.vote_question(question_id, -1)
+        data_manager.vote_question(question_id, -2)
     data_manager.update_vote_history('question', question_id, user_id)
+    data_manager.set_reputation(data_manager.get_user_id_by_question_id(question_id))
     return redirect('/')
 
 
@@ -337,9 +338,10 @@ def delete_answer(answer_id):
 def answer_vote(answer_id, vote):
     if 'username' in session:
         if vote == "vote_up":
-            question_id = data_manager.vote_answer(answer_id, 1)
+            question_id = data_manager.vote_answer(answer_id, 10)
         else:
-            question_id = data_manager.vote_answer(answer_id, -1)
+            question_id = data_manager.vote_answer(answer_id, -2)
+        data_manager.set_reputation(data_manager.get_user_id_by_answer_id(answer_id))
         return redirect(f'/question/{question_id}')
     return render_template('access-error.html', data_type="answer", id=answer_id)
 
@@ -583,13 +585,14 @@ def logout():
 
 @app.route('/user/<user_id>')
 def get_user_profile(user_id):
-    # if 'username' in session:
-    questions = data_manager.get_questions_of_user(int(user_id))
-    answers = data_manager.get_answers_of_user(int(user_id))
-    comments = data_manager.get_comments_of_user(int(user_id))
-    user = util.return_user()
-    return render_template('user.html', username='admin', questions=questions, answers=answers, comments=comments, user=user)
-    # return redirect('/')
+    if 'username' in session:
+        questions = data_manager.get_questions_of_user(int(user_id))
+        answers = data_manager.get_answers_of_user(int(user_id))
+        comments = data_manager.get_comments_of_user(int(user_id))
+        reputation = data_manager.get_reputation_of_user(int(user_id))
+        user = util.return_user()
+        return render_template('user.html', username='admin', questions=questions, answers=answers, comments=comments, user=user, reputation=reputation)
+    return render_template('access-error.html', data_type='add_new_question')
 
 
 @app.route('/tags')

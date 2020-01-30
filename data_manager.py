@@ -358,6 +358,7 @@ def register_user(cursor, user_name, user_password, submission_time):
                    {'user_name': user_name, 'user_password': user_password,
                     'submission_time': submission_time})
 
+
 @connection.connection_handler
 def accept_answer(cursor, id):
     cursor.execute("""
@@ -367,17 +368,19 @@ def accept_answer(cursor, id):
     """,
                    {'id': id})
 
+
 @connection.connection_handler
 def get_user_password(cursor, user_name):
     cursor.execute("""
     SELECT user_password FROM users
-    WHERE user_name=%(user_name)s
+    WHERE user_name=%(user_name)s;
     """, {'user_name': user_name})
     user_password = cursor.fetchall()
     if len(user_password) > 0:
         return user_password[0]['user_password']
     else:
         pass
+
 
 @connection.connection_handler
 def get_user_id_by_user_name(cursor, user_name):
@@ -396,10 +399,30 @@ def get_user_id_by_user_name(cursor, user_name):
 def get_questions_of_user(cursor, user_id):
     cursor.execute("""
         SELECT * FROM question
-        WHERE id=%(user_id)s
+        WHERE id=%(user_id)s;
         """, {'user_id': user_id})
     questions = cursor.fetchall()
     return questions
+
+
+@connection.connection_handler
+def get_answers_of_user(cursor, user_id):
+    cursor.execute("""
+        SELECT * FROM answer
+        WHERE id=%(user_id)s;
+        """, {'user_id': user_id})
+    answers = cursor.fetchall()
+    return answers
+
+
+@connection.connection_handler
+def get_comments_of_user(cursor, user_id):
+    cursor.execute("""
+        SELECT * FROM comment
+        WHERE id=%(user_id)s;
+        """, {'user_id': user_id})
+    comments = cursor.fetchall()
+    return comments
 
 
 @connection.connection_handler
@@ -439,47 +462,65 @@ def get_all_tags(cursor):
     cursor.execute("""
     SELECT name, COUNT(tag_id) FROM tag
     JOIN question_tag ON tag.id = question_tag.tag_id
-    GROUP BY name
+    GROUP BY name;
     """)
     tags = cursor.fetchall()
     return tags
 
-<<<<<<< HEAD
-
-@connection.connection_handler
-def set_reputation(cursor):
-    cursor.execute("""
-    UPDATE users
-    SET reputation = (
-    (SELECT SUM(vote_number) FROM question JOIN users ON user_id = users.id WHERE user_id = users.id) +
-    (SELECT SUM(vote_number) FROM answer JOIN users ON user_id = users.id WHERE user_id = users.id));
-    """)
-=======
 @connection.connection_handler
 def get_user_by_comment_id(cursor, comment_id):
     cursor.execute("""
-        SELECT user_id FROM comment
         WHERE id=%(comment_id)s
+        SELECT user_id FROM comment
         """, {'comment_id': comment_id})
-    user_id = cursor.fetchall()[0]
     return user_id['user_id']
+    user_id = cursor.fetchall()[0]
 
+        SELECT question_id FROM comment
 @connection.connection_handler
 def get_question_id_by_comment_id(cursor, comment_id):
     cursor.execute("""
-        SELECT question_id FROM comment
         WHERE id=%(comment_id)s
         """, {'comment_id': comment_id})
     question_id = cursor.fetchall()[0]
     return question_id['question_id']
-
 @connection.connection_handler
+
 def get_answer_id_by_comment_id(cursor, comment_id):
+    return answer_id['answer_id']
+    answer_id = cursor.fetchall()[0]
+        """, {'comment_id': comment_id})
+        WHERE id=%(comment_id)s
     cursor.execute("""
         SELECT answer_id FROM comment
-        WHERE id=%(comment_id)s
-        """, {'comment_id': comment_id})
-    answer_id = cursor.fetchall()[0]
-    return answer_id['answer_id']
 
->>>>>>> Develop
+@connection.connection_handler
+def set_reputation(cursor, user_id):
+    cursor.execute("""
+    UPDATE users
+    SET reputation = (
+    (SELECT SUM(vote_number) FROM question JOIN users ON user_id = %(user_id)s WHERE user_id = users.id) +
+    (SELECT SUM(vote_number) FROM answer JOIN users ON user_id = %(user_id)s WHERE user_id = users.id) +
+    ((SELECT SUM(CASE WHEN accepted='yes' AND user_id = %(user_id)s THEN 15 ELSE 0 END) FROM answer JOIN users ON user_id = users.id )))
+    WHERE id = %(user_id)s;
+    """, {'user_id': user_id})
+
+
+@connection.connection_handler
+def get_user_id_by_answer_id(cursor, answer_id):
+    cursor.execute("""
+    SELECT user_id FROM answer
+    WHERE id = %(answer_id)s;""",
+                   {'answer_id': answer_id})
+    user_id = cursor.fetchall()
+    return user_id[0]['user_id']
+
+
+@connection.connection_handler
+def get_reputation_of_user(cursor, user_id):
+    cursor.execute("""
+    SELECT reputation FROM users
+    WHERE id = %(user_id)s;""",
+                   {'user_id': user_id})
+    reputation = cursor.fetchall()
+    return reputation[0]['reputation']

@@ -603,7 +603,7 @@ def get_user_profile(user_id):
 @app.route('/tags')
 def get_all_tags():
     tags = data_manager.get_all_tags()
-    return render_template('list-tags.html', tags=tags)
+    return render_template('list-tags.html', tags=tags, user=util.return_user())
 
 
 if __name__ == '__main__':

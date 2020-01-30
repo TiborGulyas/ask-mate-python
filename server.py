@@ -590,8 +590,9 @@ def get_user_profile(user_id):
         answers = data_manager.get_answers_of_user(int(user_id))
         comments = data_manager.get_comments_of_user(int(user_id))
         reputation = data_manager.get_reputation_of_user(int(user_id))
-        user = util.return_user()
-        return render_template('user.html', username='admin', questions=questions, answers=answers, comments=comments, user=user, reputation=reputation)
+        user = data_manager.get_user_by_user_id(int(user_id))
+        current_user = util.return_user()
+        return render_template('user.html', current_user=current_user, username=user, questions=questions, answers=answers, comments=comments, user=user, reputation=reputation)
     return render_template('access-error.html', data_type='add_new_question')
 
 

@@ -467,16 +467,17 @@ def get_all_tags(cursor):
     tags = cursor.fetchall()
     return tags
 
+
 @connection.connection_handler
 def get_user_by_comment_id(cursor, comment_id):
-    cursor.execute("""
-        WHERE id=%(comment_id)s
+    cursor.execute("""        
         SELECT user_id FROM comment
-        """, {'comment_id': comment_id})
-    return user_id['user_id']
-    user_id = cursor.fetchall()[0]
-
         SELECT question_id FROM comment
+        """, {'comment_id': comment_id})
+    user_id = cursor.fetchall()[0]
+    return user_id['user_id']
+
+
 @connection.connection_handler
 def get_question_id_by_comment_id(cursor, comment_id):
     cursor.execute("""
@@ -484,15 +485,17 @@ def get_question_id_by_comment_id(cursor, comment_id):
         """, {'comment_id': comment_id})
     question_id = cursor.fetchall()[0]
     return question_id['question_id']
-@connection.connection_handler
 
+
+@connection.connection_handler
 def get_answer_id_by_comment_id(cursor, comment_id):
-    return answer_id['answer_id']
-    answer_id = cursor.fetchall()[0]
-        """, {'comment_id': comment_id})
-        WHERE id=%(comment_id)s
     cursor.execute("""
         SELECT answer_id FROM comment
+        WHERE id=%(comment_id)s
+        """, {'comment_id': comment_id})
+    answer_id = cursor.fetchall()[0]
+    return answer_id['answer_id']
+
 
 @connection.connection_handler
 def set_reputation(cursor, user_id):
@@ -524,3 +527,13 @@ def get_reputation_of_user(cursor, user_id):
                    {'user_id': user_id})
     reputation = cursor.fetchall()
     return reputation[0]['reputation']
+
+
+@connection.connection_handler
+def get_user_by_user_id(cursor, user_id):
+    cursor.execute("""
+    SELECT user_name FROM users
+    WHERE id = %(user_id)s;""",
+    {'user_id': user_id})
+    user_name = cursor.fetchall()
+    return user_name[0]['user_name']

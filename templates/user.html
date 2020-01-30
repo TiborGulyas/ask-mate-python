@@ -8,7 +8,7 @@
 {% if user == 'not logged in' %}
     <h3 id="user">{{ user }}</h3>
 {% else %}
-    <h3 id="user">Logged in as: {{ user }}</h3>
+    <h3 id="user">Logged in as: {{ current_user }}</h3>
 {% endif %}
 <h1>{{ username }}'s profile</h1>
 {{ reputation }}

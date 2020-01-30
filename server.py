@@ -243,6 +243,7 @@ def question_vote(question_id, vote):
     else:
         data_manager.vote_question(question_id, -1)
     data_manager.update_vote_history('question', question_id, user_id)
+    data_manager.set_reputation()
     return redirect('/')
 
 

@@ -92,6 +92,17 @@ def view_question(cursor, id):
 def get_answer_by_question_id(cursor, question_id):
     cursor.execute("""
     SELECT * FROM answer
+    WHERE question_id= %(question_id)s AND accepted= 'yes'
+    ORDER BY submission_time DESC;
+    """,
+                   {'question_id': question_id})
+    answers = cursor.fetchall()
+    return answers
+
+@connection.connection_handler
+def get_answer_by_question_id_for_accept(cursor, question_id):
+    cursor.execute("""
+    SELECT * FROM answer
     WHERE question_id= %(question_id)s
     ORDER BY submission_time DESC;
     """,
@@ -545,3 +556,14 @@ def get_user_data(cursor):
     SELECT id, user_name, submission_time, reputation FROM users""")
     user_data = cursor.fetchall()
     return user_data
+
+
+@connection.connection_handler
+def get_question_id_by_answer_id(cursor, answer_id):
+    cursor.execute("""
+        SELECT question_id FROM answer
+        WHERE id=%(answer_id)s
+        """, {'answer_id': answer_id})
+    question_id = cursor.fetchall()[0]
+    return question_id['question_id']
+

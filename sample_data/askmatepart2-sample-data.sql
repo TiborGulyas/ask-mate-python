@@ -145,7 +145,7 @@ INSERT INTO question VALUES (DEFAULT, '2017-04-29 09:19:00', 0, 0, 'Wordpress lo
 INSERT INTO question VALUES (DEFAULT, '2017-05-01 10:41:00', 0, 0, 'Drawing canvas with an image picked with Cordova Camera Plugin', 'I''m getting an image from device and drawing a canvas with filters using Pixi JS. It works all well using computer to get an image. But when I''m on IOS, it throws errors such as cross origin issue, or that I''m trying to use an unknown format.
 ', 'no', 1)
     RETURNING id;
-SELECT pg_catalog.setval('question_id_seq', 2, true);
+SELECT pg_catalog.setval('question_id_seq', 3, true);
 
 INSERT INTO answer VALUES (DEFAULT, '2017-04-28 16:49:00', 0, 1, 'You need to use brackets: my_list = []', 'no', 2, 'no')
     RETURNING id;

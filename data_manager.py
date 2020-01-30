@@ -99,6 +99,17 @@ def get_answer_by_question_id(cursor, question_id):
     answers = cursor.fetchall()
     return answers
 
+@connection.connection_handler
+def get_answer_by_question_id_for_accept(cursor, question_id):
+    cursor.execute("""
+    SELECT * FROM answer
+    WHERE question_id= %(question_id)s
+    ORDER BY submission_time DESC;
+    """,
+                   {'question_id': question_id})
+    answers = cursor.fetchall()
+    return answers
+
 
 @connection.connection_handler
 def insert_new_answer(cursor, message, submission_time, vote_number, question_id, image, user_id):

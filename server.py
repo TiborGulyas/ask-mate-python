@@ -147,8 +147,6 @@ def new_tag(question_id):
 
 @app.route('/question/<question_id>', methods=['GET', 'POST'])
 def view_question(question_id):
-
-
     user_id = data_manager.get_user_id_by_question_id(question_id)
     actual_user_id = 'a'
 

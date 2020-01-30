@@ -135,7 +135,7 @@ INSERT INTO users VALUES (DEFAULT, '2020-01-28 00:00:00', 'admin', '$2b$12$jXWgU
     RETURNING id;
 INSERT INTO users VALUES (DEFAULT, '2020-01-28 00:00:00', 'random_user', '$2b$12$g8P9.q0fgBEYvLTXYd8eOOEvccN/K/49081bBw8YvJNfMLWh5CENW', 0)
     RETURNING id;
-SELECT pg_catalog.setval('users_id_seq', 1, true);
+SELECT pg_catalog.setval('users_id_seq', 2, true);
 
 
 INSERT INTO question VALUES (DEFAULT, '2017-04-28 08:29:00', 0, 0, 'How to make lists in Python?', 'I am totally new to this, any hints?', 'no', 1)

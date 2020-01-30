@@ -537,3 +537,11 @@ def get_user_by_user_id(cursor, user_id):
     {'user_id': user_id})
     user_name = cursor.fetchall()
     return user_name[0]['user_name']
+
+
+@connection.connection_handler
+def get_user_data(cursor):
+    cursor.execute("""
+    SELECT id, user_name, submission_time, reputation FROM users""")
+    user_data = cursor.fetchall()
+    return user_data

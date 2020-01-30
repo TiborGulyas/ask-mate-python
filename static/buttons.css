@@ -80,3 +80,28 @@
     align-content: center;
     text-align: center;
 }
+
+
+#list-of-users-button{
+	float: right;
+    background-color:#D2E4C4;
+	border-radius:18px;
+	display:inline-block;
+	cursor:pointer;
+	font-family:Arial;
+	font-size:17px;
+	padding:10px 10px;
+	text-shadow:0px 1px 0px #2f6627;
+}
+#list-of-users-button:hover {
+	background-color:purple;
+}
+#list-of-users-button:active {
+	position:relative;
+	top:1px;
+}
+
+#list_of_users_link{
+    text-decoration: none;
+    color: black;
+}

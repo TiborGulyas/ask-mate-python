@@ -606,6 +606,22 @@ def get_all_tags():
     return render_template('list-tags.html', tags=tags, user=util.return_user())
 
 
+@app.route('/list_users')
+def list_users():
+    user_data = []
+    interim_data = data_manager.get_user_data()
+    for dictionary in interim_data:
+        user_data.append(dict(dictionary))
+    for dictionary in user_data:
+        dictionary['question_votes'] = len(data_manager.get_vote_history('question', dictionary['id']))
+        dictionary['answer_votes'] = len(data_manager.get_vote_history('answer', dictionary['id']))
+        dictionary['number_of_questions'] = len(data_manager.get_questions_of_user(dictionary['id']))
+        dictionary['number_of_answers'] = len(data_manager.get_answers_of_user(dictionary['id']))
+        dictionary['number_of_comments'] = len(data_manager.get_comments_of_user(dictionary['id']))
+    print(user_data)
+    return render_template('list-tags.html', tags=tags, user=util.return_user())
+
+
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',

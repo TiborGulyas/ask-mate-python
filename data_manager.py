@@ -443,3 +443,43 @@ def get_all_tags(cursor):
     """)
     tags = cursor.fetchall()
     return tags
+
+<<<<<<< HEAD
+
+@connection.connection_handler
+def set_reputation(cursor):
+    cursor.execute("""
+    UPDATE users
+    SET reputation = (
+    (SELECT SUM(vote_number) FROM question JOIN users ON user_id = users.id WHERE user_id = users.id) +
+    (SELECT SUM(vote_number) FROM answer JOIN users ON user_id = users.id WHERE user_id = users.id));
+    """)
+=======
+@connection.connection_handler
+def get_user_by_comment_id(cursor, comment_id):
+    cursor.execute("""
+        SELECT user_id FROM comment
+        WHERE id=%(comment_id)s
+        """, {'comment_id': comment_id})
+    user_id = cursor.fetchall()[0]
+    return user_id['user_id']
+
+@connection.connection_handler
+def get_question_id_by_comment_id(cursor, comment_id):
+    cursor.execute("""
+        SELECT question_id FROM comment
+        WHERE id=%(comment_id)s
+        """, {'comment_id': comment_id})
+    question_id = cursor.fetchall()[0]
+    return question_id['question_id']
+
+@connection.connection_handler
+def get_answer_id_by_comment_id(cursor, comment_id):
+    cursor.execute("""
+        SELECT answer_id FROM comment
+        WHERE id=%(comment_id)s
+        """, {'comment_id': comment_id})
+    answer_id = cursor.fetchall()[0]
+    return answer_id['answer_id']
+
+>>>>>>> Develop

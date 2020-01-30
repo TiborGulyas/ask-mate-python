@@ -91,6 +91,8 @@ CREATE TABLE users (
     reputation integer DEFAULT 0
 );
 
+ALTER TABLE ONLY tag
+    ADD CONSTRAINT pk_tag_id PRIMARY KEY (id);
 
 ALTER TABLE ONLY answer
     ADD CONSTRAINT pk_answer_id PRIMARY KEY (id);
@@ -103,12 +105,6 @@ ALTER TABLE ONLY question
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT pk_users_id PRIMARY KEY (id);
-
-ALTER TABLE ONLY tag
-    ADD CONSTRAINT pk_tag_id PRIMARY KEY (id);
-
-ALTER TABLE ONLY question_tag
-    ADD CONSTRAINT pk_question_tag_id PRIMARY KEY (question_id, tag_id);
 
 ALTER TABLE ONLY question
     ADD CONSTRAINT fk_users_id FOREIGN KEY (user_id) REFERENCES users(id);
@@ -135,29 +131,42 @@ ALTER TABLE ONLY question_tag
     ADD CONSTRAINT fk_tag_id FOREIGN KEY (tag_id) REFERENCES tag(id);
 
 
-INSERT INTO users VALUES (0, '2020-01-28 00:00:00', 'admin', '$2b$12$jXWgU/asaN7kwaSdoVWuge1pWkg/Je4gSViTUMKipZBffr4To0XmS', 9999999);
-INSERT INTO users VALUES (1, '2020-01-28 00:00:00', 'random_user', '$2b$12$g8P9.q0fgBEYvLTXYd8eOOEvccN/K/49081bBw8YvJNfMLWh5CENW', 0);
-SELECT pg_catalog.setval('users_id_seq', 1, true);
+INSERT INTO users VALUES (DEFAULT, '2020-01-28 00:00:00', 'admin', '$2b$12$jXWgU/asaN7kwaSdoVWuge1pWkg/Je4gSViTUMKipZBffr4To0XmS', 9999999)
+    RETURNING id;
+INSERT INTO users VALUES (DEFAULT, '2020-01-28 00:00:00', 'random_user', '$2b$12$g8P9.q0fgBEYvLTXYd8eOOEvccN/K/49081bBw8YvJNfMLWh5CENW', 0)
+    RETURNING id;
+SELECT pg_catalog.setval('users_id_seq', 2, true);
 
-INSERT INTO question VALUES (0, '2017-04-28 08:29:00', 0, 0, 'How to make lists in Python?', 'I am totally new to this, any hints?', 'no', 0);
-INSERT INTO question VALUES (1, '2017-04-29 09:19:00', 0, 0, 'Wordpress loading multiple jQuery Versions', 'I developed a plugin that uses the jquery booklet.', 'images/image1.png', 1);
-INSERT INTO question VALUES (2, '2017-05-01 10:41:00', 0, 0, 'Drawing canvas with an image picked with Cordova Camera Plugin', 'I''m getting an image from device and drawing a canvas with filters using Pixi JS. It works all well using computer to get an image. But when I''m on IOS, it throws errors such as cross origin issue, or that I''m trying to use an unknown format.
-', 'no', 1);
-SELECT pg_catalog.setval('question_id_seq', 2, true);
 
-INSERT INTO answer VALUES (0, '2017-04-28 16:49:00', 0, 1, 'You need to use brackets: my_list = []', 'no', 1, 'no');
-INSERT INTO answer VALUES (1, '2017-04-25 14:42:00', 0, 1, 'Look it up in the Python docs', 'images/image2.jpg', 0, 'yes');
+INSERT INTO question VALUES (DEFAULT, '2017-04-28 08:29:00', 0, 0, 'How to make lists in Python?', 'I am totally new to this, any hints?', 'no', 1)
+    RETURNING id;
+INSERT INTO question VALUES (DEFAULT, '2017-04-29 09:19:00', 0, 0, 'Wordpress loading multiple jQuery Versions', 'I developed a plugin that uses the jquery booklet.', 'images/image1.png', 2)
+    RETURNING id;
+INSERT INTO question VALUES (DEFAULT, '2017-05-01 10:41:00', 0, 0, 'Drawing canvas with an image picked with Cordova Camera Plugin', 'I''m getting an image from device and drawing a canvas with filters using Pixi JS. It works all well using computer to get an image. But when I''m on IOS, it throws errors such as cross origin issue, or that I''m trying to use an unknown format.
+', 'no', 1)
+    RETURNING id;
+SELECT pg_catalog.setval('question_id_seq', 3, true);
+
+INSERT INTO answer VALUES (DEFAULT, '2017-04-28 16:49:00', 0, 1, 'You need to use brackets: my_list = []', 'no', 2, 'no')
+    RETURNING id;
+INSERT INTO answer VALUES (DEFAULT, '2017-04-25 14:42:00', 0, 1, 'Look it up in the Python docs', 'images/image2.jpg', 1, 'yes')
+    RETURNING id;
 SELECT pg_catalog.setval('answer_id_seq', 2, true);
 
-INSERT INTO comment VALUES (0, 0, NULL, 'Please clarify the question as it is too vague!', '2017-05-01 05:49:00', 0, 1);
-INSERT INTO comment VALUES (1, NULL, 1, 'I think you could use my_list = list() as well.', '2017-05-02 16:55:00', 0, 0);
+INSERT INTO comment VALUES (DEFAULT, 1, NULL, 'Please clarify the question as it is too vague!', '2017-05-01 05:49:00', 0, 2)
+    RETURNING id;
+INSERT INTO comment VALUES (DEFAULT, NULL, 2, 'I think you could use my_list = list() as well.', '2017-05-02 16:55:00', 0, 1)
+    RETURNING id;
 SELECT pg_catalog.setval('comment_id_seq', 2, true);
 
-INSERT INTO tag VALUES (0, 'python');
-INSERT INTO tag VALUES (1, 'sql');
-INSERT INTO tag VALUES (2, 'css');
+INSERT INTO tag VALUES (DEFAULT, 'python')
+    RETURNING id;
+INSERT INTO tag VALUES (DEFAULT, 'sql')
+    RETURNING id;
+INSERT INTO tag VALUES (DEFAULT, 'css')
+    RETURNING id;
 SELECT pg_catalog.setval('tag_id_seq', 3, true);
 
-INSERT INTO question_tag VALUES (0, 1);
+
 INSERT INTO question_tag VALUES (1, 2);
-SELECT pg_catalog.setval('tag_id_seq', 1, true);
+INSERT INTO question_tag VALUES (1, 3);

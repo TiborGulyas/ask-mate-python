@@ -377,13 +377,16 @@ def add_question_comment(question_id):
 def add_answer_comment(answer_id):
     answer_for_display = data_manager.get_answer_by_id(answer_id)
     user = util.return_user()
-    if request.method == 'GET':
+    if request.method == 'GET' and 'username' in session:
         return render_template(
             'new-comment.html',
             answer_for_display=answer_for_display[0],
             user=user)
 
-    elif request.method == 'POST':
+    elif request.method == 'GET':
+        return render_template('access-error.html', data_type="answer", id=answer_id)
+
+    elif request.method == 'POST' and 'username' in session:
         user_id = data_manager.get_user_id_by_user_name(session['username'])
         new_comment = {'id_type': 'answer_id',
                        'answer_id': int(answer_id),
@@ -435,8 +438,16 @@ def fancy_search(questions, detail):
 
 @app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])
 def edit_comment(comment_id):
-    user = util.return_user()
-    if request.method == 'GET':
+    actual_question = data_manager.get_question_id_by_comment_id(comment_id)
+    actual_answer = data_manager.get_answer_id_by_comment_id(comment_id)
+    actual_user_id = 'nothing'
+    if 'username' in session:
+        actual_user_id = data_manager.get_user_id_by_user_name(session['username'])
+
+    comment_user_id = data_manager.get_user_by_comment_id(comment_id)
+
+    if request.method == 'GET' and actual_user_id == comment_user_id:
+        user = util.return_user()
         comment_type = ""
         all_comments = data_manager.get_all_comments()
         for comment in all_comments:
@@ -465,7 +476,13 @@ def edit_comment(comment_id):
                 comment_for_display=comment_for_display,
                 user=user)
 
-    elif request.method == 'POST':
+    elif request.method == 'GET':
+        if actual_question == None:
+            return render_template('access-error.html', data_type="answer", id=actual_answer)
+        elif actual_answer == None:
+            return render_template('access-error.html', data_type="question", id=actual_question)
+
+    elif request.method == 'POST' and 'username' in session and actual_user_id == comment_user_id:
         update_comment = {'id': comment_id,
                           'message': request.form.get('comment'),
                           'submission_time': util.generate_time()}
@@ -481,9 +498,30 @@ def edit_comment(comment_id):
 
 @app.route('/comments/<comment_id>/delete', methods=['GET'])
 def delete_comment(comment_id):
-    question_id = request.args.get('question_id')
-    data_manager.delete_comment(comment_id)
-    return redirect(f'/question/{question_id}')
+    actual_question = data_manager.get_question_id_by_comment_id(comment_id)
+    actual_answer = data_manager.get_answer_id_by_comment_id(comment_id)
+    actual_user_id = 'a'
+
+    if 'username' in session:
+        actual_user_id = data_manager.get_user_id_by_user_name(session['username'])
+    else:
+        if actual_question == None:
+            return render_template('access-error.html', data_type="answer", id=actual_answer)
+        elif actual_answer == None:
+            return render_template('access-error.html', data_type="question", id=actual_question)
+
+    comment_user_id = data_manager.get_user_by_comment_id(comment_id)
+
+    if actual_user_id == comment_user_id:
+        question_id = request.args.get('question_id')
+        data_manager.delete_comment(comment_id)
+        return redirect(f'/question/{question_id}')
+    else:
+        if actual_question == None:
+            return render_template('access-error.html', data_type="answer", id=actual_answer)
+        elif actual_answer == None:
+            return render_template('access-error.html', data_type="question", id=actual_question)
+
 
 @app.route('/answer/<answer_id>/accept',methods=['GET'])
 def accept_answer(answer_id):

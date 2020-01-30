@@ -537,6 +537,12 @@ def get_user_profile(user_id):
     # return redirect('/')
 
 
+@app.route('/tags')
+def get_all_tags():
+    tags = data_manager.get_all_tags()
+    return render_template('list-tags.html', tags=tags)
+
+
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',

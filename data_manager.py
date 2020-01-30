@@ -472,7 +472,7 @@ def get_all_tags(cursor):
 def get_user_by_comment_id(cursor, comment_id):
     cursor.execute("""        
         SELECT user_id FROM comment
-        SELECT question_id FROM comment
+        WHERE id = %(comment_id)s
         """, {'comment_id': comment_id})
     user_id = cursor.fetchall()[0]
     return user_id['user_id']

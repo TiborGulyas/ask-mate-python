@@ -548,3 +548,12 @@ def get_user_by_user_id(cursor, user_id):
     {'user_id': user_id})
     user_name = cursor.fetchall()
     return user_name[0]['user_name']
+
+@connection.connection_handler
+def get_question_id_by_answer_id(cursor, answer_id):
+    cursor.execute("""
+        SELECT question_id FROM answer
+        WHERE id=%(answer_id)s
+        """, {'answer_id': answer_id})
+    question_id = cursor.fetchall()[0]
+    return question_id['question_id']

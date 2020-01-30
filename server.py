@@ -157,14 +157,14 @@ def view_question(question_id):
 
     if actual_user_id == user_id:
         show_answer_accept = True
-
+    print(show_answer_accept)
     user = util.return_user()
     user_id = data_manager.get_user_id_by_user_name(user)
     try:
         data_manager.view_question(question_id)
     except TypeError:
         pass
-    if request.method == 'GET' and question_id.isdigit() and show_answer_accept == False:
+    if request.method == 'GET' and question_id.isdigit() and not show_answer_accept:
         question_for_display = data_manager.get_question_by_id(question_id)
         answer_for_display = data_manager.get_answer_by_question_id(question_id)
         question_comment_for_display = data_manager.get_comment_by_question_id(question_id)
@@ -188,7 +188,7 @@ def view_question(question_id):
             answer_comment_for_display=answer_comment_for_display, answer_with_comment=answer_with_comment,
             user=user, user_id=user_id, vote_history=vote_history)
 
-    elif request.method == 'GET' and question_id.isdigit() and show_answer_accept == True:
+    elif request.method == 'GET' and question_id.isdigit() and show_answer_accept:
         question_for_display = data_manager.get_question_by_id(question_id)
         answer_for_display = data_manager.get_answer_by_question_id_for_accept(question_id)
         question_comment_for_display = data_manager.get_comment_by_question_id(question_id)

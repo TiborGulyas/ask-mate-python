@@ -358,6 +358,7 @@ def register_user(cursor, user_name, user_password, submission_time):
                    {'user_name': user_name, 'user_password': user_password,
                     'submission_time': submission_time})
 
+
 @connection.connection_handler
 def accept_answer(cursor, id):
     cursor.execute("""
@@ -367,33 +368,73 @@ def accept_answer(cursor, id):
     """,
                    {'id': id})
 
+
 @connection.connection_handler
 def get_user_password(cursor, user_name):
     cursor.execute("""
     SELECT user_password FROM users
-    WHERE user_name=%(user_name)s
+    WHERE user_name=%(user_name)s;
     """, {'user_name': user_name})
-    user_password = cursor.fetchall()[0]
-    return user_password['user_password']
+    user_password = cursor.fetchall()
+    if len(user_password) > 0:
+        return user_password[0]['user_password']
+    else:
+        pass
+
 
 @connection.connection_handler
 def get_user_id_by_user_name(cursor, user_name):
-    cursor.execute("""
-    SELECT id FROM users
-    WHERE user_name=%(user_name)s
-    """, {'user_name': user_name})
-    user_id = cursor.fetchall()
-    return user_id[0]['id']
+    if user_name != 'not logged in':
+        cursor.execute("""
+        SELECT id FROM users
+        WHERE user_name=%(user_name)s
+        """, {'user_name': user_name})
+        user_id = cursor.fetchall()
+        return user_id[0]['id']
+    else:
+        pass
 
 
 @connection.connection_handler
 def get_questions_of_user(cursor, user_id):
     cursor.execute("""
         SELECT * FROM question
-        WHERE id=%(user_id)s
+        WHERE id=%(user_id)s;
         """, {'user_id': user_id})
     questions = cursor.fetchall()
     return questions
+
+
+@connection.connection_handler
+def get_vote_history(cursor, input_type, user_id):
+    cursor.execute("""
+        SELECT type_id FROM vote_tracker
+        WHERE user_id = %(user_id)s and type = %(type)s
+        """, {'user_id': user_id, 'type': input_type})
+    vote_history = []
+    findings = cursor.fetchall()
+    for dictionary in findings:
+        vote_history.append(dictionary['type_id'])
+    return vote_history
+
+
+@connection.connection_handler
+def update_vote_history(cursor, input_type, type_id, user_id):
+    cursor.execute("""
+        INSERT INTO vote_tracker
+        (type, type_id, user_id)
+        VALUES (%(type)s, %(type_id)s, %(user_id)s);
+        """, {'type': input_type, 'type_id': type_id, 'user_id': user_id})
+
+
+@connection.connection_handler
+def get_user_id_by_question_id(cursor, question_id):
+    cursor.execute("""
+    SELECT user_id FROM question
+    WHERE id=%(question_id)s
+    """, {'question_id': question_id})
+    user_id = cursor.fetchall()
+    return int(user_id[0]['user_id'])
 
 
 @connection.connection_handler
@@ -401,7 +442,17 @@ def get_all_tags(cursor):
     cursor.execute("""
     SELECT name, COUNT(tag_id) FROM tag
     JOIN question_tag ON tag.id = question_tag.tag_id
-    GROUP BY name
+    GROUP BY name;
     """)
     tags = cursor.fetchall()
     return tags
+
+
+@connection.connection_handler
+def set_reputation(cursor):
+    cursor.execute("""
+    UPDATE users
+    SET reputation = (
+    (SELECT SUM(vote_number) FROM question JOIN users ON user_id = users.id WHERE user_id = users.id) +
+    (SELECT SUM(vote_number) FROM answer JOIN users ON user_id = users.id WHERE user_id = users.id));
+    """)
